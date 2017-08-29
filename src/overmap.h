@@ -118,7 +118,8 @@ struct city {
     int y;
     int s;
     std::string name;
-    city(int X = -1, int Y = -1, int S = -1);
+    omzone_type z;
+    city( int X = -1, int Y = -1, int S = -1, omzone_type Z = OMZONE_CITY );
 
     operator bool() const {
         return s >= 0;
@@ -245,6 +246,9 @@ class overmap
      */
     std::vector<point> find_terrain(const std::string &term, int zlevel);
 
+    int in_city( point p );
+    int in_zone( tripoint p );
+
     oter_id& ter(const int x, const int y, const int z);
     oter_id& ter( const tripoint &p );
     const oter_id get_ter(const int x, const int y, const int z) const;
@@ -352,6 +356,7 @@ public:
   std::map<int, om_vehicle> vehicles;
   std::vector<city> cities;
   std::vector<city> roads_out;
+  std::vector<overmap_zone> zones;
 
         /// Adds the npc. The overmap takes ownership of the pointer.
         void insert_npc( npc *who );
@@ -455,6 +460,8 @@ public:
     oter_id random_park() const;
     oter_id random_house() const;
 
+  // Overmap zones
+  void place_zones();
   // Overall terrain
   void place_river(point pa, point pb);
   void place_forest();
@@ -537,5 +544,6 @@ void apply_region_overlay(JsonObject &jo, regional_settings &region);
 
 bool is_river(const oter_id &ter);
 bool is_ot_type(const std::string &otype, const oter_id &oter);
+std::set<tripoint> generate_zone( tripoint c, int radius );
 
 #endif

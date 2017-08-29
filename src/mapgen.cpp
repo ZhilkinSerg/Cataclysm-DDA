@@ -1803,6 +1803,130 @@ int lua_mapgen( map *m, const oter_id &id, const mapgendata &md, int t, float d,
 }
 #endif
 
+void map::loot()
+{
+    for( int x = 0; x < 24; x++ )
+    {
+        for( int y = 0; y < 24; y++ )
+        {
+            if( !this->i_at( x, y ).empty() ){
+                for( std::vector<item>::iterator it = i_at( x, y ).begin();
+                    it != i_at( x, y ).end();){
+                    item m = *it;
+                    // 200 bucks, arbitrary choice
+                    double p = (double)m.price() / 20000.0;
+
+                    if( ( p > 1.0 ) || ( x_in_y( p * p, 1.0 ) ) ){
+                        it = i_at( x, y ).erase( it );
+                    } else {
+                        ++it;
+                    }
+                }
+            }
+            if( this->ter_at( x, y ).has_flag( "BASHABLE" ) ){
+                map_bash_info b = ter_at( x, y ).bash;
+
+                if( ( b.str_min < 25 ) && ( one_in( b.str_min ) ) ){
+                    ter_set( x, y, b.ter_set );
+                    spawn_item_list( b.items, x, y );
+                }
+            }
+            if( this->furn_at( x, y ).has_flag( "BASHABLE" ) ){
+                map_bash_info b = furn_at( x, y ).bash;
+
+                if( ( b.str_min < 25 ) && ( one_in( b.str_min ) ) ){
+                    furn_set( x, y, f_null );
+                    spawn_item_list( b.items, x, y );
+                }
+            }
+            if( one_in( 4 ) ){
+                add_field( x, y, fd_blood, 1 );
+            }
+            if( one_in( 24 ) && ( !this->ter_at( x, y ).has_flag( "NOITEM" ) )
+                    && ( !this->furn_at( x, y ).has_flag( "NOITEM" ) ) ){
+                Item_list l = item_controller->create_from_group( "trash_forest", 0 );
+                this->i_at( x, y ).push_back( l[0] );
+            }
+            vehicle* veh = this->veh_at( x, y );
+            if( veh != NULL ){
+                veh->smash();
+            }
+        }
+    }
+}
+
+void map::burn()
+{
+    while( one_in( 4 ) ) {
+        point center( rng( 4, 19 ), rng( 4, 19 ) );
+        int radius = rng( 1, 4 );
+        for( int x = center.x - radius; x <= center.x + radius; x++ ){
+            for( int y = center.y - radius; y <= center.y + radius; y++ ){
+                if( rl_dist( x, y, center.x, center.y ) <= rng( 1, radius ) ){
+                    destroy( x, y, false );
+                    for( auto itr = i_at( x, y ).begin(); itr != i_at( x, y ).end(); ++itr ){
+                        (*itr).burn( 20 );
+                    }
+                }
+            }
+        }
+    }
+}
+
+// distance is distance from current point to the center of the zone, used to calculate density
+void map::post_process( omzone_type zones, int distance )
+{
+    switch( zones )
+    {
+    case OMZONE_CITY:{
+        // as distance increases, amount of looting should decrease
+        // 1 in (distance^2)
+            if( one_in( distance ) ){
+                if( one_in( 10 ) ){
+                    this->burn();
+                } else {
+                    this->loot();
+                }
+            }
+            break;
+        }
+    }
+/*
+    if (zones & mfb(OMZONE_CITY)) {
+        if (!one_in(10)) { // 90% chance of smashing stuff up
+            for (int x = 0; x < 24; x++) {
+                for (int y = 0; y < 24; y++) {
+                    bash(x, y, 20, true);
+                }
+            }
+        }
+        if (one_in(10)) { // 10% chance of corpses
+            int num_corpses = rng(1, 8);
+            for (int i = 0; i < num_corpses; i++) {
+                int x = rng(0, 23), y = rng(0, 23);
+                if (move_cost(x, y) > 0) {
+                    add_corpse(x, y);
+                }
+            }
+        }
+    } // OMZONE_CITY
+
+    if (zones & mfb(OMZONE_BOMBED)) {
+        while (one_in(4)) {
+            point center( rng(4, 19), rng(4, 19) );
+            int radius = rng(1, 4);
+            for (int x = center.x - radius; x <= center.x + radius; x++) {
+                for (int y = center.y - radius; y <= center.y + radius; y++) {
+                    if (rl_dist(x, y, center.x, center.y) <= rng(1, radius)) {
+                        destroy(x, y, false);
+                    }
+                }
+            }
+        }
+    }
+*/
+}
+
 void mapgen_function_lua::generate( map *m, const oter_id &terrain_type, const mapgendata &dat, int t, float d ) {
     lua_mapgen( m, terrain_type, dat, t, d, scr );
 }
