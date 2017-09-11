@@ -3197,7 +3197,7 @@ void parse_tags( std::string &phrase, const player &u, const npc &me )
             if( !me.weapon.is_gun() ) {
                 phrase.replace(fa, l, _("BADAMMO"));
             } else {
-                phrase.replace(fa, l, ammo_name( me.weapon.ammo_type() ) );
+                phrase.replace(fa, l, me.weapon.ammo_type()->name() );
             }
         } else if( tag == "<punc>" ) {
             switch( rng( 0, 2 ) ) {
@@ -4279,7 +4279,7 @@ consumption_result try_consume( npc &p, item &it, std::string &reason )
             }
         }
 
-        p.consume_effects( to_eat, comest );
+        p.consume_effects( to_eat );
         p.moves -= 250;
     } else {
         debugmsg("Unknown comestible type of item: %s\n", to_eat.tname().c_str());

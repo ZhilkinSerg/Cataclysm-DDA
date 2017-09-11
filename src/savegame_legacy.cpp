@@ -367,7 +367,7 @@ void overmap::unserialize_legacy(std::istream & fin) {
 //   assignment to an NPC.
 
             if (!npc_inventory.empty() && !npcs.empty()) {
-                npcs.back()->inv.add_stack(npc_inventory);
+                npcs.back()->inv.push_back(npc_inventory);
                 npc_inventory.clear();
             }
             std::string npcdata;
@@ -441,7 +441,7 @@ void overmap::unserialize_legacy(std::istream & fin) {
 
 // If we accrued an npc_inventory, assign it now
     if (!npc_inventory.empty() && !npcs.empty()) {
-        npcs.back()->inv.add_stack(npc_inventory);
+        npcs.back()->inv.push_back(npc_inventory);
     }
 }
 
