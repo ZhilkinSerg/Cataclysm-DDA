@@ -6542,11 +6542,22 @@ void game::smash()
         return;
     }
 
-    if( m.get_field( smashp, fd_vines ) != nullptr ) {
-        m.remove_field( smashp, fd_vines );
-        sounds::sound( smashp, 2, "" );
-        add_msg( m_info, _( "You brush aside some vines." ) );
-        u.moves -= 200;
+    field_entry *f_vines = m.get_field( smashp, fd_vines );
+    if( f_vines != nullptr )
+    {
+        if( u.weapon.damage_melee( DT_CUT ) > 10 ) {
+            m.remove_field( smashp, fd_vines );
+            sounds::sound( smashp, 2, "" );
+            add_msg( m_info, _( "You hack away the vines." ) );
+        } else if( one_in( f_vines->getFieldDensity() ) ) {
+            m.remove_field( smashp, fd_vines );
+            sounds::sound( smashp, 2, "" );
+            add_msg( m_info, _( "You clear the vines." ) );
+        } else {
+            sounds::sound( smashp, 2, "" );
+            f_vines->setFieldDensity( f_vines->getFieldDensity() - 1 );
+            add_msg( m_info, _( "You thin the vines a little." ) );
+        }
         return;
     }
 
