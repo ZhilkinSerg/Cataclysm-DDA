@@ -1109,6 +1109,12 @@ class map
         void process_zone_fungalized( const int distance );
         void process_zone_entriffidate( const int distance );
         void post_process( std::set<om_zone::type> zone_types, int distance );
+        void map::post_process( om_zone::type zone_type, int distance )
+        {
+            std::set<om_zone::type> zone_types;
+            zone_types.emplace( zone_type );
+            post_process( zone_types, distance );
+        }
 
         // Climbing
         /**
