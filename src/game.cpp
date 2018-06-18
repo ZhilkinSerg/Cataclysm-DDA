@@ -6542,6 +6542,14 @@ void game::smash()
         return;
     }
 
+    if( m.get_field( smashp, fd_vines ) != nullptr ) {
+        m.remove_field( smashp, fd_vines );
+        sounds::sound( smashp, 2, "" );
+        add_msg( m_info, _( "You brush aside some vines." ) );
+        u.moves -= 200;
+        return;
+    }
+
     for( const auto &maybe_corpse : m.i_at( smashp ) ) {
         if ( maybe_corpse.is_corpse() && maybe_corpse.damage() < maybe_corpse.max_damage() &&
              maybe_corpse.get_mtype()->has_flag( MF_REVIVES ) ) {

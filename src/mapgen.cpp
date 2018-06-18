@@ -2009,7 +2009,7 @@ int lua_mapgen( map *m, const oter_id &id, const mapgendata &md, const time_poin
 }
 #endif
 
-void map::process_zone_loot()
+void map::process_zone_looted( const int distance )
 {
     const int z = abs_sub.z;
     for( int x = 0; x < SEEX * 2; x++ ) {
@@ -2040,9 +2040,8 @@ void map::process_zone_loot()
     }
 }
 
-void map::process_zone_burn()
+void map::process_zone_burned( const int distance )
 {
-
     while( one_in( 4 ) ) {
         tripoint center( rng( 4, 19 ), rng( 4, 19 ), abs_sub.z );
         int radius = rng( 1, 4 );
@@ -2062,58 +2061,199 @@ void map::process_zone_burn()
     }
 }
 
-// distance is distance from current point to the center of the zone, used to calculate density
-void map::post_process( om_zone::type zone_types, int distance )
+void map::process_zone_fungalized( const int distance )
 {
-    switch( zone_types )
-    {
-    case om_zone::type::OMZONE_CITY:{
-        // as distance increases, amount of looting should decrease
-        // 1 in (distance^2)
-            if( one_in( distance ) ){
-                if( one_in( 10 ) ){
-                    process_zone_burn();
-                } else {
-                    process_zone_loot();
-                }
-            }
-            break;
+    // @todo: utilize spread_fungus from fungal_effects.cpp
+
+    std::vector<furn_t> all_furniture; // @todo: get list of all furniture
+    std::vector<furn_t> fungal_furniture;
+    for( furn_t f : all_furniture ) {
+        if( f.has_flag( "FUNGUS" ) ) {
+            fungal_furniture.push_back( f );
         }
     }
-/*
-    if (zone_types & mfb(om_zone::type::OMZONE_CITY)) {
-        if (!one_in(10)) { // 90% chance of smashing stuff up
-            for (int x = 0; x < 24; x++) {
-                for (int y = 0; y < 24; y++) {
-                    bash(x, y, 20, true);
-                }
-            }
-        }
-        if (one_in(10)) { // 10% chance of corpses
-            int num_corpses = rng(1, 8);
-            for (int i = 0; i < num_corpses; i++) {
-                int x = rng(0, 23), y = rng(0, 23);
-                if (move_cost(x, y) > 0) {
-                    add_corpse(x, y);
-                }
-            }
-        }
-    } // OMZONE_CITY
 
-    if (zone_types & mfb(om_zone::type::OMZONE_BOMBED)) {
-        while (one_in(4)) {
-            point center( rng(4, 19), rng(4, 19) );
-            int radius = rng(1, 4);
-            for (int x = center.x - radius; x <= center.x + radius; x++) {
-                for (int y = center.y - radius; y <= center.y + radius; y++) {
-                    if (rl_dist(x, y, center.x, center.y) <= rng(1, radius)) {
-                        destroy(x, y, false);
+    const int z = abs_sub.z;
+    for( int x = 0; x < SEEX * 2; x++ ) {
+        for( int y = 0; y < SEEY * 2; y++ ) {
+            tripoint fungal_point = tripoint( x, y, z );
+            // replace terrain with fungal variants
+            ter_id terid = ter( fungal_point );
+            if( terid == t_wall ) {
+                if( one_in( 8 ) ) {
+                    ter_set( fungal_point, t_fungus_wall );
+                } else if( !one_in( 4 ) ) {
+                    ter_set( fungal_point, t_fungus_wall );
+                }
+            } else if( terid == t_floor ) {
+                this->ter_set( fungal_point, t_fungus_floor_in );
+            } else if( ( terid == t_dirt ) || ( terid == t_grass ) ||
+                       ( terid == t_pavement ) || ( terid == t_pavement_y ) ||
+                       ( terid == t_sidewalk ) ) {
+                if( one_in( 3 ) ) {
+                    ter_set( fungal_point, t_fungus );
+                } else if( one_in( 2 ) ) {
+                    ter_set( fungal_point, t_fungus_mound );
+                }
+            } else if( ter( fungal_point )->has_flag( "SHRUB" ) ) {
+                ter_set( fungal_point, t_shrub_fungal );
+            } else if( ter( fungal_point )->has_flag( "TREE" ) ) {
+                if( !one_in( 3 ) ) {
+                    if( ter( fungal_point )->has_flag( "YOUNG" ) )  {
+                        ter_set( fungal_point, t_tree_fungal );
+                    } else {
+                        ter_set( fungal_point, t_tree );
+                    }
+                }
+            }
+            // check furniture and set fungal
+            if( ter( fungal_point )->has_flag( "FLAT" ) ) {
+                if( one_in( 8 ) ) {
+                    int i = rng( 0, fungal_furniture.size() - 1 );
+                    furn_set( fungal_point, fungal_furniture.at( i ).id );
+                }
+            }
+        }
+    }
+}
+
+void map::process_zone_entriffidate( const int distance )
+{
+    // @todo: process_zone_entriffidate
+
+    int strength = distance;
+    if( distance <= 0 ) {
+        strength = 1;
+    } else if( distance > 16 ) {
+        strength = 16;
+    };
+
+    const int calc_max = 20;
+
+    int x = 0;
+    int y = 0;
+    int z = abs_sub.z;
+
+    for( x = 0; x < SEEX * 2; x++ ) {
+        for( y = 0; y < SEEY * 2; y++ ) {
+            tripoint entriffidate_point( x, y, z );
+            ter_id terid = ter( entriffidate_point );
+
+            // cover the walls in vines
+            if( terid == t_wall && x_in_y( strength, calc_max ) ) {
+                if( ( ter( x, y + 1 ) == t_dirt ) || ( ter( x, y + 1 ) == t_grass ) ||
+                    ( ter( x, y - 1 ) == t_dirt ) || ( ter( x, y - 1 ) == t_grass ) ||
+                    ( ter( x + 1, y ) == t_dirt ) || ( ter( x + 1, y ) == t_grass ) ||
+                    ( ter( x - 1, y ) == t_dirt ) || ( ter( x - 1, y ) == t_grass ) ) {
+                    /*
+                    if(terid == "t_wall_h"){
+                        ter_set(x, y, "t_vine_wall_h");
+                    } else if(terid == "t_wall_v"){
+                        ter_set(x, y, "t_vine_wall_v");
+                    }
+                    */
+                    add_field( entriffidate_point, fd_vines, 2 );
+                }
+            }
+            // bust through some of the pavement
+            if( ( terid == t_pavement ) || ( terid == t_pavement_y ) ||
+                ( terid == t_sidewalk ) || ( terid == t_sand ) ) {
+                if( x_in_y( strength, calc_max ) ) {
+                    ter_set( entriffidate_point, grass_or_dirt() );
+                    terid = ter( entriffidate_point );
+                }
+            }
+            // place vegetation, at max density, roughly 60% chance to place something
+            if( ( terid == t_dirt ) || ( terid == t_grass ) ) {
+                if( x_in_y( strength, calc_max ) ) {
+                    if( one_in( 3 ) ) {
+                        ter_set( entriffidate_point, t_underbrush );
+                    } else if( one_in( 4 ) ) {
+                        ter_set( entriffidate_point, t_shrub );
+                    } else if( one_in( 5 ) ) {
+                        ter_set( entriffidate_point, t_tree_young );
+                    } else if( one_in( 6 ) ) {
+                        ter_set( entriffidate_point, t_tree );
                     }
                 }
             }
         }
     }
-*/
+
+    // @todo: scale by strength
+    for( int n = rng( 3, 6 ); n > 0; n-- ) {
+        add_field( random_outdoor_tile( z ), fd_vines, rng( 1, 3 ), 0 );
+    }
+}
+
+// distance is distance from current point to the center of the zone, used to calculate density
+void map::post_process( std::set<om_zone::type> zone_types, int distance )
+{
+    const int z = abs_sub.z;
+
+    for( om_zone::type zone_type : zone_types ) {
+        switch( zone_type ) {
+            case om_zone::type::OMZONE_CITY: {
+                // as distance increases, amount of looting should decrease 1 in (distance^2)
+                if( one_in( distance ) ) {
+                    if( one_in( 10 ) ) {
+                        process_zone_burned( distance );
+                    } else {
+                        process_zone_looted( distance );
+                    }
+                }
+                // 90% chance of smashing stuff up
+                if( !one_in( 10 ) ) {
+                    for( int x = 0; x < SEEX * 2; x++ ) {
+                        for( int y = 0; y < SEEY * 2; y++ ) {
+                            tripoint bash_point( x, y, z );
+                            const int bash_strength = 20;
+                            bash( bash_point, bash_strength, true );
+                        }
+                    }
+                }
+                // 10% chance of corpses
+                if( one_in( 10 ) ) {
+                    const int max_num_corpses = 8;
+                    int num_corpses = rng( 1, max_num_corpses );
+                    for( int i = 0; i < num_corpses; i++ ) {
+                        int x = rng( 0, SEEX * 2 - 1 ), y = rng( 0, SEEY * 2 - 1 );
+                        tripoint corpse_point( x, y, z );
+                        if( move_cost( corpse_point ) > 0 ) {
+                            add_corpse( corpse_point );
+                        }
+                    }
+                }
+                break;
+            }
+            case om_zone::type::OMZONE_BOMBED: {
+                while( one_in( 4 ) ) {
+                    const int max_blast_radius = 4;
+                    int blast_radius = rng( 1, max_blast_radius );
+                    tripoint center( rng( max_blast_radius, SEEX * 2 - max_blast_radius - 1 ), rng( max_blast_radius, SEEY * 2 - max_blast_radius - 1 ), z );
+                    for( int x = center.x - blast_radius; x <= center.x + blast_radius; x++ ) {
+                        for( int y = center.y - blast_radius; y <= center.y + blast_radius; y++ ) {
+                            tripoint destroy_point( x, y, z );
+                            if( rl_dist( destroy_point, center ) <= rng( 1, blast_radius ) ) {
+                                destroy( destroy_point, false );
+                            }
+                        }
+                    }
+                }
+                break;
+            }
+            case om_zone::type::OMZONE_FUNGAL: {
+                // as distance increases the density of the fungal mass should decrease
+                process_zone_fungalized( distance );
+                break;
+            }
+            case om_zone::type::OMZONE_OVERGROWN: {
+                // as distance increases the density of the overgrowth should decrease
+                process_zone_entriffidate( distance );
+                break;
+            }
+        }
+    }
 }
 
 void mapgen_function_lua::generate( map *m, const oter_id &terrain_type, const mapgendata &dat, const time_point &t, float d ) {

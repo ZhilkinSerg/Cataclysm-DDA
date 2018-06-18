@@ -726,6 +726,11 @@ class map
          */
         bool flammable_items_at( const tripoint &p, int threshold = 0 );
         point random_outdoor_tile();
+        tripoint random_outdoor_tile( const int z_level )
+        {
+            const point p = random_outdoor_tile();
+            return tripoint( p.x, p.y, z_level );
+        }
         // mapgen
 
         void draw_line_ter( const ter_id type, int x1, int y1, int x2, int y2 );
@@ -1099,9 +1104,11 @@ class map
         void delete_graffiti( const tripoint &p );
 
         // Zones
-        void process_zone_loot();
-        void process_zone_burn();
-        void post_process( om_zone::type zone_types, int distance );
+        void process_zone_looted( const int distance );
+        void process_zone_burned( const int distance );
+        void process_zone_fungalized( const int distance );
+        void process_zone_entriffidate( const int distance );
+        void post_process( std::set<om_zone::type> zone_types, int distance );
 
         // Climbing
         /**
