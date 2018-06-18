@@ -191,6 +191,20 @@ void map::generate( const int x, const int y, const int z, const time_point &whe
         }
     }
 
+    const tripoint opoint = tripoint( x, y, z );
+    overmap &om = overmap_buffer.get_om_global( opoint );
+    dbg( D_ERROR ) << "[get_om_global] in [map::generate] at [" << x << ":" << y << ":" << z << "].";
+    int idx = om.in_zone( tripoint( overx, overy, z ) );
+    if( idx != -1 )
+    {
+        overmap_zone oz = om.zones[idx];
+        // max size: 16, min size: 1-2.
+        int strength = oz.size - oz.distance_from_center( tripoint( overx, overy, z ) );
+        dbg( D_ERROR ) << "post_process [" << om_zone::name( oz.type ) << "] with strength [" << strength << "] at [" << x << ":" << y << ":" << z << "].";
+        //debugmsg( "post_process: [%s] with strength [%d] at [%d:%d:%d]", om_zone::name( oz.type ), strength, x, y, z );
+        post_process( oz.type, strength );
+    }
+
     // Okay, we know who are neighbors are.  Let's draw!
     // And finally save used submaps and delete the rest.
     for (int i = 0; i < my_MAPSIZE; i++) {

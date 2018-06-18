@@ -3188,12 +3188,15 @@ void overmap::signal_hordes( const tripoint &p, const int sig_power)
 
 int overmap::in_zone( tripoint p )
 {
+    dbg( D_ERROR ) << "overmap::in_zone: zones.size()=[" << zones.size() << "]";
     int notfound = -1;
     for( int i = 0; i < zones.size(); i++ ){
         if( zones[i].contains_tripoint( p ) ){
+            dbg( D_ERROR ) << "found at [" << i << "]!";
             return i;
         }
     }
+    dbg( D_ERROR ) << "NOT found!";
     return notfound;
 }
 
