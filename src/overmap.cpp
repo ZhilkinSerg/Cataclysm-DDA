@@ -4284,7 +4284,7 @@ bool om_direction::are_parallel( type dir1, type dir2 )
 const std::string &om_zone::id( type zone_type )
 {
     static const std::array < std::string, size + 1 > ids = { {
-            "OMZONE_NULL", "OMZONE_CITY", "OMZONE_BOMBED", "OMZONE_IRRADIATED" "OMZONE_IRRADIATED", "OMZONE_CORRUPTED", "OMZONE_OVERGROWN", "OMZONE_FUNGAL", "OMZONE_MILITARIZED", "OMZONE_FLOODED", "OMZONE_TRAPPED", "OMZONE_MUTATED", "OMZONE_FORTIFIED", "OMZONE_BOTS"
+            "OMZONE_NULL", "OMZONE_CITY", "OMZONE_BOMBED", "OMZONE_IRRADIATED", "OMZONE_CORRUPTED", "OMZONE_OVERGROWN", "OMZONE_FUNGAL", "OMZONE_MILITARIZED", "OMZONE_FLOODED", "OMZONE_TRAPPED", "OMZONE_MUTATED", "OMZONE_FORTIFIED", "OMZONE_BOTS"
         }
     };
     return ids[static_cast<size_t>( zone_type ) + 1];
@@ -4293,7 +4293,7 @@ const std::string &om_zone::id( type zone_type )
 const std::string &om_zone::name( type zone_type )
 {
     static const std::array < std::string, size + 1 > names = { {
-            _( "OMZONE_NULL" ), _( "OMZONE_CITY" ), _( "OMZONE_BOMBED" ), _( "OMZONE_IRRADIATED" ), _( "OMZONE_IRRADIATED" ), _( "OMZONE_CORRUPTED" ), _( "OMZONE_OVERGROWN" ), _( "OMZONE_FUNGAL" ), _( "OMZONE_MILITARIZED" ), _( "OMZONE_FLOODED" ), _( "OMZONE_TRAPPED" ), _( "OMZONE_MUTATED" ), _( "OMZONE_FORTIFIED" ), _( "OMZONE_BOTS" )
+            _( "OMZONE_NULL" ), _( "OMZONE_CITY" ), _( "OMZONE_BOMBED" ), _( "OMZONE_IRRADIATED" ), _( "OMZONE_CORRUPTED" ), _( "OMZONE_OVERGROWN" ), _( "OMZONE_FUNGAL" ), _( "OMZONE_MILITARIZED" ), _( "OMZONE_FLOODED" ), _( "OMZONE_TRAPPED" ), _( "OMZONE_MUTATED" ), _( "OMZONE_FORTIFIED" ), _( "OMZONE_BOTS" )
         }
     };
     return names[static_cast<size_t>( zone_type ) + 1];

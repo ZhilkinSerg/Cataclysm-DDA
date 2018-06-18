@@ -200,7 +200,7 @@ void map::generate( const int x, const int y, const int z, const time_point &whe
         overmap_zone oz = om.zones[idx];
         // max size: 16, min size: 1-2.
         int strength = oz.size - oz.distance_from_center( tripoint( overx, overy, z ) );
-        dbg( D_ERROR ) << "post_process [" << om_zone::name( oz.type ) << "] with strength [" << strength << "] at [" << x << ":" << y << ":" << z << "].";
+        dbg( D_ERROR ) << "will start post_process [" << om_zone::name( oz.type ) << "] with strength [" << strength << "] at [" << x << ":" << y << ":" << z << "].";
         //debugmsg( "post_process: [%s] with strength [%d] at [%d:%d:%d]", om_zone::name( oz.type ), strength, x, y, z );
         post_process( oz.type, strength );
     }
@@ -2162,9 +2162,13 @@ void map::process_zone_entriffidate( const int distance )
 // distance is distance from current point to the center of the zone, used to calculate density
 void map::post_process( std::set<om_zone::type> zone_types, int distance )
 {
+
     const int z = abs_sub.z;
 
+    dbg( D_ERROR ) << "Actual post_process started with zone_types.size()=[" << zone_types.size() << "] at Z-level [ " << z << " ].";
+
     for( om_zone::type zone_type : zone_types ) {
+        dbg( D_ERROR ) << "There is zone_type named [" << om_zone::name( zone_type ) << " with id=[" << om_zone::id( zone_type ) << "] to process.";
         switch( zone_type ) {
             case om_zone::type::OMZONE_CITY: {
                 // as distance increases, amount of looting should decrease 1 in (distance^2)
