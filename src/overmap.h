@@ -26,6 +26,7 @@ class JsonObject;
 class npc;
 class overmapbuffer;
 class overmap_connection;
+
 namespace catacurses
 {
 class window;
@@ -151,8 +152,8 @@ struct city {
     int y;
     int s;
     std::string name;
-    omzone_type z;
-    city( int X = -1, int Y = -1, int S = -1, omzone_type Z = OMZONE_CITY );
+    om_zone::type zt;
+    city( int X = -1, int Y = -1, int S = -1, om_zone::type ZT = om_zone::type::OMZONE_CITY );
 
     operator bool() const {
         return s >= 0;

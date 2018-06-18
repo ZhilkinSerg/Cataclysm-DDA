@@ -18,6 +18,7 @@
 #include "string_id.h"
 #include "enums.h"
 #include "calendar.h"
+#include "omdata.h"
 
 //TODO: include comments about how these variables work. Where are they used. Are they constant etc.
 #define CAMPSIZE 1
@@ -1096,6 +1097,11 @@ class map
         const std::string &graffiti_at( const tripoint &p ) const;
         void set_graffiti( const tripoint &p, const std::string &contents );
         void delete_graffiti( const tripoint &p );
+
+        // Zones
+        void process_zone_loot();
+        void process_zone_burn();
+        void post_process( om_zone::type zone_types, int distance );
 
         // Climbing
         /**

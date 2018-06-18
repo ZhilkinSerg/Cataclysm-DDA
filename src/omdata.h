@@ -7,6 +7,7 @@
 #include "enums.h"
 #include "line.h"
 #include "int_id.h"
+#include "rng.h"
 #include "string_id.h"
 #include "translations.h"
 
@@ -85,11 +86,13 @@ type random();
 /** Whether these directions are parallel. */
 bool are_parallel( type dir1, type dir2 );
 
-// Overmap "Zones"
-// Areas which have special post-generation processing attached to them
+}
 
-enum omzone_type
+// Overmap "Zones" - Areas which have special post-generation processing attached to them
+namespace om_zone
 {
+/** Basic enum for directions. */
+enum class type : int {
     OMZONE_NULL = 0,
     OMZONE_CITY,        // Basic city; place corpses
     OMZONE_BOMBED,      // Terrain is heavily destroyed
@@ -103,21 +106,31 @@ enum omzone_type
     OMZONE_MUTATED,     // Home of mutation experiments - mutagen & monsters TODO
     OMZONE_FORTIFIED,   // Boarded up windows &c TODO
     OMZONE_BOTS,        // Home of the bots TODO
-    OMZONE_MAX
 };
 
+/** For the purposes of iteration. */
+const std::array<type, 13> all = {{ type::OMZONE_NULL, type::OMZONE_CITY, type::OMZONE_BOMBED, type::OMZONE_IRRADIATED, type::OMZONE_CORRUPTED, type::OMZONE_OVERGROWN, type::OMZONE_FUNGAL, type::OMZONE_MILITARIZED, type::OMZONE_FLOODED, type::OMZONE_TRAPPED, type::OMZONE_MUTATED, type::OMZONE_FORTIFIED, type::OMZONE_BOTS }};
+const size_t size = all.size();
+
+/** Identifier for serialization purposes. */
+const std::string &id( type zone_type );
+
+/** Get Human readable name of a direction */
+const std::string &name( type zone_type );
+
+/** Returns a random direction. */
+type random();
+
+}
+
 struct overmap_zone {
-    omzone_type z;
+    om_zone::type type;
     tripoint center;
     std::set<tripoint> points;
     int size;
     int distance_from_center( tripoint p ) {return rl_dist( center, p );}
     bool contains_tripoint( tripoint p ) {return ( points.find( p ) != points.end() );}
 };
-
-void loot();
-void burn();
-void post_process( omzone_type zones, int distance );
 
 struct overmap_spawns {
         overmap_spawns() : group( mongroup_id::NULL_ID() ) {}

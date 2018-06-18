@@ -359,7 +359,7 @@ void overmap::unserialize_legacy(std::istream & fin) {
             tripoint p;
             int zt;
             fin >> zt >> p.x >> p.y >> p.z;
-            omz.z = (omzone_type) zt;
+            omz.type = (om_zone::type) zt;
             omz.center = p;
             while(fin.peek() != '\n'){
                 fin >> p.x >> p.y >> p.z;

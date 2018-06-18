@@ -33,6 +33,7 @@
 #include "computer.h"
 #include "optional.h"
 #include "map_iterator.h"
+#include "fire.h"
 
 #include <algorithm>
 #include <cassert>
@@ -2008,69 +2009,52 @@ int lua_mapgen( map *m, const oter_id &id, const mapgendata &md, const time_poin
 }
 #endif
 
-void map::loot()
+void map::process_zone_loot()
 {
-    for( int x = 0; x < 24; x++ )
-    {
-        for( int y = 0; y < 24; y++ )
-        {
-            if( !this->i_at( x, y ).empty() ){
-                for( std::vector<item>::iterator it = i_at( x, y ).begin();
-                    it != i_at( x, y ).end();){
-                    item m = *it;
-                    // 200 bucks, arbitrary choice
-                    double p = (double)m.price() / 20000.0;
+    const int z = abs_sub.z;
+    for( int x = 0; x < SEEX * 2; x++ ) {
+        for( int y = 0; y < SEEY * 2; y++ ) {
 
-                    if( ( p > 1.0 ) || ( x_in_y( p * p, 1.0 ) ) ){
-                        it = i_at( x, y ).erase( it );
-                    } else {
-                        ++it;
-                    }
+            const tripoint loot_point( x, y, z );
+            map_stack loot_point_items = i_at( loot_point );
+
+            // Loot items cost more than 200$ (arbitrary choice) - one_in( 2 )
+            for( auto i : loot_point_items ) {
+                if( one_in( 2 ) && ( i.price( false ) > 20000 ) ) {
+                    bash( loot_point, 20 );
+                    //loot_point_items.erase( i );
                 }
             }
-            if( this->ter_at( x, y ).has_flag( "BASHABLE" ) ){
-                map_bash_info b = ter_at( x, y ).bash;
 
-                if( ( b.str_min < 25 ) && ( one_in( b.str_min ) ) ){
-                    ter_set( x, y, b.ter_set );
-                    spawn_item_list( b.items, x, y );
-                }
+            // Bash loot point with strength of 20 - one_in( 10 )
+            if( one_in( 10 ) ) {
+                bash( loot_point, 20, false );
             }
-            if( this->furn_at( x, y ).has_flag( "BASHABLE" ) ){
-                map_bash_info b = furn_at( x, y ).bash;
 
-                if( ( b.str_min < 25 ) && ( one_in( b.str_min ) ) ){
-                    furn_set( x, y, f_null );
-                    spawn_item_list( b.items, x, y );
-                }
-            }
-            if( one_in( 4 ) ){
-                add_field( x, y, fd_blood, 1 );
-            }
-            if( one_in( 24 ) && ( !this->ter_at( x, y ).has_flag( "NOITEM" ) )
-                    && ( !this->furn_at( x, y ).has_flag( "NOITEM" ) ) ){
-                Item_list l = item_controller->create_from_group( "trash_forest", 0 );
-                this->i_at( x, y ).push_back( l[0] );
-            }
-            vehicle* veh = this->veh_at( x, y );
-            if( veh != NULL ){
-                veh->smash();
+            // Add some blood - one_in( 5 )
+            if( one_in( 4 ) ) {
+                add_field( loot_point, fd_blood, 1 );
             }
         }
+
     }
 }
 
-void map::burn()
+void map::process_zone_burn()
 {
+
     while( one_in( 4 ) ) {
-        point center( rng( 4, 19 ), rng( 4, 19 ) );
+        tripoint center( rng( 4, 19 ), rng( 4, 19 ), abs_sub.z );
         int radius = rng( 1, 4 );
-        for( int x = center.x - radius; x <= center.x + radius; x++ ){
-            for( int y = center.y - radius; y <= center.y + radius; y++ ){
-                if( rl_dist( x, y, center.x, center.y ) <= rng( 1, radius ) ){
-                    destroy( x, y, false );
-                    for( auto itr = i_at( x, y ).begin(); itr != i_at( x, y ).end(); ++itr ){
-                        (*itr).burn( 20 );
+        for( int x = center.x - radius; x <= center.x + radius; x++ ) {
+            for( int y = center.y - radius; y <= center.y + radius; y++ ) {
+                tripoint burn_point( x, y, center.z );
+                if( rl_dist( burn_point, center ) <= rng( 1, radius ) ) {
+                    destroy( burn_point, false );
+                    map_stack burn_point_items = i_at( burn_point );
+                    for( auto i : burn_point_items ) {
+                        fire_data frd{ 2, 0.0f, 0.0f };
+                        i.burn( frd, true );
                     }
                 }
             }
@@ -2079,25 +2063,25 @@ void map::burn()
 }
 
 // distance is distance from current point to the center of the zone, used to calculate density
-void map::post_process( omzone_type zones, int distance )
+void map::post_process( om_zone::type zone_types, int distance )
 {
-    switch( zones )
+    switch( zone_types )
     {
-    case OMZONE_CITY:{
+    case om_zone::type::OMZONE_CITY:{
         // as distance increases, amount of looting should decrease
         // 1 in (distance^2)
             if( one_in( distance ) ){
                 if( one_in( 10 ) ){
-                    this->burn();
+                    process_zone_burn();
                 } else {
-                    this->loot();
+                    process_zone_loot();
                 }
             }
             break;
         }
     }
 /*
-    if (zones & mfb(OMZONE_CITY)) {
+    if (zone_types & mfb(om_zone::type::OMZONE_CITY)) {
         if (!one_in(10)) { // 90% chance of smashing stuff up
             for (int x = 0; x < 24; x++) {
                 for (int y = 0; y < 24; y++) {
@@ -2116,7 +2100,7 @@ void map::post_process( omzone_type zones, int distance )
         }
     } // OMZONE_CITY
 
-    if (zones & mfb(OMZONE_BOMBED)) {
+    if (zone_types & mfb(om_zone::type::OMZONE_BOMBED)) {
         while (one_in(4)) {
             point center( rng(4, 19), rng(4, 19) );
             int radius = rng(1, 4);
