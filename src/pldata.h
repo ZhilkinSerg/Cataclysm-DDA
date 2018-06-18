@@ -2,11 +2,15 @@
 #ifndef PLDATA_H
 #define PLDATA_H
 
-#include "json.h"
 #include "bodypart.h"
 #include "string_id.h"
+#include "calendar.h"
+
 #include <map>
 #include <string>
+
+class JsonIn;
+class JsonOut;
 
 class martialart;
 using matype_id = string_id<martialart>;
@@ -27,6 +31,7 @@ enum character_type : int {
     PLTYPE_RANDOM,
     PLTYPE_TEMPLATE,
     PLTYPE_NOW,
+    PLTYPE_FULL_RANDOM,
 };
 
 enum add_type : int {
@@ -46,31 +51,18 @@ enum hp_part : int {
     num_hp_parts
 };
 
-class addiction : public JsonSerializer, public JsonDeserializer
+class addiction
 {
     public:
         add_type type      = ADD_NULL;
         int      intensity = 0;
-        int      sated     = 600;
+        time_duration sated = 1_hours;
 
         addiction() = default;
         addiction( add_type const t, int const i = 1 ) : type {t}, intensity {i} { }
 
-        using JsonSerializer::serialize;
-        void serialize( JsonOut &json ) const override {
-            json.start_object();
-            json.member( "type_enum", type );
-            json.member( "intensity", intensity );
-            json.member( "sated", sated );
-            json.end_object();
-        }
-        using JsonDeserializer::deserialize;
-        void deserialize( JsonIn &jsin ) override {
-            JsonObject jo = jsin.get_object();
-            type = ( add_type )jo.get_int( "type_enum" );
-            intensity = jo.get_int( "intensity" );
-            sated = jo.get_int( "sated" );
-        }
+        void serialize( JsonOut &json ) const;
+        void deserialize( JsonIn &jsin );
 };
 
 #endif

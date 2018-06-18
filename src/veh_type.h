@@ -36,7 +36,7 @@ using requirement_id = string_id<requirement_data>;
 class Skill;
 using skill_id = string_id<Skill>;
 
-// bitmask backing store of -certian- vpart_info.flags, ones that
+// bitmask backing store of -certain- vpart_info.flags, ones that
 // won't be going away, are involved in core functionality, and are checked frequently
 enum vpart_bitflags : int {
     VPFLAG_ARMOR,
@@ -69,6 +69,7 @@ enum vpart_bitflags : int {
     VPFLAG_RECHARGE,
     VPFLAG_EXTENDS_VISION,
     VPFLAG_ENABLED_DRAINS_EPOWER,
+    VPFLAG_WASHING_MACHINE,
 
     NUM_VPFLAGS
 };
@@ -99,8 +100,8 @@ class vpart_info
         std::string location;
 
         /** Color of part for different states */
-        nc_color color = c_ltgray;
-        nc_color color_broken = c_ltgray;
+        nc_color color = c_light_gray;
+        nc_color color_broken = c_light_gray;
 
         /**
          * Symbol of part which will be translated as follows:
@@ -151,7 +152,7 @@ class vpart_info
         std::map<skill_id, int> install_skills;
 
         /** Installation time (in moves) for component (@see install_time), default 1 hour */
-        int install_moves = MOVES( HOURS( 1 ) );
+        int install_moves = to_moves<int>( 1_hours );
 
         /** Installation time (in moves) for this component accounting for player skills */
         int install_time( const Character &ch ) const;
@@ -178,7 +179,7 @@ class vpart_info
         std::map<skill_id, int> repair_skills;
 
         /** Repair time (in moves) to fully repair a component (@see repair_time) */
-        int repair_moves = MOVES( HOURS( 1 ) );
+        int repair_moves = to_moves<int>( 1_hours );
 
         /** Repair time (in moves) to fully repair this component, accounting for player skills */
         int repair_time( const Character &ch ) const;
@@ -231,7 +232,7 @@ class vpart_info
 struct vehicle_item_spawn {
     point pos;
     int chance;
-    /** Chance [0-100%] for items to spawn with ammo (plus default magazine if necesssary) */
+    /** Chance [0-100%] for items to spawn with ammo (plus default magazine if necessary) */
     int with_ammo = 0;
     /** Chance [0-100%] for items to spawn with their default magazine (if any) */
     int with_magazine = 0;

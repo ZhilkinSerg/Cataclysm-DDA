@@ -43,7 +43,6 @@
 #include "scenario.h"
 #include "omdata.h"
 #include "options.h"
-#include "game.h"
 #include "faction.h"
 #include "npc.h"
 #include "item_action.h"
@@ -72,6 +71,10 @@
 #include <fstream>
 #include <sstream> // for throwing errors
 #include <locale> // for loading names
+
+#if defined(TILES)
+void load_tileset();
+#endif
 
 DynamicDataLoader::DynamicDataLoader()
 {
@@ -182,6 +185,7 @@ void DynamicDataLoader::initialize()
     // Non Static Function Access
     add( "snippet", []( JsonObject &jo ) { SNIPPET.load_snippet( jo ); } );
     add( "item_group", []( JsonObject &jo ) { item_controller->load_item_group( jo ); } );
+    add( "trait_group", []( JsonObject &jo ) { mutation_branch::load_trait_group( jo ); } );
     add( "item_action", []( JsonObject &jo ) { item_action_generator::generator().load_item_action( jo ); } );
 
     add( "vehicle_part",  &vpart_info::load );
@@ -238,13 +242,14 @@ void DynamicDataLoader::initialize()
     add( "ITEM_BLACKLIST", []( JsonObject &jo ) { item_controller->load_item_blacklist( jo ); } );
     add( "TRAIT_BLACKLIST", []( JsonObject &jo ) { mutation_branch::load_trait_blacklist( jo ); } );
     add( "WORLD_OPTION", &load_world_option );
+    add( "EXTERNAL_OPTION", &load_external_option );
 
     // loaded earlier.
     add( "colordef", &load_ignored_type );
     // mod information, ignored, handled by the mod manager
     add( "MOD_INFO", &load_ignored_type );
 
-    add( "faction", &faction::load_faction );
+    add( "faction", &faction_template::load );
     add( "npc", &npc_template::load );
     add( "npc_class", &npc_class::load_npc_class );
     add( "talk_topic", &load_talk_topic );
@@ -368,6 +373,7 @@ void DynamicDataLoader::unload_data()
     MonsterGenerator::generator().reset();
     reset_recipe_categories();
     recipe_dictionary::reset();
+    faction_template::reset();
     quality::reset();
     trap::reset();
     reset_constructions();
@@ -400,7 +406,7 @@ extern void calculate_mapgen_weights();
 void DynamicDataLoader::finalize_loaded_data()
 {
     // Create a dummy that will not display anything
-    // @todo Make it print to stdout?
+    // @todo: Make it print to stdout?
     loading_ui ui( false );
     finalize_loaded_data( ui );
 }
@@ -417,6 +423,7 @@ void DynamicDataLoader::finalize_loaded_data( loading_ui &ui )
         { _( "Crafting requirements" ), []() { requirement_data::finalize(); } },
         { _( "Vehicle parts" ), &vpart_info::finalize },
         { _( "Traps" ), &trap::finalize },
+        { _( "Bionics" ), &finalize_bionics },
         { _( "Terrain" ), &set_ter_ids },
         { _( "Furniture" ), &set_furn_ids },
         { _( "Overmap terrain" ), &overmap_terrains::finalize },
@@ -432,7 +439,10 @@ void DynamicDataLoader::finalize_loaded_data( loading_ui &ui )
         { _( "Constructions" ), &finalize_constructions },
         { _( "NPC classes" ), &npc_class::finalize_all },
         { _( "Harvest lists" ), &harvest_list::finalize_all },
-        { _( "Anatomies" ), &anatomy::finalize_all }
+        { _( "Anatomies" ), &anatomy::finalize_all },
+#if defined(TILES)
+        { _( "Tileset" ), &load_tileset },
+#endif
     }};
 
     for( const named_entry &e : entries ) {

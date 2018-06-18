@@ -4,7 +4,8 @@
 #include "generic_factory.h"
 #include "debug.h"
 #include "line.h"
-#include "game.h"
+#include "json.h"
+#include "map_iterator.h"
 #include "map.h"
 #include "debug.h"
 #include "translations.h"
@@ -100,7 +101,7 @@ void trap::load( JsonObject &jo, const std::string & )
     mandatory( jo, was_loaded, "visibility", visibility );
     mandatory( jo, was_loaded, "avoidance", avoidance );
     mandatory( jo, was_loaded, "difficulty", difficulty );
-    // @todo Is there a generic_factory version of this?
+    // @todo: Is there a generic_factory version of this?
     act = trap_function_from_string( jo.get_string( "action" ) );
 
     optional( jo, was_loaded, "benign", benign, false );
@@ -186,9 +187,8 @@ bool trap::is_3x3_trap() const
     return id == trap_str_id( "tr_engine" );
 }
 
-void trap::on_disarmed( const tripoint &p ) const
+void trap::on_disarmed( map &m, const tripoint &p ) const
 {
-    map &m = g->m;
     for( auto &i : components ) {
         m.spawn_item( p.x, p.y, i, 1, 1 );
     }
@@ -197,10 +197,8 @@ void trap::on_disarmed( const tripoint &p ) const
         m.spawn_item( p.x, p.y, "shot_00", 1, 2 );
     }
     if( is_3x3_trap() ) {
-        for( int i = -1; i <= 1; i++ ) {
-            for( int j = -1; j <= 1; j++ ) {
-                m.remove_trap( tripoint( p.x + i, p.y + j, p.z ) );
-            }
+        for( const tripoint &dest : m.points_in_radius( p, 1 ) ) {
+            m.remove_trap( dest );
         }
     } else {
         m.remove_trap( p );
@@ -229,8 +227,6 @@ tr_shotgun_2,
 tr_shotgun_1,
 tr_engine,
 tr_blade,
-tr_light_snare,
-tr_heavy_snare,
 tr_landmine,
 tr_landmine_buried,
 tr_telepad,
@@ -295,8 +291,6 @@ void trap::finalize()
     tr_shotgun_1 = trapfind( "tr_shotgun_1" );
     tr_engine = trapfind( "tr_engine" );
     tr_blade = trapfind( "tr_blade" );
-    tr_light_snare = trapfind( "tr_light_snare" );
-    tr_heavy_snare = trapfind( "tr_heavy_snare" );
     tr_landmine = trapfind( "tr_landmine" );
     tr_landmine_buried = trapfind( "tr_landmine_buried" );
     tr_telepad = trapfind( "tr_telepad" );

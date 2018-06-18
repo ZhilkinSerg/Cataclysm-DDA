@@ -42,7 +42,7 @@ class main_menu
         std::vector<std::string> get_hotkeys( const std::string &s );
 
 
-        // Play a sound whenver the user moves left or right in the main menu or its tabs
+        // Play a sound whenever the user moves left or right in the main menu or its tabs
         void on_move() const;
 
         // Tab functions. They return whether a game was started or not. The ones that can never
@@ -54,9 +54,9 @@ class main_menu
         // These variables are shared between @opening_screen and the tab functions.
         // TODO: But this is an ugly short-term solution.
         input_context ctxt;
-        int sel1 = 1, sel2 = 1, sel3 = 1, layer = 1;
-        WINDOW *w_open;
-        WINDOW *w_background;
+        int sel1 = 1, sel2 = 1, sel3 = 1, layer = 1, LAST_TERMX = 0, LAST_TERMY = 0;
+        catacurses::window w_open;
+        catacurses::window w_background;
         int iMenuOffsetX = 0;
         int iMenuOffsetY;
         std::vector<std::string> templates;
@@ -74,7 +74,7 @@ class main_menu
          * @param iOffsetX Offset of menu items, x coordinate
          * @param spacing: How many spaces to print between each menu item
          */
-        void print_menu_items( WINDOW *w_in, std::vector<std::string> vItems, size_t iSel,
+        void print_menu_items( const catacurses::window &w_in, std::vector<std::string> vItems, size_t iSel,
                                int iOffsetY, int iOffsetX, int spacing = 1 );
 
         /**
@@ -86,10 +86,13 @@ class main_menu
          * @param iMenuOffsetY Menu location in window, y coordinate
          * @param bShowDDA Whether to show "Dark Days Ahead" banner
          */
-        void print_menu( WINDOW *w_open, int iSel, const int iMenuOffsetX, int iMenuOffsetY,
-                         bool bShowDDA = true );
+        void print_menu( const catacurses::window &w_open, int iSel, const int iMenuOffsetX,
+                         int iMenuOffsetY, bool bShowDDA = true );
 
         void display_credits();
+
+        void init_windows();
+        std::string handle_input_timeout( input_context &ctxt );
 };
 
 #endif

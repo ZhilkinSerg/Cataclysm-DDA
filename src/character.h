@@ -5,21 +5,33 @@
 #include "visitable.h"
 #include "creature.h"
 #include "inventory.h"
-#include "bionics.h"
-#include "skill.h"
-#include "map_selector.h"
-#include "pathfinding.h"
+#include "pimpl.h"
+#include "bodypart.h"
+#include "calendar.h"
+#include "pldata.h"
 
 #include <map>
 #include <vector>
+#include <bitset>
 
+class Skill;
+struct pathfinding_settings;
 using skill_id = string_id<Skill>;
+class SkillLevel;
+class SkillLevelMap;
 enum field_id : int;
+class JsonObject;
+class JsonIn;
+class JsonOut;
 class field;
 class field_entry;
 class vehicle;
 struct resistances;
 struct mutation_branch;
+class bionic_collection;
+struct bionic_data;
+using bionic_id = string_id<bionic_data>;
+class recipe;
 
 enum vision_modes {
     DEBUG_NIGHTVISION,
@@ -49,14 +61,43 @@ enum fatigue_levels {
     MASSIVE_FATIGUE = 1000
 };
 
+struct layer_details {
+
+    std::vector<int> pieces;
+    int max = 0;
+    int total = 0;
+
+    void reset();
+    int layer( const int encumbrance );
+
+    bool operator ==( const layer_details &rhs ) const {
+        return max == rhs.max &&
+               total == rhs.total &&
+               pieces == rhs.pieces;
+    }
+};
+
 struct encumbrance_data {
     int encumbrance = 0;
     int armor_encumbrance = 0;
     int layer_penalty = 0;
+
+    std::array<layer_details, static_cast<size_t>( layer_level::MAX_CLOTHING_LAYER )>
+    layer_penalty_details;
+
+    void layer( const layer_level level, const int emcumbrance ) {
+        layer_penalty += layer_penalty_details[static_cast<size_t>( level )].layer( emcumbrance );
+    }
+
+    void reset() {
+        *this = encumbrance_data();
+    }
+
     bool operator ==( const encumbrance_data &rhs ) const {
         return encumbrance == rhs.encumbrance &&
                armor_encumbrance == rhs.armor_encumbrance &&
-               layer_penalty == rhs.layer_penalty;
+               layer_penalty == rhs.layer_penalty &&
+               layer_penalty_details == rhs.layer_penalty_details;
     }
 };
 
@@ -71,7 +112,7 @@ struct aim_type {
 class Character : public Creature, public visitable<Character>
 {
     public:
-        ~Character() override { };
+        ~Character() override;
 
         field_id bloodType() const override;
         field_id gibType() const override;
@@ -165,7 +206,8 @@ class Character : public Creature, public visitable<Character>
 
         /* Accessors for aspects of aim speed. */
         std::vector<aim_type> get_aim_types( const item &gun ) const;
-        std::pair<int, int> get_best_sight( const item &gun, double recoil ) const;
+        std::pair<int, int> get_fastest_sight( const item &gun, double recoil ) const;
+        int get_most_accurate_sight( const item &gun ) const;
         double aim_speed_skill_modifier( const skill_id &gun_skill ) const;
         double aim_speed_dex_modifier() const;
         double aim_speed_encumbrance_modifier() const;
@@ -204,6 +246,8 @@ class Character : public Creature, public visitable<Character>
         std::array<encumbrance_data, num_bp> get_encumbrance() const;
         /** Get encumbrance for all body parts as if `new_item` was also worn. */
         std::array<encumbrance_data, num_bp> get_encumbrance( const item &new_item ) const;
+        /** Get encumbrance penalty per layer & body part */
+        int extraEncumbrance( const layer_level level, const int bp ) const;
 
         /** Returns true if the character is wearing active power */
         bool is_wearing_active_power_armor() const;
@@ -212,14 +256,15 @@ class Character : public Creature, public visitable<Character>
         bool is_blind() const;
 
         /** Bitset of all the body parts covered only with items with `flag` (or nothing) */
-        std::bitset<num_bp> exclusive_flag_coverage( const std::string &flag ) const;
+        body_part_set exclusive_flag_coverage( const std::string &flag ) const;
 
         /** Processes effects which may prevent the Character from moving (bear traps, crushed, etc.).
          *  Returns false if movement is stopped. */
         bool move_effects( bool attacking ) override;
         /** Performs any Character-specific modifications to the arguments before passing to Creature::add_effect(). */
-        void add_effect( const efftype_id &eff_id, int dur, body_part bp = num_bp, bool permanent = false,
-                         int intensity = 0, bool force = false ) override;
+        void add_effect( const efftype_id &eff_id, time_duration dur, body_part bp = num_bp,
+                         bool permanent = false,
+                         int intensity = 0, bool force = false, bool deferred = false ) override;
         /**
          * Handles end-of-turn processing.
          */
@@ -303,7 +348,8 @@ class Character : public Creature, public visitable<Character>
         /** Applies encumbrance from mutations and bionics only */
         void mut_cbm_encumb( std::array<encumbrance_data, num_bp> &vals ) const;
         /** Applies encumbrance from items only */
-        void item_encumb( std::array<encumbrance_data, num_bp> &vals, const item &new_item ) const;
+        void item_encumb( std::array<encumbrance_data, num_bp> &vals,
+                          const item &new_item ) const;
     public:
         /** Handles things like destruction of armor, etc. */
         void mutation_effect( const trait_id &mut );
@@ -315,7 +361,7 @@ class Character : public Creature, public visitable<Character>
         /**
          * Returns resistances on a body part provided by mutations
          */
-        // @todo Cache this, it's kinda expensive to compute
+        // @todo: Cache this, it's kinda expensive to compute
         resistances mutation_armor( body_part bp ) const;
         float mutation_armor( body_part bp, damage_type dt ) const;
         float mutation_armor( body_part bp, const damage_unit &dt ) const;
@@ -374,7 +420,7 @@ class Character : public Creature, public visitable<Character>
 
         /**
          * Returns a reference to the item which will be used to make attacks.
-         * At the moment it's always @ref weapon or @ref ret_null.
+         * At the moment it's always @ref weapon or a reference to a null item.
          */
         /*@{*/
         const item &used_weapon() const;
@@ -494,12 +540,14 @@ class Character : public Creature, public visitable<Character>
         bool worn_with_flag( const std::string &flag, body_part bp = num_bp ) const;
 
         // --------------- Skill Stuff ---------------
-        SkillLevel &get_skill_level( const skill_id &ident );
+        int get_skill_level( const skill_id &ident ) const;
+        int get_skill_level( const skill_id &ident, const item &context ) const;
 
-        /** for serialization */
-        SkillLevel const &get_skill_level( const skill_id &ident, const item &context = item() ) const;
+        SkillLevel &get_skill_level_object( const skill_id &ident );
+        const SkillLevel &get_skill_level_object( const skill_id &ident ) const;
+
         void set_skill_level( const skill_id &ident, int level );
-        void boost_skill_level( const skill_id &ident, int delta );
+        void mod_skill_level( const skill_id &ident, int delta );
 
         /** Calculates skill difference
          * @param req Required skills to be compared with.
@@ -521,12 +569,14 @@ class Character : public Creature, public visitable<Character>
         // --------------- Other Stuff ---------------
 
         /** return the calendar::turn the character expired */
-        int get_turn_died() const {
-            return turn_died;
+        time_point get_time_died() const {
+            return time_died;
         }
         /** set the turn the turn the character died if not already done */
-        void set_turn_died( int turn ) {
-            turn_died = ( turn_died != -1 ) ? turn : turn_died;
+        void set_time_died( const time_point &time ) {
+            if( time_died != calendar::before_time_starts ) {
+                time_died = time;
+            }
         }
 
         /** Calls Creature::normalize()
@@ -600,9 +650,8 @@ class Character : public Creature, public visitable<Character>
         inventory inv;
         itype_id last_item;
         item weapon;
-        item ret_null; // Null item, sometimes returns by weapon() etc
 
-        std::vector<bionic> my_bionics;
+        pimpl<bionic_collection> my_bionics;
 
     protected:
         void on_stat_change( const std::string &, int ) override {};
@@ -615,11 +664,11 @@ class Character : public Creature, public visitable<Character>
 
     protected:
         Character();
-        Character( const Character & ) = default;
-        Character( Character && ) = default;
-        Character &operator=( const Character & ) = default;
-        Character &operator=( Character && ) = default;
-        struct trait_data : public JsonSerializer, public JsonDeserializer {
+        Character( const Character & );
+        Character( Character && );
+        Character &operator=( const Character & );
+        Character &operator=( Character && );
+        struct trait_data {
             /** Key to select the mutation in the UI. */
             char key = ' ';
             /**
@@ -630,11 +679,8 @@ class Character : public Creature, public visitable<Character>
             int charge = 0;
             /** Whether the mutation is activated. */
             bool powered = false;
-            // -- serialization stuff, see savegame_json.cpp
-            using JsonSerializer::serialize;
-            void serialize( JsonOut &json ) const override;
-            using JsonDeserializer::deserialize;
-            void deserialize( JsonIn &jsin ) override;
+            void serialize( JsonOut &json ) const;
+            void deserialize( JsonIn &jsin );
         };
 
         /** Bonuses to stats, calculated each turn */
@@ -669,20 +715,21 @@ class Character : public Creature, public visitable<Character>
         void load( JsonObject &jsin );
 
         // --------------- Values ---------------
-        std::map<skill_id, SkillLevel> _skills;
+        pimpl<SkillLevelMap> _skills;
 
         // Cached vision values.
         std::bitset<NUM_VISION_MODES> vision_mode_cache;
         int sight_max;
 
-        // turn the character expired, if -1 it has not been set yet.
-        int turn_died = -1;
+        // turn the character expired, if calendar::before_time_starts it has not been set yet.
+        //@todo: change into an optional<time_point>
+        time_point time_died = calendar::before_time_starts;
 
         /**
          * Cache for pathfinding settings.
          * Most of it isn't changed too often, hence mutable.
          */
-        mutable pathfinding_settings path_settings;
+        mutable pimpl<pathfinding_settings> path_settings;
 
     private:
         /** Needs (hunger, thirst, fatigue, etc.) */

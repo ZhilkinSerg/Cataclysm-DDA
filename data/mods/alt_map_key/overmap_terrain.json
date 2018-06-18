@@ -335,7 +335,7 @@
         "id" : "office_doctor",
         "name" : "doctor's office",
         "sym" : 100,
-        "color" : "ltred",
+        "color" : "light_red",
         "see_cost" : 5,
         "extras" : "build",
         "mondensity" : 2,
@@ -352,76 +352,45 @@
         "flags" : [ "SIDEWALK" ]
     },{
         "type" : "overmap_terrain",
-        "id" : "apartments_con_tower_NW",
+        "abstract" : "apartments_tower_any",
         "name" : "apartment tower",
-        "color" : "i_ltgreen",
-        "rotate" : true,
+        "sym" : 65,
+        "color" : "i_light_green",
         "see_cost" : 5,
         "mondensity" : 2,
         "flags" : [ "SIDEWALK" ]
+    },{
+        "type" : "overmap_terrain",
+        "id" : "apartments_con_tower_NW",
+        "copy-from" : "apartments_tower_any"
     },{
         "type" : "overmap_terrain",
         "id" : "apartments_con_tower_NE",
-        "name" : "apartment tower",
-        "color" : "i_ltgreen",
-        "rotate" : true,
-        "see_cost" : 5,
-        "mondensity" : 2,
-        "flags" : [ "SIDEWALK" ]
+        "copy-from" : "apartments_tower_any"
     },{
         "type" : "overmap_terrain",
         "id" : "apartments_con_tower_SW",
-        "name" : "apartment tower",
-        "color" : "i_ltgreen",
-        "rotate" : true,
-        "see_cost" : 5,
-        "mondensity" : 2,
-        "flags" : [ "SIDEWALK" ]
+        "copy-from" : "apartments_tower_any"
     },{
         "type" : "overmap_terrain",
         "id" : "apartments_con_tower_SE",
-        "name" : "apartment tower",
-        "color" : "i_ltgreen",
-        "rotate" : true,
-        "see_cost" : 5,
-        "mondensity" : 2,
-        "flags" : [ "SIDEWALK" ]
+        "copy-from" : "apartments_tower_any"
     },{
         "type" : "overmap_terrain",
         "id" : "apartments_mod_tower_NW",
-        "name" : "apartment tower",
-        "color" : "i_ltgreen",
-        "rotate" : true,
-        "see_cost" : 5,
-        "mondensity" : 2,
-        "flags" : [ "SIDEWALK" ]
+        "copy-from" : "apartments_tower_any"
     },{
         "type" : "overmap_terrain",
         "id" : "apartments_mod_tower_NE",
-        "name" : "apartment tower",
-        "color" : "i_ltgreen",
-        "rotate" : true,
-        "see_cost" : 5,
-        "mondensity" : 2,
-        "flags" : [ "SIDEWALK" ]
+        "copy-from" : "apartments_tower_any"
     },{
         "type" : "overmap_terrain",
         "id" : "apartments_mod_tower_SW",
-        "name" : "apartment tower",
-        "color" : "i_ltgreen",
-        "rotate" : true,
-        "see_cost" : 5,
-        "mondensity" : 2,
-        "flags" : [ "SIDEWALK" ]
+        "copy-from" : "apartments_tower_any"
     },{
         "type" : "overmap_terrain",
         "id" : "apartments_mod_tower_SE",
-        "name" : "apartment tower",
-        "color" : "i_ltgreen",
-        "rotate" : true,
-        "see_cost" : 5,
-        "mondensity" : 2,
-        "flags" : [ "SIDEWALK" ]
+        "copy-from" : "apartments_tower_any"
     },{
         "type" : "overmap_terrain",
         "id" : "office_tower_1_entrance",
@@ -759,7 +728,7 @@
         "id" : "s_garage",
         "name" : "mechanics garage",
         "sym" : 109,
-        "color" : "ltblue",
+        "color" : "light_blue",
         "see_cost" : 5,
         "extras" : "build",
         "mondensity" : 2,
@@ -778,7 +747,7 @@
         "id" : "cabin_strange_b",
         "name" : "cabin basement",
         "sym" : 98,
-        "color" : "dk_gray",
+        "color" : "dark_gray",
         "see_cost" : 5,
         "extras" : "build",
         "flags" : [ "NO_ROTATE" ]
@@ -982,24 +951,51 @@
         "flags" : [ "SIDEWALK", "NO_ROTATE" ]
     },{
         "type" : "overmap_terrain",
-        "id" : "hospital_entrance",
+        "abstract" : "generic_hospital",
         "name" : "hospital",
-        "sym" : 72,
+        "sym" : 104,
         "color" : "i_light_red",
         "see_cost" : 5,
         "extras" : "build",
         "mondensity" : 2,
-        "flags" : [ "SIDEWALK", "NO_ROTATE" ]
+        "flags" : [ "SIDEWALK" ]
     },{
         "type" : "overmap_terrain",
-        "id" : "hospital",
-        "name" : "hospital",
-        "sym" : 104,
-        "color" : "i_ltred",
-        "see_cost" : 5,
-        "extras" : "build",
-        "mondensity" : 2,
-        "flags" : [ "SIDEWALK", "NO_ROTATE" ]
+        "id" : "hospital_1",
+        "copy-from" : "generic_hospital"
+    },{
+        "type" : "overmap_terrain",
+        "id" : "hospital_2",
+        "sym" : 72,
+        "copy-from" : "generic_hospital"
+    },{
+        "type" : "overmap_terrain",
+        "id" : "hospital_3",
+        "copy-from" : "generic_hospital"
+    },{
+        "type" : "overmap_terrain",
+        "id" : "hospital_4",
+        "copy-from" : "generic_hospital"
+    },{
+        "type" : "overmap_terrain",
+        "id" : "hospital_5",
+        "copy-from" : "generic_hospital"
+    },{
+        "type" : "overmap_terrain",
+        "id" : "hospital_6",
+        "copy-from" : "generic_hospital"
+    },{
+        "type" : "overmap_terrain",
+        "id" : "hospital_7",
+        "copy-from" : "generic_hospital"
+    },{
+        "type" : "overmap_terrain",
+        "id" : "hospital_8",
+        "copy-from" : "generic_hospital"
+    },{
+        "type" : "overmap_terrain",
+        "id" : "hospital_9",
+        "copy-from" : "generic_hospital"
     },{
         "type" : "overmap_terrain",
         "id" : "public_works_NE",
@@ -1257,7 +1253,7 @@
         "id" : "hotel_tower_1_1",
         "name" : "hotel parking",
         "sym" : 104,
-        "color" : "i_ltgreen",
+        "color" : "i_light_green",
         "see_cost" : 5,
         "mondensity" : 2,
         "flags" : [ "SIDEWALK" ]
@@ -1266,7 +1262,7 @@
         "id" : "hotel_tower_1_2",
         "name" : "hotel parking",
         "sym" : 104,
-        "color" : "i_ltgreen",
+        "color" : "i_light_green",
         "see_cost" : 5,
         "mondensity" : 2,
         "flags" : [ "SIDEWALK" ]
@@ -1275,7 +1271,7 @@
         "id" : "hotel_tower_1_3",
         "name" : "hotel parking",
         "sym" : 104,
-        "color" : "i_ltgreen",
+        "color" : "i_light_green",
         "see_cost" : 5,
         "mondensity" : 2,
         "flags" : [ "SIDEWALK" ]
@@ -1284,7 +1280,7 @@
         "id" : "hotel_tower_1_4",
         "name" : "hotel parking",
         "sym" : 104,
-        "color" : "i_ltgreen",
+        "color" : "i_light_green",
         "see_cost" : 5,
         "mondensity" : 2,
         "flags" : [ "SIDEWALK" ]
@@ -1293,7 +1289,7 @@
         "id" : "hotel_tower_1_5",
         "name" : "hotel entrance",
         "sym" : 72,
-        "color" : "i_ltgreen",
+        "color" : "i_light_green",
         "see_cost" : 5,
         "mondensity" : 2,
         "flags" : [ "SIDEWALK" ]
@@ -1302,7 +1298,7 @@
         "id" : "hotel_tower_1_6",
         "name" : "hotel parking",
         "sym" : 104,
-        "color" : "i_ltgreen",
+        "color" : "i_light_green",
         "see_cost" : 5,
         "mondensity" : 2,
         "flags" : [ "SIDEWALK" ]
@@ -1311,7 +1307,7 @@
         "id" : "hotel_tower_1_7",
         "name" : "hotel tower",
         "sym" : 72,
-        "color" : "i_ltgreen",
+        "color" : "i_light_green",
         "see_cost" : 5,
         "mondensity" : 2,
         "flags" : [ "SIDEWALK" ]
@@ -1320,7 +1316,7 @@
         "id" : "hotel_tower_1_8",
         "name" : "hotel tower",
         "sym" : 72,
-        "color" : "i_ltgreen",
+        "color" : "i_light_green",
         "see_cost" : 5,
         "mondensity" : 2,
         "flags" : [ "SIDEWALK" ]
@@ -1329,7 +1325,7 @@
         "id" : "hotel_tower_1_9",
         "name" : "hotel tower",
         "sym" : 72,
-        "color" : "i_ltgreen",
+        "color" : "i_light_green",
         "see_cost" : 5,
         "mondensity" : 2,
         "flags" : [ "SIDEWALK" ]
@@ -1338,7 +1334,7 @@
         "id" : "hotel_tower_b_1",
         "name" : "hotel basement",
         "sym" : 66,
-        "color" : "i_ltgreen",
+        "color" : "i_light_green",
         "see_cost" : 5,
         "mondensity" : 2
     },{
@@ -1346,7 +1342,7 @@
         "id" : "hotel_tower_b_2",
         "name" : "hotel basement",
         "sym" : 66,
-        "color" : "i_ltgreen",
+        "color" : "i_light_green",
         "see_cost" : 5,
         "mondensity" : 2
     },{
@@ -1354,7 +1350,7 @@
         "id" : "hotel_tower_b_3",
         "name" : "hotel basement",
         "sym" : 66,
-        "color" : "i_ltgreen",
+        "color" : "i_light_green",
         "see_cost" : 5,
         "mondensity" : 2
     },{
@@ -1362,7 +1358,7 @@
         "id" : "motel_entrance",
         "name" : "motel",
         "sym" : 109,
-        "color" : "i_ltgreen",
+        "color" : "i_light_green",
         "see_cost" : 5,
         "extras" : "build",
         "mondensity" : 2,
@@ -1372,7 +1368,7 @@
         "id" : "motel_1",
         "name" : "motel",
         "sym" : 109,
-        "color" : "i_ltgreen",
+        "color" : "i_light_green",
         "see_cost" : 5,
         "extras" : "build",
         "mondensity" : 2,
@@ -1382,7 +1378,7 @@
         "id" : "motel_2",
         "name" : "motel",
         "sym" : 109,
-        "color" : "i_ltgreen",
+        "color" : "i_light_green",
         "see_cost" : 5,
         "extras" : "build",
         "mondensity" : 2,
@@ -1392,7 +1388,7 @@
         "id" : "motel_3",
         "name" : "motel",
         "sym" : 109,
-        "color" : "i_ltgreen",
+        "color" : "i_light_green",
         "see_cost" : 5,
         "extras" : "build",
         "mondensity" : 2,
@@ -1487,26 +1483,6 @@
         "extras" : "build",
         "mondensity" : 2,
         "flags" : [ "SIDEWALK" ]
-    },{
-        "type" : "overmap_terrain",
-        "id" : "mansion_entrance",
-        "name" : "mansion",
-        "sym" : 77,
-        "color" : "i_light_green",
-        "see_cost" : 5,
-        "extras" : "build",
-        "mondensity" : 2,
-        "flags" : [ "NO_ROTATE" ]
-    },{
-        "type" : "overmap_terrain",
-        "id" : "mansion",
-        "name" : "mansion",
-        "sym" : 109,
-        "color" : "i_light_green",
-        "see_cost" : 5,
-        "extras" : "build",
-        "mondensity" : 2,
-        "flags" : [ "NO_ROTATE" ]
     },{
         "type" : "overmap_terrain",
         "id" : "fema_entrance",
@@ -1956,7 +1932,7 @@
         "id" : "triffid_finale",
         "name" : "triffid heart",
         "sym" : 84,
-        "color" : "white_pink",
+        "color" : "i_pink",
         "see_cost" : 5,
         "flags" : [ "KNOWN_UP", "NO_ROTATE" ]
     },{
@@ -2014,8 +1990,8 @@
         "flags" : [ "KNOWN_DOWN", "NO_ROTATE" ]
     },{
         "type" : "overmap_terrain",
-        "id" : "subway_station",
-        "name" : "subway station",
+        "id" : "sewer_sub_station",
+        "name" : "subway station (underground level)",
         "sym" : 83,
         "color" : "yellow",
         "see_cost" : 5,
@@ -5778,7 +5754,7 @@
         "id" : "warehouse",
         "name" : "small warehouse",
         "sym" : 119,
-        "color" : "ltcyan",
+        "color" : "light_cyan",
         "see_cost" : 5,
         "mondensity" : 2,
         "flags" : [ "SIDEWALK" ]
@@ -5788,7 +5764,7 @@
         "id" : "hdwr_large_entrance",
         "name" : "home improvement superstore entrance",
         "sym" : 72,
-        "color" : "i_ltcyan",
+        "color" : "i_light_cyan",
         "see_cost" : 5,
         "extras" : "field",
         "flags" : [ "NO_ROTATE" ]
@@ -5797,7 +5773,7 @@
         "id" : "hdwr_large_SW",
         "name" : "home improvement superstore",
         "sym" : 104,
-        "color" : "i_ltcyan",
+        "color" : "i_light_cyan",
         "see_cost" : 5,
         "extras" : "field",
         "flags" : [ "NO_ROTATE" ]
@@ -5806,7 +5782,7 @@
         "id" : "hdwr_large_NW",
         "name" : "home improvement superstore",
         "sym" : 104,
-        "color" : "i_ltcyan",
+        "color" : "i_light_cyan",
         "see_cost" : 5,
         "extras" : "field",
         "flags" : [ "NO_ROTATE" ]
@@ -5815,7 +5791,7 @@
         "id" : "hdwr_large_NE",
         "name" : "home improvement superstore",
         "sym" : 104,
-        "color" : "i_ltcyan",
+        "color" : "i_light_cyan",
         "see_cost" : 5,
         "extras" : "field",
         "flags" : [ "NO_ROTATE" ]
@@ -5824,7 +5800,7 @@
         "id" : "hdwr_large_backroom",
         "name" : "home improvement superstore",
         "sym" : 104,
-        "color" : "i_ltcyan",
+        "color" : "i_light_cyan",
         "see_cost" : 5,
         "extras" : "field",
         "flags" : [ "NO_ROTATE" ]
@@ -5833,7 +5809,7 @@
         "id" : "hdwr_large_loadingbay",
         "name" : "home improvement superstore",
         "sym" : 104,
-        "color" : "i_ltcyan",
+        "color" : "i_light_cyan",
         "see_cost" : 5,
         "extras" : "field",
         "flags" : [ "NO_ROTATE" ]
@@ -6756,7 +6732,7 @@
         "id" : "garage_gas_1",
         "name" : "gas station",
         "sym" : 103,
-        "color" : "i_ltblue",
+        "color" : "i_light_blue",
         "see_cost" : 5,
         "mondensity" : 2,
         "flags" : [ "SIDEWALK" ]
@@ -6765,7 +6741,7 @@
         "id" : "garage_gas_2",
         "name" : "garage",
         "sym" : 103,
-        "color" : "i_ltblue",
+        "color" : "i_light_blue",
         "see_cost" : 5,
         "mondensity" : 2,
         "flags" : [ "SIDEWALK" ]
@@ -6774,7 +6750,7 @@
         "id" : "garage_gas_3",
         "name" : "garage",
         "sym" : 103,
-        "color" : "i_ltblue",
+        "color" : "i_light_blue",
         "see_cost" : 5,
         "mondensity" : 2,
         "flags" : [ "SIDEWALK" ]
@@ -6823,7 +6799,7 @@
         "id" : "4way_road",
         "name" : "road",
         "sym" : 43,
-        "color" : "ltgray",
+        "color" : "light_gray",
         "see_cost" : 5,
         "extras" : "forest",
         "mondensity" : 2,
@@ -6969,7 +6945,7 @@
     "type": "overmap_terrain",
     "name": "small office",
     "sym": 111,
-    "color": "ltgray",
+    "color": "light_gray",
     "see_cost": 5,
     "mondensity": 2,
     "extras": "build",
@@ -7002,7 +6978,7 @@
     "type": "overmap_terrain",
     "name": "derelict property",
     "sym": 100,
-    "color": "grey",
+    "color": "light_gray",
     "see_cost": 5,
     "mondensity": 2,
     "extras": "field"
@@ -7124,592 +7100,344 @@
     "flags": [ "SIDEWALK" ]
   },
   {
+    "type" : "overmap_terrain",
+    "abstract" : "generic_mansion_no_sidewalk",
+    "name" : "mansion",
+    "sym" : 109,
+    "color" : "i_light_green",
+    "see_cost" : 5,
+    "mondensity" : 2
+  },
+  {
+    "type" : "overmap_terrain",
+    "abstract" : "generic_mansion",
+    "copy-from" : "generic_mansion_no_sidewalk",
+    "flags" : [ "SIDEWALK" ]
+  },
+  {
     "id": "mansion_c",
     "type": "overmap_terrain",
-    "name": "mansion",
-    "sym": 109,
-    "color": "i_ltgreen",
-    "see_cost": 5,
-    "mondensity": 2
+    "copy-from" : "generic_mansion_no_sidewalk"
   },
   {
     "id": "mansion_c1",
     "type": "overmap_terrain",
-    "name": "mansion",
-    "sym": 109,
-    "color": "i_ltgreen",
-    "see_cost": 5,
-    "mondensity": 2
+    "copy-from" : "generic_mansion_no_sidewalk"
   },
   {
     "id": "mansion_c2",
     "type": "overmap_terrain",
-    "name": "mansion",
-    "sym": 109,
-    "color": "i_ltgreen",
-    "see_cost": 5,
-    "mondensity": 2
+    "copy-from" : "generic_mansion_no_sidewalk"
   },
   {
     "id": "mansion_c3",
     "type": "overmap_terrain",
-    "name": "mansion",
-    "sym": 109,
-    "color": "i_ltgreen",
-    "see_cost": 5,
-    "mondensity": 2
+    "copy-from" : "generic_mansion_no_sidewalk"
   },
   {
     "id": "mansion_c4",
     "type": "overmap_terrain",
-    "name": "mansion",
-    "sym": 109,
-    "color": "i_ltgreen",
-    "see_cost": 5,
-    "mondensity": 2
+    "copy-from" : "generic_mansion_no_sidewalk"
   },
   {
     "id": "mansion_c5",
     "type": "overmap_terrain",
-    "name": "mansion",
-    "sym": 109,
-    "color": "i_ltgreen",
-    "see_cost": 5,
-    "mondensity": 2
+    "copy-from" : "generic_mansion_no_sidewalk"
   },
   {
     "id": "mansion_c_up",
     "type": "overmap_terrain",
-    "name": "mansion",
-    "sym": 109,
-    "color": "i_ltgreen",
-    "see_cost": 5,
-    "mondensity": 2
+    "copy-from" : "generic_mansion_no_sidewalk"
   },
   {
     "id": "mansion_c1u",
     "type": "overmap_terrain",
-    "name": "mansion",
-    "sym": 109,
-    "color": "i_ltgreen",
-    "see_cost": 5,
-    "mondensity": 2
+    "copy-from" : "generic_mansion_no_sidewalk"
   },
   {
     "id": "mansion_c2u",
     "type": "overmap_terrain",
-    "name": "mansion",
-    "sym": 109,
-    "color": "i_ltgreen",
-    "see_cost": 5,
-    "mondensity": 2
+    "copy-from" : "generic_mansion_no_sidewalk"
   },
   {
     "id": "mansion_c3u",
     "type": "overmap_terrain",
-    "name": "mansion",
-    "sym": 109,
-    "color": "i_ltgreen",
-    "see_cost": 5,
-    "mondensity": 2
+    "copy-from" : "generic_mansion_no_sidewalk"
   },
   {
     "id": "mansion_c4u",
     "type": "overmap_terrain",
-    "name": "mansion",
-    "sym": 109,
-    "color": "i_ltgreen",
-    "see_cost": 5,
-    "mondensity": 2
+    "copy-from" : "generic_mansion_no_sidewalk"
   },
   {
     "id": "mansion_c5u",
     "type": "overmap_terrain",
-    "name": "mansion",
-    "sym": 109,
-    "color": "i_ltgreen",
-    "see_cost": 5,
-    "mondensity": 2
+    "copy-from" : "generic_mansion_no_sidewalk"
   },
   {
     "id": "mansion_c_dn",
     "type": "overmap_terrain",
-    "name": "mansion",
-    "sym": 109,
-    "color": "i_ltgreen",
-    "see_cost": 5,
-    "mondensity": 2
+    "copy-from" : "generic_mansion_no_sidewalk"
   },
   {
     "id": "mansion_c1d",
     "type": "overmap_terrain",
-    "name": "mansion",
-    "sym": 109,
-    "color": "i_ltgreen",
-    "see_cost": 5,
-    "mondensity": 2
+    "copy-from" : "generic_mansion_no_sidewalk"
   },
   {
     "id": "mansion_c2d",
     "type": "overmap_terrain",
-    "name": "mansion",
-    "sym": 109,
-    "color": "i_ltgreen",
-    "see_cost": 5,
-    "mondensity": 2
+    "copy-from" : "generic_mansion_no_sidewalk"
   },
   {
     "id": "mansion_c3d",
     "type": "overmap_terrain",
-    "name": "mansion",
-    "sym": 109,
-    "color": "i_ltgreen",
-    "see_cost": 5,
-    "mondensity": 2
+    "copy-from" : "generic_mansion_no_sidewalk"
   },
   {
     "id": "mansion_c4d",
     "type": "overmap_terrain",
-    "name": "mansion",
-    "sym": 109,
-    "color": "i_ltgreen",
-    "see_cost": 5,
-    "mondensity": 2
+    "copy-from" : "generic_mansion_no_sidewalk"
   },
   {
     "id": "mansion_c5d",
     "type": "overmap_terrain",
-    "name": "mansion",
-    "sym": 109,
-    "color": "i_ltgreen",
-    "see_cost": 5,
-    "mondensity": 2
+    "copy-from" : "generic_mansion_no_sidewalk"
   },
   {
     "id": "mansion_+",
     "type": "overmap_terrain",
-    "name": "mansion",
-    "sym": 109,
-    "color": "i_ltgreen",
-    "see_cost": 5,
-    "mondensity": 2
+    "copy-from" : "generic_mansion_no_sidewalk"
   },
   {
     "id": "mansion_+1",
     "type": "overmap_terrain",
-    "name": "mansion",
-    "sym": 109,
-    "color": "i_ltgreen",
-    "see_cost": 5,
-    "mondensity": 2
+    "copy-from" : "generic_mansion_no_sidewalk"
   },
   {
     "id": "mansion_+2",
     "type": "overmap_terrain",
-    "name": "mansion",
-    "sym": 109,
-    "color": "i_ltgreen",
-    "see_cost": 5,
-    "mondensity": 2
+    "copy-from" : "generic_mansion_no_sidewalk"
   },
   {
     "id": "mansion_+3",
     "type": "overmap_terrain",
-    "name": "mansion",
-    "sym": 109,
-    "color": "i_ltgreen",
-    "see_cost": 5,
-    "mondensity": 2
+    "copy-from" : "generic_mansion_no_sidewalk"
   },
   {
     "id": "mansion_+4",
     "type": "overmap_terrain",
-    "name": "mansion",
-    "sym": 109,
-    "color": "i_ltgreen",
-    "see_cost": 5,
-    "mondensity": 2
+    "copy-from" : "generic_mansion_no_sidewalk"
   },
   {
     "id": "mansion_+_up",
     "type": "overmap_terrain",
-    "name": "mansion",
-    "sym": 109,
-    "color": "i_ltgreen",
-    "see_cost": 5,
-    "mondensity": 2
+    "copy-from" : "generic_mansion_no_sidewalk"
   },
   {
     "id": "mansion_+1u",
     "type": "overmap_terrain",
-    "name": "mansion",
-    "sym": 109,
-    "color": "i_ltgreen",
-    "see_cost": 5,
-    "mondensity": 2
+    "copy-from" : "generic_mansion_no_sidewalk"
   },
   {
     "id": "mansion_+2u",
     "type": "overmap_terrain",
-    "name": "mansion",
-    "sym": 109,
-    "color": "i_ltgreen",
-    "see_cost": 5,
-    "mondensity": 2
+    "copy-from" : "generic_mansion_no_sidewalk"
   },
   {
     "id": "mansion_+3u",
     "type": "overmap_terrain",
-    "name": "mansion",
-    "sym": 109,
-    "color": "i_ltgreen",
-    "see_cost": 5,
-    "mondensity": 2
+    "copy-from" : "generic_mansion_no_sidewalk"
   },
   {
     "id": "mansion_+4u",
     "type": "overmap_terrain",
-    "name": "mansion",
-    "sym": 109,
-    "color": "i_ltgreen",
-    "see_cost": 5,
-    "mondensity": 2
+    "copy-from" : "generic_mansion_no_sidewalk"
   },
   {
     "id": "mansion_+_dn",
     "type": "overmap_terrain",
-    "name": "mansion",
-    "sym": 109,
-    "color": "i_ltgreen",
-    "see_cost": 5,
-    "mondensity": 2
+    "copy-from" : "generic_mansion_no_sidewalk"
   },
   {
     "id": "mansion_+1d",
     "type": "overmap_terrain",
-    "name": "mansion",
-    "sym": 109,
-    "color": "i_ltgreen",
-    "see_cost": 5,
-    "mondensity": 2
+    "copy-from" : "generic_mansion_no_sidewalk"
   },
   {
     "id": "mansion_+2d",
     "type": "overmap_terrain",
-    "name": "mansion",
-    "sym": 109,
-    "color": "i_ltgreen",
-    "see_cost": 5,
-    "mondensity": 2
+    "copy-from" : "generic_mansion_no_sidewalk"
   },
   {
     "id": "mansion_+4d",
     "type": "overmap_terrain",
-    "name": "mansion",
-    "sym": 109,
-    "color": "i_ltgreen",
-    "see_cost": 5,
-    "mondensity": 2
+    "copy-from" : "generic_mansion_no_sidewalk"
   },
   {
     "id": "mansion_t",
     "type": "overmap_terrain",
-    "name": "mansion",
-    "sym": 109,
-    "color": "i_ltgreen",
-    "see_cost": 5,
-    "mondensity": 2
+    "copy-from" : "generic_mansion_no_sidewalk"
   },
   {
     "id": "mansion_t1",
     "type": "overmap_terrain",
-    "name": "mansion",
-    "sym": 109,
-    "color": "i_ltgreen",
-    "see_cost": 5,
-    "mondensity": 2
+    "copy-from" : "generic_mansion_no_sidewalk"
   },
   {
     "id": "mansion_t2",
     "type": "overmap_terrain",
-    "name": "mansion",
-    "sym": 109,
-    "color": "i_ltgreen",
-    "see_cost": 5,
-    "mondensity": 2
+    "copy-from" : "generic_mansion_no_sidewalk"
   },
   {
     "id": "mansion_t4",
     "type": "overmap_terrain",
-    "name": "mansion",
-    "sym": 109,
-    "color": "i_ltgreen",
-    "see_cost": 5,
-    "mondensity": 2
+    "copy-from" : "generic_mansion_no_sidewalk"
   },
   {
     "id": "mansion_t5",
     "type": "overmap_terrain",
-    "name": "mansion",
-    "sym": 109,
-    "color": "i_ltgreen",
-    "see_cost": 5,
-    "mondensity": 2
+    "copy-from" : "generic_mansion_no_sidewalk"
   },
   {
     "id": "mansion_t6",
     "type": "overmap_terrain",
-    "name": "mansion",
-    "sym": 109,
-    "color": "i_ltgreen",
-    "see_cost": 5,
-    "mondensity": 2
+    "copy-from" : "generic_mansion_no_sidewalk"
   },
   {
     "id": "mansion_t7",
     "type": "overmap_terrain",
-    "name": "mansion",
-    "sym": 109,
-    "color": "i_ltgreen",
-    "see_cost": 5,
-    "mondensity": 2
+    "copy-from" : "generic_mansion_no_sidewalk"
   },
   {
     "id": "mansion_t_up",
     "type": "overmap_terrain",
-    "name": "mansion",
-    "sym": 109,
-    "color": "i_ltgreen",
-    "see_cost": 5,
-    "mondensity": 2
+    "copy-from" : "generic_mansion_no_sidewalk"
   },
   {
     "id": "mansion_t1u",
     "type": "overmap_terrain",
-    "name": "mansion",
-    "sym": 109,
-    "color": "i_ltgreen",
-    "see_cost": 5,
-    "mondensity": 2
+    "copy-from" : "generic_mansion_no_sidewalk"
   },
   {
     "id": "mansion_t2u",
     "type": "overmap_terrain",
-    "name": "mansion",
-    "sym": 109,
-    "color": "i_ltgreen",
-    "see_cost": 5,
-    "mondensity": 2
+    "copy-from" : "generic_mansion_no_sidewalk"
   },
   {
     "id": "mansion_t4u",
     "type": "overmap_terrain",
-    "name": "mansion",
-    "sym": 109,
-    "color": "i_ltgreen",
-    "see_cost": 5,
-    "mondensity": 2
+    "copy-from" : "generic_mansion_no_sidewalk"
   },
   {
     "id": "mansion_t5u",
     "type": "overmap_terrain",
-    "name": "mansion",
-    "sym": 109,
-    "color": "i_ltgreen",
-    "see_cost": 5,
-    "mondensity": 2
+    "copy-from" : "generic_mansion_no_sidewalk"
   },
   {
     "id": "mansion_t6u",
     "type": "overmap_terrain",
-    "name": "mansion",
-    "sym": 109,
-    "color": "i_ltgreen",
-    "see_cost": 5,
-    "mondensity": 2
+    "copy-from" : "generic_mansion_no_sidewalk"
   },
   {
     "id": "mansion_t7u",
     "type": "overmap_terrain",
-    "name": "mansion",
-    "sym": 109,
-    "color": "i_ltgreen",
-    "see_cost": 5,
-    "mondensity": 2
+    "copy-from" : "generic_mansion_no_sidewalk"
   },
   {
     "id": "mansion_t_dn",
     "type": "overmap_terrain",
-    "name": "mansion",
-    "sym": 109,
-    "color": "i_ltgreen",
-    "see_cost": 5,
-    "mondensity": 2
+    "copy-from" : "generic_mansion_no_sidewalk"
   },
   {
     "id": "mansion_t1d",
     "type": "overmap_terrain",
-    "name": "mansion",
-    "sym": 109,
-    "color": "i_ltgreen",
-    "see_cost": 5,
-    "mondensity": 2
+    "copy-from" : "generic_mansion_no_sidewalk"
   },
   {
     "id": "mansion_t2d",
     "type": "overmap_terrain",
-    "name": "mansion",
-    "sym": 109,
-    "color": "i_ltgreen",
-    "see_cost": 5,
-    "mondensity": 2
+    "copy-from" : "generic_mansion_no_sidewalk"
   },
   {
     "id": "mansion_t4d",
     "type": "overmap_terrain",
-    "name": "mansion",
-    "sym": 109,
-    "color": "i_ltgreen",
-    "see_cost": 5,
-    "mondensity": 2
+    "copy-from" : "generic_mansion_no_sidewalk"
   },
   {
     "id": "mansion_t5d",
     "type": "overmap_terrain",
-    "name": "mansion",
-    "sym": 109,
-    "color": "i_ltgreen",
-    "see_cost": 5,
-    "mondensity": 2
+    "copy-from" : "generic_mansion_no_sidewalk"
   },
   {
     "id": "mansion_t6d",
     "type": "overmap_terrain",
-    "name": "mansion",
-    "sym": 109,
-    "color": "i_ltgreen",
-    "see_cost": 5,
-    "mondensity": 2
+    "copy-from" : "generic_mansion_no_sidewalk"
   },
   {
     "id": "mansion_t7d",
     "type": "overmap_terrain",
-    "name": "mansion",
-    "sym": 109,
-    "color": "i_ltgreen",
-    "see_cost": 5,
-    "mondensity": 2
+    "copy-from" : "generic_mansion_no_sidewalk"
   },
   {
     "id": "mansion_entry",
     "type": "overmap_terrain",
-    "name": "mansion",
-    "sym": 109,
-    "color": "i_ltgreen",
-    "see_cost": 5,
-    "mondensity": 2,
-    "flags" : [ "SIDEWALK" ]
+    "copy-from" : "generic_mansion"
   },
   {
     "id": "mansion_e1",
     "type": "overmap_terrain",
-    "name": "mansion",
-    "sym": 109,
-    "color": "i_ltgreen",
-    "see_cost": 5,
-    "mondensity": 2,
-    "flags" : [ "SIDEWALK" ]
+    "copy-from" : "generic_mansion"
   },
   {
     "id": "mansion_e2",
     "type": "overmap_terrain",
-    "name": "mansion",
-    "sym": 109,
-    "color": "i_ltgreen",
-    "see_cost": 5,
-    "mondensity": 2,
-    "flags" : [ "SIDEWALK" ]
+    "copy-from" : "generic_mansion"
   },
   {
     "id": "mansion_entry_up",
     "type": "overmap_terrain",
-    "name": "mansion",
-    "sym": 109,
-    "color": "i_ltgreen",
-    "see_cost": 5,
-    "mondensity": 2
+    "copy-from" : "generic_mansion_no_sidewalk"
   },
   {
     "id": "mansion_e1u",
     "type": "overmap_terrain",
-    "name": "mansion",
-    "sym": 109,
-    "color": "i_ltgreen",
-    "see_cost": 5,
-    "mondensity": 2
+    "copy-from" : "generic_mansion_no_sidewalk"
   },
   {
     "id": "mansion_e2u",
     "type": "overmap_terrain",
-    "name": "mansion",
-    "sym": 109,
-    "color": "i_ltgreen",
-    "see_cost": 5,
-    "mondensity": 2
+    "copy-from" : "generic_mansion_no_sidewalk"
   },
   {
     "id": "mansion_entry_dn",
     "type": "overmap_terrain",
-    "name": "mansion",
-    "sym": 109,
-    "color": "i_ltgreen",
-    "see_cost": 5,
-    "mondensity": 2
+    "copy-from" : "generic_mansion_no_sidewalk"
   },
   {
     "id": "mansion_e1d",
     "type": "overmap_terrain",
-    "name": "mansion",
-    "sym": 109,
-    "color": "i_ltgreen",
-    "see_cost": 5,
-    "mondensity": 2
+    "copy-from" : "generic_mansion_no_sidewalk"
   },
   {
     "id": "mansion_e2d",
     "type": "overmap_terrain",
-    "name": "mansion",
-    "sym": 109,
-    "color": "i_ltgreen",
-    "see_cost": 5,
-    "mondensity": 2
+    "copy-from" : "generic_mansion_no_sidewalk"
   },
   {
     "id": "mansion_wild",
     "type": "overmap_terrain",
-    "name": "mansion",
-    "sym": 109,
-    "color": "i_ltgreen",
-    "see_cost": 5,
-    "mondensity": 2
+    "copy-from" : "generic_mansion_no_sidewalk"
   },
   {
     "id": "mansion_wild_up",
     "type": "overmap_terrain",
-    "name": "mansion",
-    "sym": 109,
-    "color": "i_ltgreen",
-    "see_cost": 5,
-    "mondensity": 2
+    "copy-from" : "generic_mansion_no_sidewalk"
   },
   {
     "id": "mansion_wild_dn",
     "type": "overmap_terrain",
-    "name": "mansion",
-    "sym": 109,
-    "color": "i_ltgreen",
-    "see_cost": 5,
-    "mondensity": 2
+    "copy-from" : "generic_mansion_no_sidewalk"
  },{
     "id": "fire_station",
     "type": "overmap_terrain",
@@ -7768,7 +7496,7 @@
     "type": "overmap_terrain",
     "name": "veterinarian clinic",
     "sym": 118,
-    "color": "ltred",
+    "color": "light_red",
     "see_cost": 5,
     "mondensity": 2,
     "extras": "build"
@@ -7835,5 +7563,77 @@
     "see_cost": 5,
     "mondensity": 2,
     "extras": "build"
+  },
+  {
+    "type": "overmap_terrain",
+    "id": "lumberyard_0_0",
+    "name": "lumberyard",
+    "copy-from": "generic_city_building",
+    "sym": 76,
+    "color": "i_green"
+  },
+  {
+    "type": "overmap_terrain",
+    "id": "lumberyard_0_1",
+    "name": "lumberyard",
+    "copy-from": "generic_city_building_no_sidewalk",
+    "sym": 76,
+    "color": "i_green"
+  },
+  {
+    "type": "overmap_terrain",
+    "id": "lumberyard_1_0",
+    "name": "lumberyard",
+    "copy-from": "generic_city_building_no_sidewalk",
+    "sym": 76,
+    "color": "i_green"
+  },
+  {
+    "type": "overmap_terrain",
+    "id": "lumberyard_1_1",
+    "name": "lumberyard",
+    "copy-from": "generic_city_building_no_sidewalk",
+    "sym": 76,
+    "color": "i_green"
+  },
+  {
+    "type": "overmap_terrain",
+    "id": "construction_site",
+    "name": "construction site",
+    "copy-from": "generic_city_building",
+    "sym": 120,
+    "color": "i_light_gray"
+  },
+  {
+    "type": "overmap_terrain",
+    "id": "post_office",
+    "name": "post office",
+    "copy-from": "generic_city_building",
+    "sym": 80,
+    "color": "blue"
+  },
+  {
+    "type": "overmap_terrain",
+    "id": "candy_shop",
+    "name": "candy shop",
+    "copy-from": "generic_city_building",
+    "sym": 67,
+    "color": "yellow"
+  },
+  {
+    "type": "overmap_terrain",
+    "id": "bakery",
+    "name": "bakery",
+    "copy-from": "generic_city_building",
+    "sym": 66,
+    "color": "yellow"
+  },
+  {
+    "type": "overmap_terrain",
+    "id": "icecream_shop",
+    "name": "icecream shop",
+    "copy-from": "generic_city_building",
+    "sym": 73,
+    "color": "white"
   }
 ]

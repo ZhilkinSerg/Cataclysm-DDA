@@ -5,8 +5,18 @@
 #include "creature.h"
 #include "enums.h"
 #include "int_id.h"
-#include <vector>
+#include "calendar.h"
 
+#include <vector>
+#include <map>
+#include <set>
+#include <utility>
+#include <bitset>
+#include <string>
+
+class JsonObject;
+class JsonIn;
+class JsonOut;
 class map;
 class game;
 class item;
@@ -23,14 +33,13 @@ using mtype_id = string_id<mtype>;
 class monster;
 typedef std::map< mfaction_id, std::set< monster * > > mfactions;
 
-class mon_special_attack : public JsonSerializer
+class mon_special_attack
 {
     public:
         int cooldown = 0;
         bool enabled = true;
 
-        using JsonSerializer::serialize;
-        void serialize( JsonOut &jsout ) const override;
+        void serialize( JsonOut &jsout ) const;
         // deserialize inline in monster::load due to backwards/forwards compatibility concerns
 };
 
@@ -52,18 +61,18 @@ enum monster_effect_cache_fields {
     NUM_MEFF
 };
 
-class monster : public Creature, public JsonSerializer, public JsonDeserializer
+class monster : public Creature
 {
         friend class editmap;
     public:
         monster();
         monster( const mtype_id &id );
         monster( const mtype_id &id, const tripoint &pos );
-        monster( const monster & ) = default;
-        monster( monster && ) = default;
+        monster( const monster & ) ;
+        monster( monster && );
         ~monster() override;
-        monster &operator=( const monster & ) = default;
-        monster &operator=( monster && ) = default;
+        monster &operator=( const monster & );
+        monster &operator=( monster && );
 
         bool is_monster() const override {
             return true;
@@ -73,16 +82,14 @@ class monster : public Creature, public JsonSerializer, public JsonDeserializer
         bool can_upgrade();
         void hasten_upgrade();
         void try_upgrade( bool pin_time );
+        void try_reproduce();
+        void try_biosignature();
         void spawn( const tripoint &p );
         m_size get_size() const override;
-        int get_hp( hp_part ) const override {
-            return hp;
-        };
-        int get_hp() const {
-            return hp;
-        }
+        int get_hp( hp_part ) const override;
+        int get_hp() const override;
         int get_hp_max( hp_part ) const override;
-        int get_hp_max() const;
+        int get_hp_max() const override;
         int hp_percentage() const override;
 
         // Access
@@ -94,7 +101,7 @@ class monster : public Creature, public JsonSerializer, public JsonDeserializer
         std::string skin_name() const override;
         void get_HP_Bar( nc_color &color, std::string &text ) const;
         std::pair<std::string, nc_color> get_attitude() const;
-        int print_info( WINDOW *w, int vStart, int vLines, int column ) const override;
+        int print_info( const catacurses::window &w, int vStart, int vLines, int column ) const override;
 
         // Information on how our symbol should appear
         nc_color basic_symbol_color() const override;
@@ -115,18 +122,13 @@ class monster : public Creature, public JsonSerializer, public JsonDeserializer
         // Returns false if the monster is stunned, has 0 moves or otherwise wouldn't act this turn
         bool can_act() const;
         int sight_range( int light_level ) const override;
-        using Creature::sees;
         bool made_of( const material_id &m ) const override; // Returns true if it's made of m
         bool made_of( phase_id p ) const; // Returns true if its phase is p
 
         bool avoid_trap( const tripoint &pos, const trap &tr ) const override;
 
-        void load_info( std::string data );
-
-        using JsonSerializer::serialize;
-        void serialize( JsonOut &jsout ) const override;
-        using JsonDeserializer::deserialize;
-        void deserialize( JsonIn &jsin ) override;
+        void serialize( JsonOut &jsout ) const;
+        void deserialize( JsonIn &jsin );
 
         tripoint move_target(); // Returns point at the end of the monster's current plans
         Creature *attack_target(); // Returns the creature at the end of plans (if hostile)
@@ -158,7 +160,7 @@ class monster : public Creature, public JsonSerializer, public JsonDeserializer
          * This will cause the monster to slowly move towards the destination,
          * unless there is an overriding smell or plan.
          *
-         * @param p Destination of monster's wonderings
+         * @param p Destination of monster's wanderings
          * @param f The priority of the destination, as well as how long we should
          *          wander towards there.
          */
@@ -254,10 +256,9 @@ class monster : public Creature, public JsonSerializer, public JsonDeserializer
 
         void absorb_hit( body_part bp, damage_instance &dam ) override;
         bool block_hit( Creature *source, body_part &bp_hit, damage_instance &d ) override;
-        using Creature::melee_attack;
-        void melee_attack( Creature &p, bool allow_special, const matec_id &force_technique ) override;
-        void melee_attack( Creature &p, bool allow_special, const matec_id &force_technique,
-                           int hitspread ) override;
+        void melee_attack( Creature &p );
+        void melee_attack( Creature &p, float accuracy );
+        void melee_attack( Creature &p, bool ) = delete;
         void deal_projectile_attack( Creature *source, dealt_projectile_attack &attack ) override;
         void deal_damage_handle_type( const damage_unit &du, body_part bp, int &damage,
                                       int &pain ) override;
@@ -277,15 +278,15 @@ class monster : public Creature, public JsonSerializer, public JsonDeserializer
          */
         void set_hp( int hp );
 
-        /** Processes monster-specific effects effects before calling Creature::process_effects(). */
+        /** Processes monster-specific effects before calling Creature::process_effects(). */
         void process_effects() override;
         /** Processes effects which may prevent the monster from moving (bear traps, crushed, etc.).
          *  Returns false if movement is stopped. */
         bool move_effects( bool attacking ) override;
         /** Performs any monster-specific modifications to the arguments before passing to Creature::add_effect(). */
-        void add_effect( const efftype_id &eff_id, int dur, body_part bp = num_bp,
+        void add_effect( const efftype_id &eff_id, time_duration dur, body_part bp = num_bp,
                          bool permanent = false,
-                         int intensity = 0, bool force = false ) override;
+                         int intensity = 0, bool force = false, bool defererd = false ) override;
         /** Returns a std::string containing effects for descriptions */
         std::string get_effect_status() const;
 
@@ -348,7 +349,7 @@ class monster : public Creature, public JsonSerializer, public JsonDeserializer
         bool make_fungus();
         void make_friendly();
         /** Makes this monster an ally of the given monster. */
-        void make_ally( monster *z );
+        void make_ally( const monster &z );
         void add_item( item it );   // Add an item to inventory
 
         /**
@@ -425,7 +426,10 @@ class monster : public Creature, public JsonSerializer, public JsonDeserializer
          */
         void init_from_item( const item &itm );
 
-        int last_updated;
+        time_point last_updated = calendar::time_of_cataclysm;
+        int last_baby;
+        int last_biosig;
+
         /**
          * Do some cleanup and caching as monster is being unloaded from map.
          */
@@ -450,6 +454,10 @@ class monster : public Creature, public JsonSerializer, public JsonDeserializer
         int next_upgrade_time();
         bool upgrades;
         int upgrade_time;
+        bool reproduces;
+        int baby_timer;
+        bool biosignatures;
+        int biosig_timer;
         /** Found path. Note: Not used by monsters that don't pathfind! **/
         std::vector<tripoint> path;
         std::bitset<NUM_MEFF> effect_cache;

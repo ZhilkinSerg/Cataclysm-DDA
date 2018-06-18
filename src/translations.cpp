@@ -9,6 +9,7 @@
 #include "name.h"
 
 #include <string>
+#include <set>
 #include <algorithm>
 
 // Names depend on the language settings. They are loaded from different files
@@ -118,7 +119,7 @@ void select_language()
         return lang.first.empty() || lang.second.empty();
     } ), languages.end() );
 
-    wrefresh( stdscr );
+    wrefresh( catacurses::stdscr );
 
     uimenu sm;
     sm.selected = 0;
@@ -219,7 +220,7 @@ std::string getOSXSystemLang()
     std::replace( lang_code.begin(), lang_code.end(), '-', '_' );
 
     /**
-     * Handle special case for simplified/traditional Chinese. Simp/trad
+     * Handle special case for simplified/traditional Chinese. Simplified/Traditional
      * is actually denoted by the region code in older iterations of the
      * language codes, whereas now (at least on OS X) region is distinct.
      * That is, CDDA expects 'zh_CN' but OS X might give 'zh-Hans-CN'.
@@ -258,54 +259,6 @@ void set_language()
 {
     reload_names();
     return;
-}
-
-// sanitized message cache
-std::map<std::string, std::string> &sanitized_messages()
-{
-    static std::map<std::string, std::string> sanitized_messages;
-    return sanitized_messages;
-}
-
-const char *strip_positional_formatting( const char *msgid )
-{
-    // first check if we have it cached
-    std::string s( msgid );
-    auto iter = sanitized_messages().find( s );
-    if( iter != sanitized_messages().end() ) {
-        return iter->second.c_str();
-    }
-
-    // basic usage is just to change all "%{number}$" to "%".
-    // thus for example "%2$s" will change to simply "%s".
-    // strings must have their parameters in strict order,
-    // or else this will not work correctly.
-    size_t pos = 0;
-    size_t len = s.length();
-    while( pos < len ) {
-        pos = s.find( '%', pos );
-        if( pos == std::string::npos || pos + 2 >= len ) {
-            break;
-        }
-        size_t dollarpos = pos + 1;
-        while( dollarpos < len && s[dollarpos] >= '0' && s[dollarpos] <= '9' ) {
-            ++dollarpos;
-        }
-        if( dollarpos >= len ) {
-            break;
-        }
-        if( s[dollarpos] != '$' ) {
-            pos = dollarpos + 1; // skip format type (also skips %%)
-            continue;
-        }
-        s.erase( pos + 1, dollarpos - pos );
-        len = s.length(); // because it ain't da same no more
-        ++pos;
-    }
-
-    std::string &ret_msg = sanitized_messages()[std::string( msgid )];
-    ret_msg = s;
-    return ret_msg.c_str();
 }
 
 #endif // LOCALIZE

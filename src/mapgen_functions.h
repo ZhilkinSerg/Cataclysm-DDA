@@ -8,6 +8,7 @@
 #include <string>
 #include <map>
 
+class time_point;
 struct ter_t;
 using ter_id = int_id<ter_t>;
 struct furn_t;
@@ -71,150 +72,77 @@ tripoint rotate_point( const tripoint &p, int turn );
 
 int terrain_type_to_nesw_array( oter_id terrain_type, bool array[4] );
 
-// @todo pass mapgendata by reference.
-typedef void (*building_gen_pointer)(map *,oter_id,mapgendata,int,float);
+// @todo: pass mapgendata by reference.
+typedef void (*building_gen_pointer)(map *,oter_id,mapgendata,const time_point &,float);
 building_gen_pointer get_mapgen_cfunction( const std::string &ident );
 ter_id grass_or_dirt();
-ter_id dirt_or_pile();
 ter_id clay_or_sand();
 
 // helper functions for mapgen.cpp, so that we can avoid having a massive switch statement (sorta)
-void mapgen_null(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_crater(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_field(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_dirtlot(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_forest_general(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_hive(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_spider_pit(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_fungal_bloom(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_fungal_tower(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_fungal_flowers(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_river_center(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_road(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_field(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_bridge(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_highway(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_river_curved_not(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_river_straight(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_river_curved(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_parking_lot(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_gas_station(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
+void mapgen_null(map *m, oter_id terrain_type, mapgendata dat, const time_point &time, float density);
+void mapgen_crater(map *m, oter_id terrain_type, mapgendata dat, const time_point &time, float density);
+void mapgen_field(map *m, oter_id terrain_type, mapgendata dat, const time_point &time, float density);
+void mapgen_dirtlot(map *m, oter_id terrain_type, mapgendata dat, const time_point &time, float density);
+void mapgen_forest_general(map *m, oter_id terrain_type, mapgendata dat, const time_point &time, float density);
+void mapgen_hive(map *m, oter_id terrain_type, mapgendata dat, const time_point &time, float density);
+void mapgen_spider_pit(map *m, oter_id terrain_type, mapgendata dat, const time_point &time, float density);
+void mapgen_fungal_bloom(map *m, oter_id terrain_type, mapgendata dat, const time_point &time, float density);
+void mapgen_fungal_tower(map *m, oter_id terrain_type, mapgendata dat, const time_point &time, float density);
+void mapgen_fungal_flowers(map *m, oter_id terrain_type, mapgendata dat, const time_point &time, float density);
+void mapgen_river_center(map *m, oter_id terrain_type, mapgendata dat, const time_point &time, float density);
+void mapgen_road(map *m, oter_id terrain_type, mapgendata dat, const time_point &time, float density);
+void mapgen_field(map *m, oter_id terrain_type, mapgendata dat, const time_point &time, float density);
+void mapgen_bridge(map *m, oter_id terrain_type, mapgendata dat, const time_point &time, float density);
+void mapgen_highway(map *m, oter_id terrain_type, mapgendata dat, const time_point &time, float density);
+void mapgen_river_curved_not(map *m, oter_id terrain_type, mapgendata dat, const time_point &time, float density);
+void mapgen_river_straight(map *m, oter_id terrain_type, mapgendata dat, const time_point &time, float density);
+void mapgen_river_curved(map *m, oter_id terrain_type, mapgendata dat, const time_point &time, float density);
+void mapgen_parking_lot(map *m, oter_id terrain_type, mapgendata dat, const time_point &time, float density);
+void mapgen_gas_station(map *m, oter_id terrain_type, mapgendata dat, const time_point &time, float density);
 
-void mapgen_generic_house(map *m, oter_id terrain_type, mapgendata dat, int turn, float density, int variant); // not mapped
-void mapgen_generic_house_boxy(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_generic_house_big_livingroom(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_generic_house_center_hallway(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
+void mapgen_generic_house(map *m, oter_id terrain_type, mapgendata dat, const time_point &time, float density, int variant); // not mapped
+void mapgen_generic_house_boxy(map *m, oter_id terrain_type, mapgendata dat, const time_point &time, float density);
+void mapgen_generic_house_big_livingroom(map *m, oter_id terrain_type, mapgendata dat, const time_point &time, float density);
+void mapgen_generic_house_center_hallway(map *m, oter_id terrain_type, mapgendata dat, const time_point &time, float density);
 
-void mapgen_pharm(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
+void mapgen_pharm(map *m, oter_id terrain_type, mapgendata dat, const time_point &time, float density);
 
-void mapgen_s_sports(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
+void mapgen_s_sports(map *m, oter_id terrain_type, mapgendata dat, const time_point &time, float density);
 
-void mapgen_shelter(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_shelter_under(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-
-void mapgen_basement_generic_layout(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_basement_junk(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_basement_chemlab(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_basement_weed(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_basement_game(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_basement_spiders(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
+void mapgen_basement_generic_layout(map *m, oter_id terrain_type, mapgendata dat, const time_point &time, float density);
+void mapgen_basement_junk(map *m, oter_id terrain_type, mapgendata dat, const time_point &time, float density);
+void mapgen_basement_chemlab(map *m, oter_id terrain_type, mapgendata dat, const time_point &time, float density);
+void mapgen_basement_weed(map *m, oter_id terrain_type, mapgendata dat, const time_point &time, float density);
+void mapgen_basement_game(map *m, oter_id terrain_type, mapgendata dat, const time_point &time, float density);
+void mapgen_basement_spiders(map *m, oter_id terrain_type, mapgendata dat, const time_point &time, float density);
 // autogen.sh
-void mapgen_office_tower_1_entrance(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_office_tower_1(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_office_tower_b_entrance(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_office_tower_b(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_police(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-//void mapgen_bank(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_pawn(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_mil_surplus(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_megastore_entrance(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_megastore(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_hospital_entrance(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_hospital(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_hotel_tower_1_1(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_hotel_tower_1_2(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_hotel_tower_1_3(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_hotel_tower_1_4(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_hotel_tower_1_5(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_hotel_tower_1_6(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_hotel_tower_1_7(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_hotel_tower_1_8(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_hotel_tower_1_9(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_hotel_tower_b_1(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_hotel_tower_b_2(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_hotel_tower_b_3(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_mansion_entrance(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_mansion(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_fema_entrance(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_fema(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_station_radio(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_lab(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_lab_stairs(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_lab_core(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_lab_finale(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_ice_lab(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_ice_lab_stairs(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_ice_lab_core(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_ice_lab_finale(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_nuke_plant_entrance(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_nuke_plant(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_outpost(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_silo(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_silo_finale(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_temple(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_temple_stairs(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_temple_core(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_temple_finale(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_sewage_treatment(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_sewage_treatment_hub(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_sewage_treatment_under(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_mine_entrance(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_mine_shaft(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_mine(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_mine_down(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_mine_finale(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_spiral_hub(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_spiral(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_toxic_dump(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_haz_sar_entrance(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_haz_sar(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_haz_sar_entrance_b1(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_haz_sar_b1(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_cave(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_cave_rat(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_spider_pit_under(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_anthill(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_slimepit(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_slimepit_down(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_triffid_grove(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_triffid_roots(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_triffid_finale(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_cavern(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_rock(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_rock_partial(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_open_air(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_rift(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_hellmouth(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_subway_station(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_subway_curved(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_subway_four_way(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_subway_straight(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_subway_tee(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
+void mapgen_police(map *m, oter_id terrain_type, mapgendata dat, const time_point &turn, float density);
+void mapgen_pawn(map *m, oter_id terrain_type, mapgendata dat, const time_point &turn, float density);
+void mapgen_mil_surplus(map *m, oter_id terrain_type, mapgendata dat, const time_point &turn, float density);
+void mapgen_cave(map *m, oter_id terrain_type, mapgendata dat, const time_point &turn, float density);
+void mapgen_cave_rat(map *m, oter_id terrain_type, mapgendata dat, const time_point &turn, float density);
+void mapgen_cavern(map *m, oter_id terrain_type, mapgendata dat, const time_point &turn, float density);
+void mapgen_rock(map *m, oter_id terrain_type, mapgendata dat, const time_point &turn, float density);
+void mapgen_rock_partial(map *m, oter_id terrain_type, mapgendata dat, const time_point &turn, float density);
+void mapgen_open_air(map *m, oter_id terrain_type, mapgendata dat, const time_point &turn, float density);
+void mapgen_rift(map *m, oter_id terrain_type, mapgendata dat, const time_point &turn, float density);
+void mapgen_hellmouth(map *m, oter_id terrain_type, mapgendata dat, const time_point &turn, float density);
+void mapgen_subway(map *m, oter_id terrain_type, mapgendata dat, const time_point &turn, float density);
 
-void mapgen_sewer_curved(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_sewer_four_way(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_sewer_straight(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_sewer_tee(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
+void mapgen_sewer_curved(map *m, oter_id terrain_type, mapgendata dat, const time_point &turn, float density);
+void mapgen_sewer_four_way(map *m, oter_id terrain_type, mapgendata dat, const time_point &turn, float density);
+void mapgen_sewer_straight(map *m, oter_id terrain_type, mapgendata dat, const time_point &turn, float density);
+void mapgen_sewer_tee(map *m, oter_id terrain_type, mapgendata dat, const time_point &turn, float density);
 
-void mapgen_ants_curved(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_ants_four_way(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_ants_straight(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_ants_tee(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
+void mapgen_ants_curved(map *m, oter_id terrain_type, mapgendata dat, const time_point &turn, float density);
+void mapgen_ants_four_way(map *m, oter_id terrain_type, mapgendata dat, const time_point &turn, float density);
+void mapgen_ants_straight(map *m, oter_id terrain_type, mapgendata dat, const time_point &turn, float density);
+void mapgen_ants_tee(map *m, oter_id terrain_type, mapgendata dat, const time_point &turn, float density);
 
-void mapgen_ants_food(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_ants_larvae(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_ants_queen(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
-void mapgen_tutorial(map *m, oter_id terrain_type, mapgendata dat, int turn, float density);
+void mapgen_ants_food(map *m, oter_id terrain_type, mapgendata dat, const time_point &turn, float density);
+void mapgen_ants_larvae(map *m, oter_id terrain_type, mapgendata dat, const time_point &turn, float density);
+void mapgen_ants_queen(map *m, oter_id terrain_type, mapgendata dat, const time_point &turn, float density);
+void mapgen_tutorial(map *m, oter_id terrain_type, mapgendata dat, const time_point &turn, float density);
 
 // Temporary wrappers
 void mremove_trap( map *m, int x, int y );

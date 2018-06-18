@@ -219,7 +219,7 @@ double clamp_to_width( double value, int width, int &scale, bool *out_truncated 
     }
     if( value >= std::pow( 10.0, width ) ) {
         // above the maximum number we can fit in the width without decimal
-        // show the bigest number we can without decimal
+        // show the biggest number we can without decimal
         // flag as truncated
         value = std::pow( 10.0, width ) - 1.0;
         scale = 0;
@@ -423,12 +423,12 @@ bool read_from_file_optional( const std::string &path, JsonDeserializer &reader 
     } );
 }
 
-std::string obscure_message( const std::string &str, std::function<char( void )> f )
+std::string obscure_message( const std::string &str, std::function<char()> f )
 {
     //~ translators: place some random 1-width characters here in your language if possible, or leave it as is
     std::string gibberish_narrow = _( "abcdefghijklmnopqrstuvwxyz" );
-    //~ translators: place some random 2-width characters here in your language if possible, or leave it as is
     std::string gibberish_wide =
+        //~ translators: place some random 2-width characters here in your language if possible, or leave it as is
         _( "に坂索トし荷測のンおク妙免イロコヤ梅棋厚れ表幌" );
     std::wstring w_gibberish_narrow = utf8_to_wstr( gibberish_narrow );
     std::wstring w_gibberish_wide = utf8_to_wstr( gibberish_wide );
@@ -446,7 +446,7 @@ std::string obscure_message( const std::string &str, std::function<char( void )>
                 w_str[i] = random_entry( w_gibberish_wide );
             }
         } else {
-            // Only support the case eg. replace current character to symbols like # or ?
+            // Only support the case e.g. replace current character to symbols like # or ?
             if( utf8_width( transformation ) != 1 ) {
                 debugmsg( "target character isn't narrow" );
             }
@@ -459,4 +459,19 @@ std::string obscure_message( const std::string &str, std::function<char( void )>
         debugmsg( "utf8_width differ between original string and obscured string" );
     }
     return result;
+}
+
+std::string serialize_wrapper( const std::function<void( JsonOut & )> &callback )
+{
+    std::ostringstream buffer;
+    JsonOut jsout( buffer );
+    callback( jsout );
+    return buffer.str();
+}
+
+void deserialize_wrapper( const std::function<void( JsonIn & )> &callback, const std::string &data )
+{
+    std::istringstream buffer( data );
+    JsonIn jsin( buffer );
+    callback( jsin );
 }

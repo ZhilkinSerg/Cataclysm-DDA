@@ -2,10 +2,9 @@
 #ifndef MESSAGES_H
 #define MESSAGES_H
 
-#include "cursesdef.h" // WINDOW
 #include "string_formatter.h"
+#include "pimpl.h"
 
-#include <memory>
 #include <string>
 #include <vector>
 #include <utility>
@@ -14,6 +13,10 @@ class JsonOut;
 class JsonObject;
 
 enum game_message_type : int;
+namespace catacurses
+{
+class window;
+} // namespace catacurses
 
 class Messages
 {
@@ -25,15 +28,17 @@ class Messages
         static void add_msg( std::string msg );
         static void add_msg( game_message_type type, std::string msg );
         static void clear_messages();
+        static void deactivate();
         static size_t size();
         static bool has_undisplayed_messages();
         static void display_messages();
-        static void display_messages( WINDOW *ipk_target, int left, int top, int right, int bottom );
+        static void display_messages( const catacurses::window &ipk_target, int left, int top, int right,
+                                      int bottom );
         static void serialize( JsonOut &jsout );
         static void deserialize( JsonObject &json );
     private:
         class impl_t;
-        std::unique_ptr<impl_t> impl_;
+        pimpl<impl_t> impl_;
 };
 
 void add_msg( std::string msg );

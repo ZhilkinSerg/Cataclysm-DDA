@@ -1809,8 +1809,8 @@
     "time": 1000,
     "qualities": [ { "id": "CUT", "level": 1 } ],
     "components": [
-      [ [ "rag", 6 ] ],
-      [ [ "cotton_ball", 4 ] ]
+      [ [ "rag", 4 ] ],
+      [ [ "cotton_ball", 8 ] ]
     ]
   },
   {
@@ -1827,7 +1827,7 @@
     "time": 600,
     "qualities": [ { "id": "SCREW", "level": 1 } ],
     "components": [
-      [ [ "scrap", 2 ] ],
+      [ [ "gold_small", 3 ] ],
       [ [ "clockworks", 1 ] ]
     ]
   },
@@ -1958,7 +1958,7 @@
     "type": "uncraft",
     "time": 60000,
     "qualities": [ { "id": "CUT", "level": 1 } ],
-    "components": [ [ [ "thread", 100 ] ] ]
+    "components": [ [ [ "thread", 80 ] ] ]
   },
   {
     "result": "ref_lighter",
@@ -2335,6 +2335,36 @@
       [ [ "pot", 1 ] ],
       [ [ "e_scrap", 1 ] ],
       [ [ "motor_small", 1 ] ]
+    ]
+  },
+  {
+    "result": "box_small",
+    "type": "uncraft",
+    "time": 2050,
+    "qualities": [ { "id": "CUT", "level": 1 } ],
+    "components": [
+    [ [ "paper", 35 ] ]
+    ]
+  },
+  {
+    "result": "washing_machine",
+    "type": "uncraft",
+    "skill_used": "electronics",
+    "time": 60000,
+    "qualities": [
+      { "id": "SCREW", "level": 1 },
+      { "id": "WRENCH", "level": 1 }
+    ],
+    "components": [
+      [ [ "cable", 8 ] ],
+      [ [ "hose", 1 ] ],
+      [ [ "cu_pipe", 3 ] ],
+      [ [ "motor_small", 1 ] ],
+      [ [ "e_scrap", 4 ] ],
+      [ [ "element", 4 ] ],
+      [ [ "power_supply", 4 ] ],
+      [ [ "processor", 1 ] ],
+      [ [ "RAM", 1 ] ]
     ]
   }
 ]

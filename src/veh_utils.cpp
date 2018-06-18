@@ -3,12 +3,13 @@
 #include <map>
 
 #include "calendar.h"
+#include "craft_command.h"
 #include "vehicle.h"
+#include "output.h"
 #include "veh_type.h"
 #include "player.h"
 #include "messages.h"
 #include "game.h"
-#include "skill.h"
 
 namespace veh_utils
 {
@@ -36,12 +37,12 @@ int calc_xp_gain( const vpart_info &vp, const skill_id &sk, Character &who )
     //   5:  3 xp /h
     //   6:  2 xp /h
     //  7+:  1 xp /h
-    return std::ceil( double( vp.install_moves ) / MOVES( MINUTES( pow( lvl, 2 ) ) ) );
+    return std::ceil( double( vp.install_moves ) / to_moves<int>( 1_minutes * pow( lvl, 2 ) ) );
 }
 
 vehicle_part &most_repairable_part( vehicle &veh, const Character &who_c, bool only_repairable )
 {
-    // @todo Get rid of this cast after moving relevant functions down to Character
+    // @todo: Get rid of this cast after moving relevant functions down to Character
     player &who = ( player & )who_c;
     const auto &inv = who.crafting_inventory();
 
@@ -94,16 +95,18 @@ vehicle_part &most_repairable_part( vehicle &veh, const Character &who_c, bool o
 
 bool repair_part( vehicle &veh, vehicle_part &pt, Character &who_c )
 {
-    // @todo Get rid of this cast after moving relevant functions down to Character
+    // @todo: Get rid of this cast after moving relevant functions down to Character
     player &who = ( player & )who_c;
     int part_index = veh.index_of_part( &pt );
     auto &vp = pt.info();
 
-    // @todo Expose base part damage somewhere, don't recalculate it here
+    // @todo: Expose base part damage somewhere, don't recalculate it here
     const auto reqs = pt.is_broken() ?
                       vp.install_requirements() :
                       vp.repair_requirements() * pt.damage();
 
+    inventory map_inv;
+    map_inv.form_from_map( who.pos(), PICKUP_RANGE );
     if( !reqs.can_make_with_inventory( who.crafting_inventory() ) ) {
         who.add_msg_if_player( m_info, _( "You don't meet the requirements to repair the %s." ),
                                pt.name().c_str() );
@@ -113,7 +116,7 @@ bool repair_part( vehicle &veh, vehicle_part &pt, Character &who_c )
     // consume items extracting any base item (which we will need if replacing broken part)
     item base( vp.item );
     for( const auto &e : reqs.get_components() ) {
-        for( auto &obj : who.consume_items( e ) ) {
+        for( auto &obj : who.consume_items( who.select_item_component( e, 1, map_inv ), 1 ) ) {
             if( obj.typeId() == vp.item ) {
                 base = obj;
             }
@@ -121,7 +124,7 @@ bool repair_part( vehicle &veh, vehicle_part &pt, Character &who_c )
     }
 
     for( const auto &e : reqs.get_tools() ) {
-        who.consume_tools( e );
+        who.consume_tools( who.select_tool_component( e, 1, map_inv ), 1 );
     }
 
     who.invalidate_crafting_inventory();
@@ -145,7 +148,7 @@ bool repair_part( vehicle &veh, vehicle_part &pt, Character &who_c )
         veh.set_hp( pt, pt.info().durability );
     }
 
-    // @todo NPC doing that
+    // @todo: NPC doing that
     who.add_msg_if_player( m_good, _( "You repair the %1$s's %2$s." ), veh.name.c_str(),
                            partname.c_str() );
     return true;

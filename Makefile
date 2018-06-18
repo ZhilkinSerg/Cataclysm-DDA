@@ -61,8 +61,6 @@
 #  make DYNAMIC_LINKING=1
 # Use MSYS2 as the build environment on Windows
 #  make MSYS2=1
-# Enable printf format checks (disables localization, might break on Windows)
-#  make PRINTF_CHECKS=1
 # Astyle the source files that aren't blacklisted. (maintain current level of styling)
 #  make astyle
 # Check if source files are styled properly (regression test, astyle_blacklist tracks un-styled files)
@@ -135,7 +133,6 @@ LUASRC_DIR = $(SRC_DIR)/$(LUA_DIR)
 # if you have LUAJIT installed, try make LUA_BINARY=luajit for extra speed
 LUA_BINARY = lua
 LOCALIZE = 1
-PRINTF_CHECKS = 0
 ASTYLE_BINARY = astyle
 
 # tiles object directories are because gcc gets confused # Appears that the default value of $LD is unsuitable on most systems
@@ -299,6 +296,7 @@ ifeq ($(NATIVE), linux64)
   TARGETSYSTEM=LINUX
   ifdef GOLD
     CXXFLAGS += -fuse-ld=gold
+    LDFLAGS += -fuse-ld=gold
   endif
 else
   # Linux 32-bit
@@ -308,6 +306,7 @@ else
     TARGETSYSTEM=LINUX
     ifdef GOLD
       CXXFLAGS += -fuse-ld=gold
+      LDFLAGS += -fuse-ld=gold
     endif
   endif
 endif
@@ -554,7 +553,7 @@ else
   # ONLY when not cross-compiling, check for pkg-config or ncurses5-config
   # When doing a cross-compile, we can't rely on the host machine's -configs
   ifeq ($(CROSS),)
-    ifneq ($(shell which pkg-config 2>/dev/null),)
+    ifneq ($(shell pkg-config --libs ncurses 2>/dev/null),)
       HAVE_PKGCONFIG = 1
     endif
     ifneq ($(shell which ncurses5-config 2>/dev/null),)
@@ -564,12 +563,22 @@ else
 
   # Link to ncurses if we're using a non-tiles, Linux build
   ifeq ($(HAVE_PKGCONFIG),1)
-    CXXFLAGS += $(shell pkg-config --cflags ncurses)
-    LDFLAGS += $(shell pkg-config --libs ncurses)
+    ifeq ($(LOCALIZE),1)
+      CXXFLAGS += $(shell pkg-config --cflags ncursesw)
+      LDFLAGS += $(shell pkg-config --libs ncursesw)
+    else
+      CXXFLAGS += $(shell pkg-config --cflags ncurses)
+      LDFLAGS += $(shell pkg-config --libs ncurses)
+    endif
   else
     ifeq ($(HAVE_NCURSES5CONFIG),1)
-      CXXFLAGS += $(shell ncurses5-config --cflags)
-      LDFLAGS += $(shell ncurses5-config --libs)
+      ifeq ($(LOCALIZE),1)
+        CXXFLAGS += $(shell ncursesw5-config --cflags)
+        LDFLAGS += $(shell ncursesw5-config --libs)
+      else
+        CXXFLAGS += $(shell ncurses5-config --cflags)
+        LDFLAGS += $(shell ncurses5-config --libs)
+      endif
     else
       ifneq ($(TARGETSYSTEM),WINDOWS)
         LDFLAGS += -lncurses
@@ -615,14 +624,7 @@ ifeq ($(BACKTRACE),1)
 endif
 
 ifeq ($(LOCALIZE),1)
-  ifeq ($(PRINTF_CHECKS),1)
-    $(error LOCALIZE does not work with PRINTF_CHECKS)
-  endif
   DEFINES += -DLOCALIZE
-endif
-
-ifeq ($(PRINTF_CHECKS),1)
-  DEFINES += -DPRINTF_CHECKS
 endif
 
 ifeq ($(TARGETSYSTEM),LINUX)
@@ -650,7 +652,7 @@ ifeq ($(TARGETSYSTEM),WINDOWS)
   RSRC = $(wildcard $(SRC_DIR)/*.rc)
   _OBJS += $(RSRC:$(SRC_DIR)/%.rc=%.o)
 endif
-OBJS = $(patsubst %,$(ODIR)/%,$(_OBJS))
+OBJS = $(sort $(patsubst %,$(ODIR)/%,$(_OBJS)))
 
 ifdef LANGUAGES
   L10N = localization
@@ -874,6 +876,7 @@ endif
 	cp -R data/credits $(APPDATADIR)
 	cp -R data/title $(APPDATADIR)
 ifdef LANGUAGES
+	lang/compile_mo.sh $(LANGUAGES)
 	mkdir -p $(APPRESOURCESDIR)/lang/mo/
 	cp -pR lang/mo/* $(APPRESOURCESDIR)/lang/mo/
 endif
@@ -970,11 +973,12 @@ else
 	@echo Cannot run an astyle check, your system either does not have astyle, or it is too old.
 endif
 
-JSON_WHITELIST = $(shell cat json_whitelist)
+JSON_FILES = $(shell find data -name *.json | sed "s|^\./||")
+JSON_WHITELIST = $(filter-out $(shell cat json_blacklist), $(JSON_FILES))
 
 style-json: $(JSON_WHITELIST)
 
-$(JSON_WHITELIST): json_whitelist json_formatter
+$(JSON_WHITELIST): json_blacklist json_formatter
 ifndef CROSS
 	@tools/format/json_formatter.cgi $@
 else

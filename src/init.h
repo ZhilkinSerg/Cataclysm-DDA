@@ -2,19 +2,20 @@
 #ifndef INIT_H
 #define INIT_H
 
-#include "json.h"
-
 #include <string>
 #include <vector>
 #include <list>
 #include <memory>
+#include <map>
 #include <functional>
 
 class loading_ui;
+class JsonObject;
+class JsonIn;
 
 /**
  * This class is used to load (and unload) the dynamic
- * (and modable) data from json files.
+ * (and moddable) data from json files.
  * There exists only one instance of this class, which
  * can be accessed with @ref get_instance
  *
@@ -23,7 +24,7 @@ class loading_ui;
  * - Call @ref unload_data (to unload data from a
  * previously loaded world, if any)
  * - Call @ref load_data_from_path(...) repeatedly with
- * different pathes for the core data and all the mods
+ * different paths for the core data and all the mods
  * of the current world.
  * - Call @ref finalize_loaded_data when all mods have been
  * loaded.
@@ -67,7 +68,7 @@ class DynamicDataLoader
 
     protected:
         /**
-         * Maps the type string (comming from json) to the
+         * Maps the type string (coming from json) to the
          * functor that loads that kind of object from json.
          */
         t_type_function_map type_function_map;
