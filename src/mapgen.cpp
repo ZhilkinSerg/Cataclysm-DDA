@@ -2063,55 +2063,14 @@ void map::process_zone_burned( const int distance )
 
 void map::process_zone_fungalized( const int distance )
 {
-    // @todo: utilize spread_fungus from fungal_effects.cpp
-
-    std::vector<furn_t> all_furniture; // @todo: get list of all furniture
-    std::vector<furn_t> fungal_furniture;
-    for( furn_t f : all_furniture ) {
-        if( f.has_flag( "FUNGUS" ) ) {
-            fungal_furniture.push_back( f );
-        }
-    }
-
+    // @todo: utilize distance
+    fungal_effects fe( *g, g->m );
     const int z = abs_sub.z;
     for( int x = 0; x < SEEX * 2; x++ ) {
         for( int y = 0; y < SEEY * 2; y++ ) {
-            tripoint fungal_point = tripoint( x, y, z );
-            // replace terrain with fungal variants
-            ter_id terid = ter( fungal_point );
-            if( terid == t_wall ) {
-                if( one_in( 8 ) ) {
-                    ter_set( fungal_point, t_fungus_wall );
-                } else if( !one_in( 4 ) ) {
-                    ter_set( fungal_point, t_fungus_wall );
-                }
-            } else if( terid == t_floor ) {
-                this->ter_set( fungal_point, t_fungus_floor_in );
-            } else if( ( terid == t_dirt ) || ( terid == t_grass ) ||
-                       ( terid == t_pavement ) || ( terid == t_pavement_y ) ||
-                       ( terid == t_sidewalk ) ) {
-                if( one_in( 3 ) ) {
-                    ter_set( fungal_point, t_fungus );
-                } else if( one_in( 2 ) ) {
-                    ter_set( fungal_point, t_fungus_mound );
-                }
-            } else if( ter( fungal_point )->has_flag( "SHRUB" ) ) {
-                ter_set( fungal_point, t_shrub_fungal );
-            } else if( ter( fungal_point )->has_flag( "TREE" ) ) {
-                if( !one_in( 3 ) ) {
-                    if( ter( fungal_point )->has_flag( "YOUNG" ) )  {
-                        ter_set( fungal_point, t_tree_fungal );
-                    } else {
-                        ter_set( fungal_point, t_tree );
-                    }
-                }
-            }
-            // check furniture and set fungal
-            if( ter( fungal_point )->has_flag( "FLAT" ) ) {
-                if( one_in( 8 ) ) {
-                    int i = rng( 0, fungal_furniture.size() - 1 );
-                    furn_set( fungal_point, fungal_furniture.at( i ).id );
-                }
+            if( one_in( 10 ) ) {
+                tripoint fungal_point = tripoint( x, y, z );
+                fe.spread_fungus( fungal_point );
             }
         }
     }
