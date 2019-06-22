@@ -321,6 +321,8 @@ class overmap
         std::map<int, om_vehicle> vehicles;
         std::vector<basecamp> camps;
         std::vector<city> cities;
+        std::vector<city> railroad_stations;
+        std::vector<city> railroads_out;
         std::map<string_id<overmap_connection>, std::vector<tripoint>> connections_out;
         cata::optional<basecamp *> find_camp( const point &p );
         /// Adds the npc to the contained list of npcs ( @ref npcs ).
@@ -409,6 +411,8 @@ class overmap
 
         void place_roads( const overmap *north, const overmap *east, const overmap *south,
                           const overmap *west );
+        void place_railroads( const overmap *north, const overmap *east, const overmap *south,
+                              const overmap *west );
 
         void populate_connections_out_from_neighbors( const overmap *north, const overmap *east,
                 const overmap *south, const overmap *west );
@@ -417,6 +421,7 @@ class overmap
         overmap_special_id pick_random_building_to_place( int town_dist ) const;
 
         void place_cities();
+        void place_railroad_stations();
         void place_building( const tripoint &p, om_direction::type dir, const city &town );
 
         void build_city_street( const overmap_connection &connection, const point &p, int cs,
