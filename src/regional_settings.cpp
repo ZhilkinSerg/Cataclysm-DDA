@@ -516,6 +516,37 @@ void load_region_settings( const JsonObject &jo )
         }
     }
 
+    if( !jo.has_object( "railroad" ) ) {
+        if( strict ) {
+            jo.throw_error( "\"railroad\": { ... } required for default" );
+        }
+    } else {
+        JsonObject cjo = jo.get_object( "railroad" );
+        if( ! cjo.read( "num_stations", new_region.railroad_spec.num_stations ) && strict ) {
+            jo.throw_error( "railroad: num_stations required for default" );
+        }
+        if( ! cjo.read( "min_border_distance", new_region.railroad_spec.min_border_distance ) && strict ) {
+            jo.throw_error( "railroad: min_border_distance required for default" );
+        }
+        const auto load_building_types = [&jo, &cjo, strict]( const std::string & type,
+        building_bin & dest ) {
+            if( !cjo.has_object( type ) && strict ) {
+                jo.throw_error( "railroad: \"" + type + "\": { ... } required for default" );
+            } else {
+                JsonObject wjo = cjo.get_object( type );
+                std::set<std::string> keys = wjo.get_member_names();
+                for( const auto &key : keys ) {
+                    if( key != "//" ) {
+                        if( wjo.has_int( key ) ) {
+                            dest.add( overmap_special_id( key ), wjo.get_int( key ) );
+                        }
+                    }
+                }
+            }
+        };
+        load_building_types( "stations", new_region.railroad_spec.stations );
+    }
+
     if( !jo.has_object( "city" ) ) {
         if( strict ) {
             jo.throw_error( "\"city\": { … } required for default" );
@@ -1002,6 +1033,7 @@ void regional_settings::finalize()
 
         field_coverage.finalize();
         default_groundcover_str.reset();
+        railroad_spec.finalize();
         city_spec.finalize();
         forest_composition.finalize();
         forest_trail.finalize();
@@ -1009,6 +1041,11 @@ void regional_settings::finalize()
         region_terrain_and_furniture.finalize();
         get_options().add_value( "DEFAULT_REGION", id, no_translation( id ) );
     }
+}
+
+void railroad_settings::finalize()
+{
+    stations.finalize();
 }
 
 void city_settings::finalize()

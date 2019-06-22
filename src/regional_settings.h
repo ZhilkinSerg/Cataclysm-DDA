@@ -34,6 +34,17 @@ class building_bin
         void finalize();
 };
 
+struct railroad_settings {
+    int num_stations = 5;
+    int min_border_distance = 10;
+    building_bin stations;
+
+    overmap_special_id pick_station() const {
+        return stations.pick()->id;
+    }
+    void finalize();
+};
+
 struct city_settings {
     // About the average US city non-residential, non-park land usage
     int shop_radius = 30;
@@ -232,6 +243,7 @@ struct regional_settings {
     weighted_int_list<ter_id> default_groundcover; // i.e., 'grass_or_dirt'
     shared_ptr_fast<weighted_int_list<ter_str_id>> default_groundcover_str;
 
+    railroad_settings railroad_spec;
     city_settings     city_spec;      // put what where in a city of what kind
     groundcover_extra field_coverage;
     forest_mapgen_settings forest_composition;
