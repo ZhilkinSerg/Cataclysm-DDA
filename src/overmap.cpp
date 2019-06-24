@@ -2803,7 +2803,18 @@ void overmap::place_railroads( const overmap *north, const overmap *east, const 
         railroad_points.emplace_back( elem.pos );
     }
     for( const auto &elem : railroad_stations ) {
-        railroad_points.emplace_back( elem.pos.x, elem.pos.y );
+        const auto &terrain_here( get_ter( elem.pos.x, elem.pos.y, 0 ) );
+        const om_direction::type dir = terrain_here->get_dir();
+        DebugLog( D_ERROR, D_GAME ) << string_format( "terrain_here:%s|%d", terrain_here.id().str(), dir );
+        point entry1 = elem.pos + rotate( point( 0, -1 ), dir );;
+        point entry2 = elem.pos + rotate( point( 0, 4 ), dir );
+        railroad_points.emplace_back( entry1 );
+        railroad_points.emplace_back( entry2 );
+        DebugLog( D_ERROR, D_GAME ) <<
+                                    string_format( "railroad_points.emplace_back:\nSTAT:%d|%d\nENT1:%d|%d\nENT2:%d|%d",
+                                            elem.pos.x, elem.pos.y,
+                                            entry1.x, entry1.y,
+                                            entry2.x, entry2.y );
     }
 
     // And finally connect them via railroads.
