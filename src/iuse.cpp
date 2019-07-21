@@ -502,7 +502,7 @@ int iuse::smoking( player *p, item *it, bool, const tripoint & )
             weed_msg( *p );
         }
     }
-    if( p->get_effect_dur( effect_cig ) > 10_minutes * ( p->addiction_level( ADD_CIG ) + 1 ) ) {
+    if( p->get_effect_dur( effect_cig ) > 10_minutes * ( p->addiction_level( ADD_NICOTINE ) + 1 ) ) {
         p->add_msg_if_player( m_bad, _( "Ugh, too much smoke... you feel nasty." ) );
     }
 
@@ -529,7 +529,7 @@ int iuse::ecig( player *p, item *it, bool, const tripoint & )
     p->mod_thirst( 1 );
     p->mod_hunger( -1 );
     p->add_effect( effect_cig, 10_minutes );
-    if( p->get_effect_dur( effect_cig ) > 10_minutes * ( p->addiction_level( ADD_CIG ) + 1 ) ) {
+    if( p->get_effect_dur( effect_cig ) > 10_minutes * ( p->addiction_level( ADD_NICOTINE ) + 1 ) ) {
         p->add_msg_if_player( m_bad, _( "Ugh, too much nicotine... you feel nasty." ) );
     }
     return it->type->charges_to_use();
@@ -1179,7 +1179,7 @@ static void spawn_spores( const player &p )
 static void marloss_common( player &p, item &it, const trait_id &current_color )
 {
     static const std::map<trait_id, add_type> mycus_colors = {{
-            { trait_MARLOSS_BLUE, ADD_MARLOSS_B }, { trait_MARLOSS_YELLOW, ADD_MARLOSS_Y }, { trait_MARLOSS, ADD_MARLOSS_R }
+            { trait_MARLOSS_BLUE, ADD_MARLOSS_BLUE }, { trait_MARLOSS_YELLOW, ADD_MARLOSS_YELLOW }, { trait_MARLOSS, ADD_MARLOSS_RED }
         }
     };
 
@@ -1426,9 +1426,9 @@ int iuse::mycus( player *p, item *it, bool t, const tripoint &pos )
         for( const tripoint &pos : g->m.points_in_radius( p->pos(), 3 ) ) {
             fe.marlossify( pos );
         }
-        p->rem_addiction( ADD_MARLOSS_R );
-        p->rem_addiction( ADD_MARLOSS_B );
-        p->rem_addiction( ADD_MARLOSS_Y );
+        p->rem_addiction( ADD_MARLOSS_RED );
+        p->rem_addiction( ADD_MARLOSS_BLUE );
+        p->rem_addiction( ADD_MARLOSS_YELLOW );
     } else if( p->has_trait( trait_THRESH_MYCUS ) &&
                !p->has_trait( trait_M_DEPENDENT ) ) { // OK, now set the hook.
         if( !one_in( 3 ) ) {

@@ -1,0 +1,123 @@
+[
+  {
+    "id": "ADD_NULL",
+    "type": "addiction_type",
+    "legacy_enum_id": 0
+  },
+  {
+    "id": "ADD_CAFFEINE",
+    "type": "addiction_type",
+    "legacy_enum_id": 1,
+    "name": "Caffeine Withdrawal",
+    "type_name": "caffeine",
+    "morale_craving": "MORALE_CRAVING_CAFFEINE",
+    "description": "Strength - 1;   Slight sluggishness;   Occasional cravings"
+  },
+  {
+    "id": "ADD_ALCOHOL",
+    "type": "addiction_type",
+    "legacy_enum_id": 2,
+    "name": "Alcohol Withdrawal",
+    "type_name": "alcohol",
+    "morale_craving": "MORALE_CRAVING_ALCOHOL",
+    "description": "Perception - 1;   Intelligence - 1;   Occasional Cravings;\nRisk of delirium tremens"
+  },
+  {
+    "id": "ADD_SLEEPING_PILLS",
+    "type": "addiction_type",
+    "legacy_enum_id": 3,
+    "name": "Sleeping Pill Dependence",
+    "type_name": "sleeping pills",
+    "description": "You may find it difficult to sleep without medication."
+  },
+  {
+    "id": "ADD_OPIATE",
+    "type": "addiction_type",
+    "legacy_enum_id": 4,
+    "name": "Opiate Withdrawal",
+    "type_name": "opiates",
+    "morale_craving": "MORALE_CRAVING_OPIATES",
+    "description": "Strength - 1;   Perception - 1;   Dexterity - 1;\nDepression and physical pain to some degree.  Frequent cravings.  Vomiting."
+  },
+  {
+    "id": "ADD_AMPHETAMINE",
+    "type": "addiction_type",
+    "legacy_enum_id": 5,
+    "name": "Amphetamine Withdrawal",
+    "type_name": "amphetamine",
+    "morale_craving": "MORALE_CRAVING_SPEED",
+    "description": "Strength - 1;   Intelligence - 1;\nMovement rate reduction.  Depression.  Weak immune system.  Frequent cravings."
+  },
+  {
+    "id": "ADD_NICOTINE",
+    "type": "addiction_type",
+    "legacy_enum_id": 6,
+    "name": "Nicotine Withdrawal",
+    "type_name": "nicotine",
+    "morale_craving": "MORALE_CRAVING_NICOTINE",
+    "description": "Intelligence - 1;   Occasional cravings"
+  },
+  {
+    "id": "ADD_COCAINE",
+    "type": "addiction_type",
+    "legacy_enum_id": 7,
+    "name": "Cocaine Withdrawal",
+    "type_name": "cocaine",
+    "morale_craving": "MORALE_CRAVING_COCAINE",
+    "description": "Perception - 1;   Intelligence - 1;  Frequent cravings."
+  },
+  {
+    "id": "ADD_CRACK",
+    "type": "addiction_type",
+    "legacy_enum_id": 8,
+    "name": "Crack Cocaine Withdrawal",
+    "type_name": "crack cocaine",
+    "morale_craving": "MORALE_CRAVING_CRACK",
+    "description": "Perception - 2;   Intelligence - 2;  Frequent cravings."
+  },
+  {
+    "id": "ADD_MUTAGEN",
+    "type": "addiction_type",
+    "legacy_enum_id": 9,
+    "name": "Mutation Withdrawal",
+    "type_name": "mutagen",
+    "morale_craving": "MORALE_CRAVING_MUTAGEN",
+    "description": "You've gotten a taste for mutating and the chemicals that cause it.  But you can stop, yeah, any time you want."
+  },
+  {
+    "id": "ADD_DIAZEPAM",
+    "type": "addiction_type",
+    "legacy_enum_id": 10,
+    "name": "Diazepam Withdrawal",
+    "type_name": "diazepam",
+    "morale_craving": "MORALE_CRAVING_DIAZEPAM",
+    "description": "Perception - 1;   Intelligence - 1;\nAnxiety, nausea, hallucinations, and general malaise."
+  },
+  {
+    "id": "ADD_MARLOSS_RED",
+    "type": "addiction_type",
+    "legacy_enum_id": 11,
+    "name": "Marloss Longing",
+    "type_name": "Marloss berries",
+    "morale_craving": "MORALE_CRAVING_MARLOSS",
+    "description": "You should try some of those pink berries."
+  },
+  {
+    "id": "ADD_MARLOSS_BLUE",
+    "type": "addiction_type",
+    "legacy_enum_id": 12,
+    "name": "Marloss Desire",
+    "type_name": "Marloss seeds",
+    "morale_craving": "MORALE_CRAVING_MARLOSS",
+    "description": "You should try some of those cyan seeds."
+  },
+  {
+    "id": "ADD_MARLOSS_YELLOW",
+    "type": "addiction_type",
+    "legacy_enum_id": 13,
+    "name": "Marloss Cravings",
+    "type_name": "Marloss gel",
+    "morale_craving": "MORALE_CRAVING_MARLOSS",
+    "description": "You should try some of that golden gel."
+  }
+]

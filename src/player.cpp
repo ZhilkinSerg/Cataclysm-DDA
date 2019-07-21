@@ -4748,7 +4748,7 @@ void player::process_one_effect( effect &it, bool is_new )
     // Handle painkillers
     val = get_effect( "PKILL", reduced );
     if( val != 0 ) {
-        mod = it.get_addict_mod( "PKILL", addiction_level( ADD_PKILLER ) );
+        mod = it.get_addict_mod( "PKILL", addiction_level( ADD_OPIATES ) );
         if( is_new || it.activated( calendar::turn, "PKILL", val, reduced, mod ) ) {
             mod_painkiller( bound_mod_to_vals( pkill, val, it.get_max_val( "PKILL", reduced ), 0 ) );
         }
@@ -6139,7 +6139,7 @@ void player::mend( int rate_multiplier )
     if( has_effect( effect_cig ) ) {
         healing_factor *= 0.5;
     } else {
-        healing_factor *= addiction_scaling( 0.25f, 0.75f, addiction_level( ADD_CIG ) );
+        healing_factor *= addiction_scaling( 0.25f, 0.75f, addiction_level( ADD_NICOTINE ) );
     }
 
     if( has_effect( effect_drunk ) ) {
@@ -9520,7 +9520,7 @@ int player::sleep_spot( const tripoint &p ) const
     int sleepy = static_cast<int>( base_level );
     bool watersleep = has_trait( trait_WATERSLEEP );
 
-    if( has_addiction( ADD_SLEEP ) ) {
+    if( has_addiction( ADD_SLEEPING_PILLS ) ) {
         sleepy -= 4;
     }
     if( has_trait( trait_INSOMNIA ) ) {
