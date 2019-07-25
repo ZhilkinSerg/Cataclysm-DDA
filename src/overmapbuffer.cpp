@@ -62,6 +62,7 @@ int camp_reference::get_distance_from_bounds() const
 
 std::string overmapbuffer::terrain_filename( const point &p )
 {
+    //limit_and_loop_om_coordinates;
     std::ostringstream filename;
 
     filename << g->get_world_base_save_path() << "/";
@@ -72,6 +73,7 @@ std::string overmapbuffer::terrain_filename( const point &p )
 
 std::string overmapbuffer::player_filename( const point &p )
 {
+    //limit_and_loop_om_coordinates;
     std::ostringstream filename;
 
     filename << g->get_player_base_save_path() << ".seen." << p.x << "." << p.y;
@@ -81,6 +83,7 @@ std::string overmapbuffer::player_filename( const point &p )
 
 overmap &overmapbuffer::get( const point &p )
 {
+    //limit_and_loop_om_coordinates;
     if( last_requested_overmap != nullptr && last_requested_overmap->pos() == p ) {
         return *last_requested_overmap;
     }
@@ -104,6 +107,7 @@ overmap &overmapbuffer::get( const point &p )
 
 void overmapbuffer::create_custom_overmap( const point &p, overmap_special_batch &specials )
 {
+    //limit_and_loop_om_coordinates;
     if( last_requested_overmap != nullptr ) {
         auto om_iter = overmaps.find( p );
         if( om_iter != overmaps.end() && om_iter->second.get() == last_requested_overmap ) {
@@ -219,6 +223,7 @@ const regional_settings &overmapbuffer::get_settings( const tripoint &p )
 
 void overmapbuffer::add_note( const tripoint &p, const std::string &message )
 {
+    //limit_and_loop_om_coordinates
     tripoint local( p );
     overmap &om = get_om_global( local.x, local.y );
     om.add_note( local, message );
@@ -235,6 +240,7 @@ void overmapbuffer::delete_note( const tripoint &p )
 
 void overmapbuffer::add_extra( const tripoint &p, const string_id<map_extra> &id )
 {
+    //limit_and_loop_om_coordinates;
     tripoint local( p );
     overmap &om = get_om_global( local.x, local.y );
     om.add_extra( local, id );
@@ -280,6 +286,7 @@ overmap *overmapbuffer::get_existing( const point &p )
 
 bool overmapbuffer::has( const point &p )
 {
+    //limit_and_loop_om_coordinates;
     return get_existing( p ) != nullptr;
 }
 
