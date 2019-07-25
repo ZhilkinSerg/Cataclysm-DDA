@@ -88,7 +88,7 @@ void sm_to_om( int &x, int &y )
 
 point sm_to_om_remain( int &x, int &y )
 {
-    //limit_and_loop_om_coordinates
+    //limit_and_loop_om_coordinates;
     return point( divide( x, 2 * OMAPX, x ), divide( y, 2 * OMAPY, y ) );
 }
 
@@ -187,41 +187,33 @@ tripoint omt_to_seg_copy( const tripoint &p )
     return tripoint( divide( p.x, SEG_SIZE ), divide( p.y, SEG_SIZE ), p.z );
 }
 
-void limit_and_loop_om_coordinates( int &x, int &y )
+void limit_and_loop_coordinates( int x, int y, const std::string &context, int size )
 {
     const int x_org = x;
     const int y_org = y;
+    int x_new = x;
+    int y_new = y;
     if( get_option<bool>( "WORLD_LIMIT" ) ) {
         const int limit_x = get_option<int>( "WORLD_LIMIT_X" );
         if( limit_x > 0 ) {
-            x = x % limit_x;
+            x_new = size * ( x % ( size * limit_x ) );
         }
         const int limit_y = get_option<int>( "WORLD_LIMIT_Y" );
         if( limit_y > 0 ) {
-            y = y % limit_y;
+            y_new = size * ( y % ( size * limit_y ) );
         }
-        if( x != x_org && y != y_org ) {
-            dbg( D_GAME ) << "OM_XY changed!";
+        if( x_new != x_org && y_new != y_org ) {
+            dbg( D_GAME ) <<  context << " [XY] : " << size << " : "
+                          << x_org << " -> " << x_new << " | "
+                          << y_org << " -> " << y_new;
         }
-        if( x != x_org ) {
-            dbg( D_GAME ) << "OM_X:" << x_org << " -> " << x;
+        if( x_new != x_org && y_new == y_org ) {
+            dbg( D_GAME ) << context << " [X*] : " << size << " : "
+                          << x_org << " -> " << x_new;
         }
-        if( y != y_org ) {
-            dbg( D_GAME ) << "OM_Y:" << y_org << " -> " << y;
-        }
-    }
-}
-
-void limit_and_loop_abs_coordinates( int &x, int &y )
-{
-    if( get_option<bool>( "WORLD_LIMIT" ) ) {
-        const int limit_x = get_option<int>( "WORLD_LIMIT_X" );
-        if( limit_x > 0 ) {
-            x = x % limit_x;
-        }
-        const int limit_y = get_option<int>( "WORLD_LIMIT_Y" );
-        if( limit_y > 0 ) {
-            y = y % limit_y;
+        if( x_new == x_org && y_new != y_org ) {
+            dbg( D_GAME ) <<  context << " [*Y] : " << size << " : "
+                          << y_org << " -> " << y_new;
         }
     }
 }

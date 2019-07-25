@@ -62,7 +62,7 @@ int camp_reference::get_distance_from_bounds() const
 
 std::string overmapbuffer::terrain_filename( const point &p )
 {
-    //limit_and_loop_om_coordinates;
+    limit_and_loop_coordinates( p, "overmapbuffer::terrain_filename", 1 ) ;
     std::ostringstream filename;
 
     filename << g->get_world_base_save_path() << "/";
@@ -73,7 +73,7 @@ std::string overmapbuffer::terrain_filename( const point &p )
 
 std::string overmapbuffer::player_filename( const point &p )
 {
-    //limit_and_loop_om_coordinates;
+    limit_and_loop_coordinates( p, "overmapbuffer::player_filename", 1 );
     std::ostringstream filename;
 
     filename << g->get_player_base_save_path() << ".seen." << p.x << "." << p.y;
@@ -83,7 +83,7 @@ std::string overmapbuffer::player_filename( const point &p )
 
 overmap &overmapbuffer::get( const point &p )
 {
-    //limit_and_loop_om_coordinates;
+    limit_and_loop_coordinates( p, "overmapbuffer::get", OMAPX );
     if( last_requested_overmap != nullptr && last_requested_overmap->pos() == p ) {
         return *last_requested_overmap;
     }
@@ -107,7 +107,7 @@ overmap &overmapbuffer::get( const point &p )
 
 void overmapbuffer::create_custom_overmap( const point &p, overmap_special_batch &specials )
 {
-    //limit_and_loop_om_coordinates;
+    limit_and_loop_coordinates( p, "overmapbuffer::create_custom_overmap", OMAPX );
     if( last_requested_overmap != nullptr ) {
         auto om_iter = overmaps.find( p );
         if( om_iter != overmaps.end() && om_iter->second.get() == last_requested_overmap ) {
@@ -223,7 +223,7 @@ const regional_settings &overmapbuffer::get_settings( const tripoint &p )
 
 void overmapbuffer::add_note( const tripoint &p, const std::string &message )
 {
-    //limit_and_loop_om_coordinates
+    //limit_and_loop_om_coordinates( p, "overmapbuffer::add_note" );
     tripoint local( p );
     overmap &om = get_om_global( local.x, local.y );
     om.add_note( local, message );
@@ -240,7 +240,7 @@ void overmapbuffer::delete_note( const tripoint &p )
 
 void overmapbuffer::add_extra( const tripoint &p, const string_id<map_extra> &id )
 {
-    //limit_and_loop_om_coordinates;
+    //limit_and_loop_om_coordinates( p, "overmapbuffer::add_extra" );
     tripoint local( p );
     overmap &om = get_om_global( local.x, local.y );
     om.add_extra( local, id );
@@ -286,50 +286,62 @@ overmap *overmapbuffer::get_existing( const point &p )
 
 bool overmapbuffer::has( const point &p )
 {
-    //limit_and_loop_om_coordinates;
+    limit_and_loop_coordinates( p, "overmapbuffer::has", 1 );
     return get_existing( p ) != nullptr;
 }
 
 overmap &overmapbuffer::get_om_global( int &x, int &y )
 {
+    limit_and_loop_coordinates( { x, y }, "overmapbuffer::get_om_global[XY]p", OMAPX );
     const point om_pos = omt_to_om_remain( x, y );
+    limit_and_loop_coordinates( om_pos, "overmapbuffer::get_om_global[XY]om_pos", OMAPX );
     return get( om_pos );
 }
 
 overmap &overmapbuffer::get_om_global( const point &p )
 {
+    limit_and_loop_coordinates( p, "overmapbuffer::get_om_global[P]p", OMAPX );
     const point om_pos = omt_to_om_copy( p );
+    limit_and_loop_coordinates( om_pos, "overmapbuffer::get_om_global[P]om_pos", OMAPX );
     return get( om_pos );
 }
 
 overmap &overmapbuffer::get_om_global( const tripoint &p )
 {
+    limit_and_loop_coordinates( p, "overmapbuffer::get_om_global[TP]p", OMAPX );
     return get_om_global( p.xy() );
 }
 
 overmap_with_local_coordinates overmapbuffer::get_om_global_with_coordinates( const tripoint &p )
 {
+    limit_and_loop_coordinates( p, "overmapbuffer::get_om_global[TP]p", OMAPX );
     int x = p.x;
     int y = p.y;
     const point om_pos = omt_to_om_remain( x, y );
+    limit_and_loop_coordinates( om_pos, "overmapbuffer::get_om_global[TP]om_pos", OMAPX );
     overmap *om = &get( om_pos );
     return { om, tripoint( x, y, p.z ) };
 }
 
 overmap *overmapbuffer::get_existing_om_global( int &x, int &y )
 {
+    limit_and_loop_coordinates( { x, y }, "overmapbuffer::get_existing_om_global[XY]p", OMAPX );
     const point om_pos = omt_to_om_remain( x, y );
+    limit_and_loop_coordinates( om_pos, "overmapbuffer::get_existing_om_global[XY]om_pos", OMAPX );
     return get_existing( om_pos );
 }
 
 overmap *overmapbuffer::get_existing_om_global( const point &p )
 {
+    limit_and_loop_coordinates( p, "overmapbuffer::get_existing_om_global[P]p", OMAPX );
     const point om_pos = omt_to_om_copy( p );
+    limit_and_loop_coordinates( om_pos, "overmapbuffer::get_existing_om_global[P]om_pos", OMAPX );
     return get_existing( om_pos );
 }
 
 overmap *overmapbuffer::get_existing_om_global( const tripoint &p )
 {
+    limit_and_loop_coordinates( p, "overmapbuffer::get_existing_om_global[TP]p", OMAPX );
     return get_existing_om_global( p.xy() );
 }
 
@@ -350,8 +362,8 @@ overmapbuffer::get_existing_om_global_with_coordinates(
 
 bool overmapbuffer::is_omt_generated( const tripoint &loc )
 {
+    limit_and_loop_coordinates( loc, "overmapbuffer::is_omt_generated[TP]loc", OMAPX );
     cata::optional<overmap_with_local_coordinates> om = get_existing_om_global_with_coordinates( loc );
-
     // If the overmap doesn't exist, then for sure the local mapgen
     // hasn't happened.
     if( !om ) {
