@@ -3208,7 +3208,7 @@ static void save_font_list()
         write_to_file( FILENAMES["fontlist"], [&]( std::ostream & fout ) {
             font_folder_list( fout, FILENAMES["fontdir"], bitmap_fonts );
 
-#if defined(_WIN32)
+#if defined(_WIN32) && !defined(__MINGW32__) && !defined(__MINGW64__)
             char buf[256];
             GetSystemWindowsDirectory( buf, 256 );
             strcat( buf, "\\fonts" );

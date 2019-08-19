@@ -3,7 +3,7 @@
 #define SDL_WRAPPERS_H
 
 // IWYU pragma: begin_exports
-#if defined(_MSC_VER) && defined(USE_VCPKG)
+#if (defined(_MSC_VER) && defined(USE_VCPKG))
 #   include <SDL2/SDL.h>
 #   include <SDL2/SDL_ttf.h>
 #   include <SDL2/SDL_image.h>
