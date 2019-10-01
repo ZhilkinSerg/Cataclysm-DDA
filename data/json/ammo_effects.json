@@ -1,7 +1,27 @@
 [
   {
-    "id": "ammo_effect",
+    "id": "ae_null",
     "type": "ammo_effect",
-    "parts": [ "eyes", "head", "mouth", "torso", "arm_l", "arm_r", "leg_l", "leg_r", "foot_l", "foot_r", "num_bp" ]
+    "effect_tag": "",
+    "aoe": {
+      "field_type": "fd_null",
+      "intensity_min": 0,
+      "intensity_max": 0,
+      "radius": 0,
+      "radius_z": 0,
+      "chance": 0,
+      "size": 0,
+      "check_passable": false,
+      "check_sees": false,
+      "check_sees_radius": 0
+    },
+    "explosion": {
+      "power": 0,
+      "distance_factor": 0.8,
+      "fire": false,
+      "shrapnel": { "casing_mass": 0, "fragment_mass": 0.005, "recovery": 0, "drop": "null" }
+    },
+    "do_flashbang": false,
+    "do_emp_blast": false
   }
 ]

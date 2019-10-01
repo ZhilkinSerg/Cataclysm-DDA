@@ -21,6 +21,8 @@ struct ammo_effect {
         std::string effect_tag;
 
         field_type_id aoe_field_type = fd_null;
+        /** used during JSON loading only */
+        std::string aoe_field_type_name = "fd_null";
         int aoe_intensity_min = 0;
         int aoe_intensity_max = 0;
         int aoe_radius = 0;
