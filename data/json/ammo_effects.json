@@ -23,5 +23,30 @@
     },
     "do_flashbang": false,
     "do_emp_blast": false
+  },
+  {
+    "id": "AE_NAPALM",
+    "type": "ammo_effect",
+    "effect_tag": "NAPALM",
+    "aoe": {
+      "field_type": "fd_fire",
+      "intensity_min": 1,
+      "intensity_max": 1,
+      "radius": 1,
+      "radius_z": 0,
+      "chance": 1,
+      "size": 3,
+      "check_passable": false,
+      "check_sees": false,
+      "check_sees_radius": 0
+    },
+    "explosion": {
+      "power": 60,
+      "distance_factor": 0.7,
+      "fire": true,
+      "shrapnel": { "casing_mass": 0, "fragment_mass": 0.005, "recovery": 0, "drop": "null" }
+    },
+    "do_flashbang": false,
+    "do_emp_blast": false
   }
 ]
