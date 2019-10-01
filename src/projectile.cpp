@@ -92,27 +92,27 @@ void projectile::unset_custom_explosion()
 
 void apply_ammo_effects( const tripoint &p, const std::set<std::string> &effects )
 {
-    for( const ammo_effect_data &aed : ammo_effects ) {
-        if( effects.count( aed.effect_tag ) > 0 ) {
-            for( auto &pt : g->m.points_in_radius( p, aed.aoe_radius, aed.aoe_radius_z ) ) {
-                if( one_in( aed.aoe_chance ) ) {
-                    const bool check_sees = !aed.aoe_check_sees ||
-                                            ( aed.aoe_check_sees && g->m.sees( p, pt, aed.aoe_check_sees_radius ) );
-                    const bool check_passable = !aed.aoe_check_passable ||
-                                                ( aed.aoe_check_passable && g->m.passable( pt ) );
+    for( const ammo_effect &ae : ammo_effects::get_all() ) {
+        if( effects.count( ae.effect_tag ) > 0 ) {
+            for( auto &pt : g->m.points_in_radius( p, ae.aoe_radius, ae.aoe_radius_z ) ) {
+                if( one_in( ae.aoe_chance ) ) {
+                    const bool check_sees = !ae.aoe_check_sees ||
+                                            ( ae.aoe_check_sees && g->m.sees( p, pt, ae.aoe_check_sees_radius ) );
+                    const bool check_passable = !ae.aoe_check_passable ||
+                                                ( ae.aoe_check_passable && g->m.passable( pt ) );
                     if( check_sees && check_passable ) {
-                        g->m.add_field( pt, aed.aoe_field_type, rng( aed.aoe_intensity_min, aed.aoe_intensity_max ) );
+                        g->m.add_field( pt, ae.aoe_field_type, rng( ae.aoe_intensity_min, ae.aoe_intensity_max ) );
                     }
                 }
             }
         }
-        if( aed.aoe_explosion_data.power > 0 ) {
-            explosion_handler::explosion( p, aed.aoe_explosion_data );
+        if( ae.aoe_explosion_data.power > 0 ) {
+            explosion_handler::explosion( p, ae.aoe_explosion_data );
         }
-        if( aed.do_flashbang ) {
+        if( ae.do_flashbang ) {
             explosion_handler::flashbang( p );
         }
-        if( aed.do_emp_blast ) {
+        if( ae.do_emp_blast ) {
             explosion_handler::emp_blast( p );
         }
     }
@@ -127,7 +127,7 @@ void apply_ammo_effects( const tripoint &p, const std::set<std::string> &effects
 int max_aoe_size( const std::set<std::string> &tags )
 {
     int aoe_size = 0;
-    for( const ammo_effect_data &aed : ammo_effects ) {
+    for( const ammo_effect &aed : ammo_effects::get_all() ) {
         if( tags.count( aed.effect_tag ) > 0 ) {
             aoe_size = std::max( aoe_size,  aed.aoe_size ) ;
         }
