@@ -49,7 +49,7 @@ const ammo_effect &string_id<ammo_effect>::obj() const
 template<>
 int_id<ammo_effect> string_id<ammo_effect>::id() const
 {
-    return all_ammo_effects.convert( *this, ae_null );
+    return all_ammo_effects.convert( *this, AE_NULL );
 }
 
 /** @relates int_id */
@@ -68,7 +68,7 @@ void ammo_effect::load( JsonObject &jo, const std::string & )
         optional( joa, was_loaded, "intensity_max", aoe_intensity_max, 0 );
         optional( joa, was_loaded, "radius", aoe_radius, 0 );
         optional( joa, was_loaded, "radius_z", aoe_radius_z, 0 );
-        optional( joa, was_loaded, "chance", aoe_chance, 0 );
+        optional( joa, was_loaded, "chance", aoe_chance, 1 );
         optional( joa, was_loaded, "size", aoe_size, 0 );
         optional( joa, was_loaded, "check_passable", aoe_check_passable, false );
         optional( joa, was_loaded, "check_sees", aoe_check_sees, false );
@@ -127,4 +127,4 @@ const std::vector<ammo_effect> &ammo_effects::get_all()
     return all_ammo_effects.get_all();
 }
 
-ammo_effect_id ae_null;
+ammo_effect_id AE_NULL;
