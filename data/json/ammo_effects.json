@@ -149,8 +149,8 @@
   },
   {
     "id": "AE_MININUKE_MOD",
-    "type": "MININUKE_MOD",
-    "effect_tag": "",
+    "type": "ammo_effect",
+    "effect_tag": "MININUKE_MOD",
     "aoe": {
       "field_type": "fd_nuke_gas",
       "intensity_min": 3,
