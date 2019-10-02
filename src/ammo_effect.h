@@ -25,7 +25,7 @@ struct ammo_effect {
         std::string aoe_field_type_name = "fd_null";
         int aoe_intensity_min = 0;
         int aoe_intensity_max = 0;
-        int aoe_radius = 0;
+        int aoe_radius = 1;
         int aoe_radius_z = 0;
         int aoe_chance = 1;
         int aoe_size = 0;

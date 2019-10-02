@@ -66,7 +66,7 @@ void ammo_effect::load( JsonObject &jo, const std::string & )
         optional( joa, was_loaded, "field_type", aoe_field_type_name, "fd_null" );
         optional( joa, was_loaded, "intensity_min", aoe_intensity_min, 0 );
         optional( joa, was_loaded, "intensity_max", aoe_intensity_max, 0 );
-        optional( joa, was_loaded, "radius", aoe_radius, 0 );
+        optional( joa, was_loaded, "radius", aoe_radius, 1 );
         optional( joa, was_loaded, "radius_z", aoe_radius_z, 0 );
         optional( joa, was_loaded, "chance", aoe_chance, 1 );
         optional( joa, was_loaded, "size", aoe_size, 0 );
