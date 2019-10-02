@@ -85,7 +85,7 @@
     "id": "AE_FLARE",
     "type": "ammo_effect",
     "effect_tag": "FLARE",
-    "aoe": { "field_type": "fd_fires", "intensity_min": 1, "intensity_max": 1 }
+    "aoe": { "field_type": "fd_fire", "intensity_min": 1, "intensity_max": 1 }
   },
   {
     "id": "AE_LIGHTNING",
