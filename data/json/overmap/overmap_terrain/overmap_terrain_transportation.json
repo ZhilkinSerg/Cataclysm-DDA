@@ -136,6 +136,37 @@
   },
   {
     "type": "overmap_terrain",
+    "id": "monorail",
+    "name": "monorail",
+    "color": "light_cyan",
+    "see_cost": 2,
+    "mapgen_straight": [ { "method": "builtin", "name": "monorail_straight" } ],
+    "mapgen_curved": [ { "method": "builtin", "name": "monorail_curved" } ],
+    "mapgen_end": [ { "method": "builtin", "name": "monorail_end" } ],
+    "mapgen_tee": [ { "method": "builtin", "name": "monorail_tee" } ],
+    "mapgen_four_way": [ { "method": "builtin", "name": "monorail_four_way" } ],
+    "flags": [ "LINEAR" ]
+  },
+  {
+    "abstract": "generic_monorail_station",
+    "type": "overmap_terrain",
+    "name": "monorail station",
+    "copy-from": "generic_city_building_no_sidewalk",
+    "sym": "M",
+    "color": "cyan"
+  },
+  {
+    "id": "monorail_station_z0",
+    "type": "overmap_terrain",
+    "copy-from": "generic_monorail_station"
+  },
+  {
+    "id": "monorail_station_z1",
+    "type": "overmap_terrain",
+    "copy-from": "generic_monorail_station"
+  },
+  {
+    "type": "overmap_terrain",
     "id": "railroad",
     "name": "railroad",
     "color": "light_green",

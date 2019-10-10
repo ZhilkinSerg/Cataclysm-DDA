@@ -744,6 +744,15 @@
   },
   {
     "type": "city_building",
+    "id": "monorail_city",
+    "locations": [ "land" ],
+    "overmaps": [
+      { "point": [ 0, 0, 0 ], "overmap": "monorail_station_z0_north" },
+      { "point": [ 0, 0, 1 ], "overmap": "monorail_station_z1_north" }
+    ]
+  },
+  {
+    "type": "city_building",
     "id": "railroad_city",
     "locations": [ "land" ],
     "overmaps": [

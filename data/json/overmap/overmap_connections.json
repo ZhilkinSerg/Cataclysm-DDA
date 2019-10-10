@@ -33,6 +33,14 @@
   },
   {
     "type": "overmap_connection",
+    "id": "local_monorail",
+    "subtypes": [
+      { "terrain": "monorail", "locations": [ "monorail" ], "basic_cost": 1, "flags": [ "ORTHOGONAL" ] },
+      { "terrain": "monorail", "locations": [ "open_air" ], "basic_cost": 1, "flags": [ "ORTHOGONAL" ] }
+    ]
+  },
+  {
+    "type": "overmap_connection",
     "id": "local_railroad",
     "subtypes": [
       { "terrain": "railroad", "locations": [ "railroad" ], "basic_cost": 1, "flags": [ "ORTHOGONAL" ] },

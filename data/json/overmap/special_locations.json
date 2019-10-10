@@ -77,6 +77,16 @@
   },
   {
     "type": "overmap_location",
+    "id": "open_air",
+    "terrains": [ "open_air" ]
+  },
+  {
+    "type": "overmap_location",
+    "id": "monorail",
+    "terrains": [ "monorail" ]
+  },
+  {
+    "type": "overmap_location",
     "id": "railroad",
     "terrains": [ "railroad" ]
   },

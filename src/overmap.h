@@ -334,6 +334,8 @@ class overmap
         void generate( const overmap *north, const overmap *east,
                        const overmap *south, const overmap *west,
                        overmap_special_batch &enabled_specials );
+
+        bool generate_monorail( int z );
         bool generate_sub( int z );
 
         const city &get_nearest_city( const tripoint &p ) const;

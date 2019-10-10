@@ -635,6 +635,7 @@
         "cs_open_sewer": 100
       },
       "shops": {
+        "monorail_city": 500,
         "bus_station": 200,
         "town_hall": 150,
         "craft_shop": 200,
