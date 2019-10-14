@@ -36,7 +36,7 @@
     "id": "local_monorail",
     "subtypes": [
       { "terrain": "monorail", "locations": [ "monorail" ], "basic_cost": 1, "flags": [ "ORTHOGONAL" ] },
-      { "terrain": "monorail", "locations": [ "open_air" ], "basic_cost": 1, "flags": [ "ORTHOGONAL" ] }
+      { "terrain": "monorail", "locations": [ "open_air" ], "basic_cost": 10, "flags": [ "ORTHOGONAL" ] }
     ]
   },
   {

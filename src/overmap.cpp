@@ -49,6 +49,7 @@
 #include "math_defines.h"
 #include "monster.h"
 #include "string_formatter.h"
+#include "drawing_primitives.h"
 
 class map_extra;
 
@@ -1475,7 +1476,7 @@ void overmap::generate( const overmap *north, const overmap *east,
 
     polish_river();
 
-    generate_monorail( 1 );
+    generate_monorail( 2 );
 
     // TODO: there is no reason we can't generate the sublevels in one pass
     //       for that matter there is no reason we can't as we add the entrance ways either
@@ -1496,28 +1497,57 @@ void overmap::generate( const overmap *north, const overmap *east,
 bool overmap::generate_monorail( int z )
 {
     std::vector<point> monorail_points;
-    for( int i = 0; i < OMAPX; i++ ) {
-        for( int j = 0; j < OMAPY; j++ ) {
-            tripoint pground( i, j, 0 );
-            tripoint pz( i, j, z );
-            oter_id oter_ground = ter( pground );
 
-            if( is_ot_match( "monorail_station_z0", oter_ground, ot_match_type::type ) ) {
-                ter_set( pz, oter_id( "monorail_isolated" ) );
-                monorail_points.emplace_back( i, j - 1 );
-                monorail_points.emplace_back( i, j );
-                monorail_points.emplace_back( i, j + 1 );
+    int min_city_size = 6;
+    int max_city_size = 16;
+    int min_radius = 6;
+    int max_radius = 16;
+    for( const city &c : cities ) {
+        if( c.size >= min_city_size && c.size <= max_city_size ) {
+            std::vector<point> temp_monorail_points;
+            const point &pc = c.pos + point( rng( -2, 2 ), rng( -2, 2 ) );
+            int radius = rng( min_radius, max_radius );
+            temp_monorail_points = closest_points_first( max_radius, pc );
+            for( const point &p : temp_monorail_points ) {
+                const tripoint pground( p, 0 );
+                const oter_id oter_ground = ter( pground );
+                if( is_ot_match( "monorail_station", oter_ground, ot_match_type::prefix ) ) {
+                    monorail_points.emplace_back( p );
+                }
+                int rp = abs( rl_dist( pc, p ) );
+                if( rp == radius ) {
+                    monorail_points.emplace_back( p );
+                }
             }
         }
     }
+
+    /*
+     for( int i = 0; i < OMAPX; i++ ) {
+         for( int j = 0; j < OMAPY; j++ ) {
+             tripoint pground( i, j, 0 );
+             tripoint pz( i, j, z );
+             oter_id oter_ground = ter( pground );
+
+             if( is_ot_match( "monorail_station_z0", oter_ground, ot_match_type::type ) ) {
+                 ter_set( pz, oter_id( "monorail_isolated" ) );
+                 monorail_points.emplace_back( i, j - 1 );
+                 monorail_points.emplace_back( i, j );
+                 monorail_points.emplace_back( i, j + 1 );
+
+       }
+         }
+     }
+
+     */
 
     if( !monorail_points.empty() ) {
         const string_id<overmap_connection> local_monorail( "local_monorail" );
         connect_closest_points( monorail_points, z, *local_monorail );
         for( auto &i : monorail_points ) {
-            tripoint pz1( i.x, i.y, z - 1 );
+            tripoint pz0( i.x, i.y, 0 );
             tripoint pz2( i.x, i.y, z );
-            if( is_ot_match( "monorail_station_z0", ter( pz1 ), ot_match_type::type ) ) {
+            if( is_ot_match( "monorail_station_z0", ter( pz0 ), ot_match_type::type ) ) {
                 ter_set( pz2,  oter_id( "monorail_station_z1_north" ) );
             }
         }
