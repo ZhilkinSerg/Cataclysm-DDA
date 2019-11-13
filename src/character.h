@@ -1080,6 +1080,10 @@ class Character : public Creature, public visitable<Character>
          */
         std::vector<std::string> get_overlay_ids() const;
 
+        // ------------ Proficiency Stuff ------------
+        bool has_proficiency( const proficiency_id &ident ) const {
+            return _proficiencies.count( ident ) > 0;
+        };
         // --------------- Skill Stuff ---------------
         int get_skill_level( const skill_id &ident ) const;
         int get_skill_level( const skill_id &ident, const item &context ) const;
@@ -1569,6 +1573,7 @@ class Character : public Creature, public visitable<Character>
 
         // --------------- Values ---------------
         pimpl<SkillLevelMap> _skills;
+        std::unordered_set<proficiency_id> _proficiencies;
 
         // Cached vision values.
         std::bitset<NUM_VISION_MODES> vision_mode_cache;

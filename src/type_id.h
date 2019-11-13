@@ -87,6 +87,9 @@ struct oter_t;
 using oter_id = int_id<oter_t>;
 using oter_str_id = string_id<oter_t>;
 
+class proficiency;
+using proficiency_id = string_id<proficiency>;
+
 class recipe;
 using recipe_id = string_id<recipe>;
 

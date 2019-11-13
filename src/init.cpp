@@ -64,6 +64,7 @@
 #include "sdltiles.h"
 #include "skill.h"
 #include "skill_boost.h"
+#include "proficiency.h"
 #include "sounds.h"
 #include "speech.h"
 #include "start_location.h"
@@ -197,6 +198,7 @@ void DynamicDataLoader::initialize()
     add( "profession_item_substitutions", &profession::load_item_substitutions );
     add( "skill", &Skill::load_skill );
     add( "skill_display_type", &SkillDisplayType::load );
+    add( "proficiency", &proficiencies::load );
     add( "dream", &dream::load );
     add( "mutation_category", &mutation_category_trait::load );
     add( "mutation_type", &load_mutation_type );
@@ -552,6 +554,7 @@ void DynamicDataLoader::finalize_loaded_data( loading_ui &ui )
             { _( "Body parts" ), &body_part_struct::finalize_all },
             { _( "Field types" ), &field_types::finalize_all },
             { _( "Emissions" ), &emit::finalize },
+            { _( "Proficiencies" ), &proficiencies::finalize },
             {
                 _( "Items" ), []()
                 {
@@ -621,6 +624,7 @@ void DynamicDataLoader::check_consistency( loading_ui &ui )
     using named_entry = std::pair<std::string, std::function<void()>>;
     const std::vector<named_entry> entries = {{
             { _( "Flags" ), &json_flag::check_consistency },
+            { _( "Proficiencies" ), &proficiencies::check_consistency },
             {
                 _( "Crafting requirements" ), []()
                 {

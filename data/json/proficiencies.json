@@ -1,0 +1,32 @@
+[
+  {
+    "type": "proficiency",
+    "id": "lockpicking",
+    "name": "lockpicking",
+    "description": "You are proficient in picking a mechanical lock using a lockpick.",
+    "time_to_achieve": "10 hours",
+    "required": {
+      "skills": [
+        { "id": "mechanics", "level_min": 1, "level_learn": 3 },
+        { "id": "null", "level_min": 0, "level_learn": 0 },
+        { "id": "null", "level_min": 0, "level_learn": 0 },
+        { "id": "null", "level_min": 0, "level_learn": 0 }
+      ],
+      "proficiencies": [ "null", "null", "null", "null" ]
+    },
+    "related": {
+      "skills": [
+        { "id": "mechanics", "xp_mult": 1.00 },
+        { "id": "null", "xp_mult": 0 },
+        { "id": "null", "xp_mult": 0 },
+        { "id": "null", "xp_mult": 0 }
+      ],
+      "proficiencies": [
+        { "id": "hotwiring", "xp_mult": 1.05 },
+        { "id": "null", "xp_mult": 0 },
+        { "id": "null", "xp_mult": 0 },
+        { "id": "null", "xp_mult": 0 }
+      ]
+    }
+  }
+]
