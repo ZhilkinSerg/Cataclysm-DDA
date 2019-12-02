@@ -144,43 +144,78 @@ void defense_game::per_turn()
 
 void defense_game::pre_action( action_id &act )
 {
-    if( act == ACTION_SLEEP && !sleep ) {
-        add_msg( m_info, _( "You don't need to sleep!" ) );
-        act = ACTION_NULL;
-    }
-    if( !allow_save && ( act == ACTION_SAVE || act == ACTION_QUICKSAVE ) ) {
-        add_msg( m_info, _( "You cannot save in defense mode!" ) );
-        act = ACTION_NULL;
-    }
+    std::string action_error_message;
+    bool leaving_defloc = false;
+    switch( act ) {
+        case ACTION_SLEEP:
+            if( !sleep ) {
+                action_error_message = _( "You don't need to sleep!" );
+            }
+            break;
+        case ACTION_SAVE:
+        case ACTION_QUICKSAVE:
+            if( !allow_save ) {
+                add_msg( m_info, _( "You cannot save in defense mode!" ) );
+                act = ACTION_NULL;
+            }
+            break;
+        case ACTION_MOVE_N:
+            if( g->u.posy() == HALF_MAPSIZE_X && g->get_levy() <= 9 ) {
+                leaving_defloc = true;
+            }
+            break;
+        case ACTION_MOVE_NE:
+            if( ( g->u.posy() == HALF_MAPSIZE_Y && g->get_levy() <= 93 ) ||
+                ( g->u.posx() == HALF_MAPSIZE_X + SEEX - 1 && g->get_levx() >= 98 ) ) {
+                leaving_defloc = true;
+            }
+            break;
+        case ACTION_MOVE_E:
+            if( g->u.posx() == HALF_MAPSIZE_X + SEEX - 1 && g->get_levx() >= 98 ) {
+                leaving_defloc = true;
+            }
+            break;
+        case ACTION_MOVE_SE:
+            if( ( g->u.posy() == HALF_MAPSIZE_Y + SEEY - 1 && g->get_levy() >= 98 ) ||
+                ( g->u.posx() == HALF_MAPSIZE_X + SEEX - 1 && g->get_levx() >= 98 ) ) {
+                leaving_defloc = true;
+                break;
+            case ACTION_MOVE_S:
+                if( g->u.posy() == HALF_MAPSIZE_Y + SEEY - 1 && g->get_levy() >= 98 ) {
+                    leaving_defloc = true;
+                }
+                break;
+            case ACTION_MOVE_SW:
+                if( ( g->u.posy() == HALF_MAPSIZE_Y + SEEY - 1 && g->get_levy() >= 98 ) ||
+                    ( g->u.posx() == HALF_MAPSIZE_X && g->get_levx() <= 93 ) ) {
+                    leaving_defloc = true;
+                }
+                break;
+            case ACTION_MOVE_W:
+                if( g->u.posx() == HALF_MAPSIZE_X &&
+                    g->get_levx() <= 93 ) {
+                    leaving_defloc = true;
+                }
+                break;
+            case ACTION_MOVE_NW:
+                if( ( g->u.posy() == HALF_MAPSIZE_Y && g->get_levy() <= 93 ) ||
+                    ( g->u.posx() == HALF_MAPSIZE_X && g->get_levx() <= 93 ) ) {
+                    leaving_defloc = true;
+                }
+                break;
+            default:
+                break;
+            }
 
-    // Big ugly block for movement
-    if( ( act == ACTION_MOVE_N && g->u.posy() == HALF_MAPSIZE_X &&
-          g->get_levy() <= 93 ) ||
-        ( act == ACTION_MOVE_NE && ( ( g->u.posy() == HALF_MAPSIZE_Y &&
-                                       g->get_levy() <= 93 ) ||
-                                     ( g->u.posx() == HALF_MAPSIZE_X + SEEX - 1 &&
-                                       g->get_levx() >= 98 ) ) ) ||
-        ( act == ACTION_MOVE_E && g->u.posx() == HALF_MAPSIZE_X + SEEX - 1 &&
-          g->get_levx() >= 98 ) ||
-        ( act == ACTION_MOVE_SE && ( ( g->u.posy() == HALF_MAPSIZE_Y + SEEY - 1 &&
-                                       g->get_levy() >= 98 ) ||
-                                     ( g->u.posx() == HALF_MAPSIZE_X + SEEX - 1 &&
-                                       g->get_levx() >= 98 ) ) ) ||
-        ( act == ACTION_MOVE_S && g->u.posy() == HALF_MAPSIZE_Y + SEEY - 1 &&
-          g->get_levy() >= 98 ) ||
-        ( act == ACTION_MOVE_SW && ( ( g->u.posy() == HALF_MAPSIZE_Y + SEEY - 1 &&
-                                       g->get_levy() >= 98 ) ||
-                                     ( g->u.posx() == HALF_MAPSIZE_X &&
-                                       g->get_levx() <= 93 ) ) ) ||
-        ( act == ACTION_MOVE_W && g->u.posx() == HALF_MAPSIZE_X &&
-          g->get_levx() <= 93 ) ||
-        ( act == ACTION_MOVE_NW && ( ( g->u.posy() == HALF_MAPSIZE_Y &&
-                                       g->get_levy() <= 93 ) ||
-                                     ( g->u.posx() == HALF_MAPSIZE_X &&
-                                       g->get_levx() <= 93 ) ) ) ) {
-        add_msg( m_info, _( "You cannot leave the %s behind!" ),
-                 defense_location_name( location ) );
-        act = ACTION_NULL;
+            if( leaving_defloc ) {
+                action_error_message = string_format( _( "You cannot leave the %s behind!" ),
+                                                      defense_location_name( location ) );
+            }
+
+            if( !action_error_message.empty() ) {
+                add_msg( m_info, action_error_message );
+                act = ACTION_NULL;
+            }
     }
 }
 
