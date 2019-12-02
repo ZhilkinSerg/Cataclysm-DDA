@@ -434,16 +434,6 @@ const std::vector<overmap_special> &overmap_specials::get_all()
     return specials.get_all();
 }
 
-const overmap_special overmap_specials::get_specific( const std::string &id )
-{
-    for( const auto &elem : specials.get_all() ) {
-        if( elem.id.str() == id ) {
-            return elem;
-        }
-    }
-    return overmap_special();
-}
-
 overmap_special_batch overmap_specials::get_default_batch( const point &origin )
 {
     const int city_size = get_option<int>( "CITY_SIZE" );

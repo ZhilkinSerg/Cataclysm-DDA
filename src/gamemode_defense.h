@@ -119,13 +119,13 @@ struct defense_game : public special_game {
         bool mercenaries;
 
         // Allow save
-        bool allow_save =  true;
+        bool allow_save;
 
         // Start defence location position on overmap
         tripoint defloc_pos;
 
         // Defense location special
-        overmap_special defloc_special;
+        overmap_special_id defloc_special;
 };
 
 #endif // GAMEMODE_DEFENSE_H
