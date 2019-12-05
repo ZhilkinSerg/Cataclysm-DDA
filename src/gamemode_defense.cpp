@@ -180,8 +180,8 @@ void defense_game::pre_action( action_id &act )
             if( ( g->u.posy() == HALF_MAPSIZE_Y + SEEY - 1 && g->get_levy() >= 98 ) ||
                 ( g->u.posx() == HALF_MAPSIZE_X + SEEX - 1 && g->get_levx() >= 98 ) ) {
                 leaving_defloc = true;
-                break;
             }
+            break;
         case ACTION_MOVE_S:
             if( g->u.posy() == HALF_MAPSIZE_Y + SEEY - 1 && g->get_levy() >= 98 ) {
                 leaving_defloc = true;
