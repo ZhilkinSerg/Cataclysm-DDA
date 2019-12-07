@@ -269,5 +269,7 @@ bool ma_game::generate_overmap( const tripoint &om_pos )
             om.ter_set( p, new_t );
         }
     }
+    om.save();
+    overmap_buffer.clear();
     return false;
 }
