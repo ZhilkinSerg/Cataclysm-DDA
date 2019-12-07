@@ -349,8 +349,10 @@ class overmap
 
         regional_settings settings;
 
+    public:
         oter_id get_default_terrain( int z ) const;
 
+    private:
         // Initialize
         void init_layers();
         // open existing overmap, or generate a new one

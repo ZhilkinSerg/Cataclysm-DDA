@@ -108,9 +108,9 @@ void tutorial_game::init_map()
 {
     const std::string MA_database_path = R"(C:\Projects\Cataclysm-DDA\database\MA.sqlite3)";
     //const tripoint MA_om_pos = tripoint( 41, 64, 0 );
-    tripoint_range MA_om_tripoint_range( tripoint( 0, 0, 0 ), tripoint( 68, 42, 0 ) );
+    tripoint_range MA_om_tripoint_range( tripoint( 51, 1, 0 ), tripoint( 51, 11, 0 ) );
     //tripoint_range MA_om_tripoint_range( tripoint( 40, 20, 0 ), tripoint( 45, 25, 0 ) );
-    tripoint MA_start = MA_om_tripoint_range.min() + tripoint_south_east;
+    tripoint MA_start = MA_om_tripoint_range.min();
     //size_t i = 0;
     size_t i_max = MA_om_tripoint_range.size();
     for( const tripoint &MA_om_pos : MA_om_tripoint_range ) {
@@ -151,8 +151,11 @@ void tutorial_game::init_map()
         debugmsg( "Generating: %s using coords %s with size of omd=%d", omd.id, omd.om_pos.to_string(),
                   omd.omt_data.size() );
         */
-        overmap_buffer.clear();
+        //overmap_buffer.clear();
         overmap &om = overmap_buffer.get( omd.om_pos.xy() );
+        //const oter_id fallback_ter = om.get_default_terrain( omd.om_pos.z );
+        //const oter_id fallback_ter( "river_center" );
+        const oter_id fallback_ter( "rock" );
         for( const overmap_terrain_data &otd : omd.omt_data ) {
             tripoint p( otd.omt_pos, 0 );
             oter_id new_t;
@@ -166,7 +169,6 @@ void tutorial_game::init_map()
             } else if( otd.is_water ) {
                 new_t = oter_id( "river_center" );
             } else {
-                const oter_id fallback_ter( "open_air" );
                 overmap_land_use_code_id luc = otd.luc;
                 if( luc == overmap_land_use_code_id::NULL_ID() ) {
                     new_t = fallback_ter;
@@ -199,12 +201,14 @@ void tutorial_game::init_map()
     starting_om.ter_set( lp, oter_id( "tutorial" ) );
     starting_om.ter_set( lp + tripoint_below, oter_id( "tutorial" ) );
     starting_om.clear_mon_groups();
+    /*
     for( int i = 0; i < OMAPX; i++ ) {
         for( int j = 0; j < OMAPY; j++ ) {
             tripoint p( i, j, 0 );
             starting_om.seen( p ) = true;
         }
     }
+    */
     g->load_map( omt_to_sm_copy( lp ) );
 
     const tripoint offset( OMAPX * MA_start.x, OMAPY * MA_start.y, MA_start.z );
