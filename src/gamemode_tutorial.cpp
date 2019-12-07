@@ -108,7 +108,7 @@ void tutorial_game::init_map()
 {
     const std::string MA_database_path = R"(C:\Projects\Cataclysm-DDA\database\MA.sqlite3)";
     //const tripoint MA_om_pos = tripoint( 41, 64, 0 );
-    tripoint_range MA_om_tripoint_range( tripoint( 51, 1, 0 ), tripoint( 51, 11, 0 ) );
+    tripoint_range MA_om_tripoint_range( tripoint( 49, 0, 0 ), tripoint( 50, 1, 0 ) );
     //tripoint_range MA_om_tripoint_range( tripoint( 40, 20, 0 ), tripoint( 45, 25, 0 ) );
     tripoint MA_start = MA_om_tripoint_range.min();
     //size_t i = 0;

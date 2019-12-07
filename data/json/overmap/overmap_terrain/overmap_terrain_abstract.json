@@ -1,205 +1,266 @@
 [
   {
     "type": "overmap_terrain",
-    "abstract": "generic_cropland",
+    "id": "generic_cropland",
     "name": "generic_cropland",
-    "land_use_code": "cropland"
+    "land_use_code": "cropland",
+    "sym": "1",
+    "color": "white"
   },
   {
     "type": "overmap_terrain",
-    "abstract": "generic_pasture",
+    "id": "generic_pasture",
     "name": "generic_pasture",
-    "land_use_code": "pasture"
+    "land_use_code": "pasture",
+    "sym": "2",
+    "color": "white"
   },
   {
     "type": "overmap_terrain",
-    "abstract": "generic_forest",
+    "id": "generic_forest",
     "name": "generic_forest",
-    "land_use_code": "forest"
+    "land_use_code": "forest",
+    "sym": "3",
+    "color": "white"
   },
   {
     "type": "overmap_terrain",
-    "abstract": "generic_wetland",
+    "id": "generic_wetland",
     "name": "generic_wetland",
-    "land_use_code": "wetland"
+    "land_use_code": "wetland",
+    "sym": "4",
+    "color": "white"
   },
   {
     "type": "overmap_terrain",
-    "abstract": "generic_mining",
+    "id": "generic_mining",
     "name": "generic_mining",
-    "land_use_code": "mining"
+    "land_use_code": "mining",
+    "sym": "5",
+    "color": "white"
   },
   {
     "type": "overmap_terrain",
-    "abstract": "generic_open_land",
+    "id": "generic_open_land",
     "name": "generic_open_land",
-    "land_use_code": "open_land"
+    "land_use_code": "open_land",
+    "sym": "6",
+    "color": "white"
   },
   {
     "type": "overmap_terrain",
-    "abstract": "generic_recreation_participation",
+    "id": "generic_recreation_participation",
     "name": "generic_recreation_participation",
-    "land_use_code": "recreation_participation"
+    "land_use_code": "recreation_participation",
+    "sym": "7",
+    "color": "white"
   },
   {
     "type": "overmap_terrain",
-    "abstract": "generic_recreation_spectator",
+    "id": "generic_recreation_spectator",
     "name": "generic_recreation_spectator",
-    "land_use_code": "recreation_spectator"
+    "land_use_code": "recreation_spectator",
+    "sym": "8",
+    "color": "white"
   },
   {
     "type": "overmap_terrain",
-    "abstract": "generic_recreation_water",
+    "id": "generic_recreation_water",
     "name": "generic_recreation_water",
-    "land_use_code": "recreation_water"
+    "land_use_code": "recreation_water",
+    "sym": "9",
+    "color": "white"
   },
   {
     "type": "overmap_terrain",
-    "abstract": "generic_residential_multi",
+    "id": "generic_residential_multi",
     "name": "generic_residential_multi",
-    "land_use_code": "residential_multi"
+    "land_use_code": "residential_multi",
+    "sym": "0",
+    "color": "white"
   },
   {
     "type": "overmap_terrain",
-    "abstract": "generic_residential_high",
+    "id": "generic_residential_high",
     "name": "generic_residential_high",
-    "land_use_code": "residential_high"
+    "land_use_code": "residential_high",
+    "sym": "A",
+    "color": "white"
   },
   {
     "type": "overmap_terrain",
-    "abstract": "generic_residential_medium",
+    "id": "generic_residential_medium",
     "name": "generic_residential_medium",
-    "land_use_code": "residential_medium"
+    "land_use_code": "residential_medium",
+    "sym": "B",
+    "color": "white"
   },
   {
     "type": "overmap_terrain",
-    "abstract": "generic_residential_low",
+    "id": "generic_residential_low",
     "name": "generic_residential_low",
-    "land_use_code": "residential_low"
+    "land_use_code": "residential_low",
+    "sym": "C",
+    "color": "white"
   },
   {
     "type": "overmap_terrain",
-    "abstract": "generic_wetland_saltwater",
+    "id": "generic_wetland_saltwater",
     "name": "generic_wetland_saltwater",
-    "land_use_code": "wetland_saltwater"
+    "land_use_code": "wetland_saltwater",
+    "sym": "D",
+    "color": "white"
   },
   {
     "type": "overmap_terrain",
-    "abstract": "generic_commercial",
+    "id": "generic_commercial",
     "name": "generic_commercial",
-    "land_use_code": "commercial"
+    "land_use_code": "commercial",
+    "sym": "E",
+    "color": "white"
   },
   {
     "type": "overmap_terrain",
-    "abstract": "generic_industrial",
+    "id": "generic_industrial",
     "name": "generic_industrial",
-    "land_use_code": "industrial"
+    "land_use_code": "industrial",
+    "sym": "F",
+    "color": "white"
   },
   {
     "type": "overmap_terrain",
-    "abstract": "generic_transitional",
+    "id": "generic_transitional",
     "name": "generic_transitional",
-    "land_use_code": "transitional"
+    "land_use_code": "transitional",
+    "sym": "G",
+    "color": "white"
   },
   {
     "type": "overmap_terrain",
-    "abstract": "generic_transportation",
+    "id": "generic_transportation",
     "name": "generic_transportation",
-    "land_use_code": "transportation"
+    "land_use_code": "transportation",
+    "sym": "H",
+    "color": "white"
   },
   {
     "type": "overmap_terrain",
-    "abstract": "generic_waste_disposal",
+    "id": "generic_waste_disposal",
     "name": "generic_waste_disposal",
-    "land_use_code": "waste_disposal"
+    "land_use_code": "waste_disposal",
+    "sym": "I",
+    "color": "white"
   },
   {
     "type": "overmap_terrain",
-    "abstract": "generic_water",
+    "id": "generic_water",
     "name": "generic_water",
-    "land_use_code": "water"
+    "land_use_code": "water",
+    "sym": "J",
+    "color": "white"
   },
   {
     "type": "overmap_terrain",
-    "abstract": "generic_cranberry_bog",
+    "id": "generic_cranberry_bog",
     "name": "generic_cranberry_bog",
-    "land_use_code": "cranberry_bog"
+    "land_use_code": "cranberry_bog",
+    "sym": "K",
+    "color": "white"
   },
   {
     "type": "overmap_terrain",
-    "abstract": "generic_powerline_utility",
+    "id": "generic_powerline_utility",
     "name": "generic_powerline_utility",
-    "land_use_code": "powerline_utility"
+    "land_use_code": "powerline_utility",
+    "sym": "L",
+    "color": "white"
   },
   {
     "type": "overmap_terrain",
-    "abstract": "generic_saltwater_sandy_beach",
+    "id": "generic_saltwater_sandy_beach",
     "name": "generic_saltwater_sandy_beach",
-    "land_use_code": "saltwater_sandy_beach"
+    "land_use_code": "saltwater_sandy_beach",
+    "sym": "M",
+    "color": "white"
   },
   {
     "type": "overmap_terrain",
-    "abstract": "generic_golf_course",
+    "id": "generic_golf_course",
     "name": "generic_golf_course",
-    "land_use_code": "golf_course"
+    "land_use_code": "golf_course",
+    "sym": "N",
+    "color": "white"
   },
   {
     "type": "overmap_terrain",
-    "abstract": "generic_marina",
+    "id": "generic_marina",
     "name": "generic_marina",
-    "land_use_code": "marina"
+    "land_use_code": "marina",
+    "sym": "O",
+    "color": "white"
   },
   {
     "type": "overmap_terrain",
-    "abstract": "generic_urban_public_institutional",
+    "id": "generic_urban_public_institutional",
     "name": "generic_urban_public_institutional",
-    "land_use_code": "urban_public_institutional"
+    "land_use_code": "urban_public_institutional",
+    "sym": "P",
+    "color": "white"
   },
   {
     "type": "overmap_terrain",
-    "abstract": "generic_cemetery",
+    "id": "generic_cemetery",
     "name": "cemetery",
     "land_use_code": "cemetery",
-    "sym": "n",
-    "color": "white",
-    "extras": "field",
-    "see_cost": 5,
-    "mondensity": 2
+    "sym": "Q",
+    "color": "white"
   },
   {
     "type": "overmap_terrain",
-    "abstract": "generic_orchard",
+    "id": "generic_orchard",
     "name": "generic_orchard",
-    "land_use_code": "orchard"
+    "land_use_code": "orchard",
+    "sym": "R",
+    "color": "white"
   },
   {
     "type": "overmap_terrain",
-    "abstract": "generic_nursery",
+    "id": "generic_nursery",
     "name": "generic_nursery",
-    "land_use_code": "nursery"
+    "land_use_code": "nursery",
+    "sym": "S",
+    "color": "white"
   },
   {
     "type": "overmap_terrain",
-    "abstract": "generic_wetland_forest",
+    "id": "generic_wetland_forest",
     "name": "generic_wetland_forest",
-    "land_use_code": "wetland_forest"
+    "land_use_code": "wetland_forest",
+    "sym": "T",
+    "color": "white"
   },
   {
     "type": "overmap_terrain",
-    "abstract": "generic_residential_very_low",
+    "id": "generic_residential_very_low",
     "name": "generic_residential_very_low",
-    "land_use_code": "residential_very_low"
+    "land_use_code": "residential_very_low",
+    "sym": "U",
+    "color": "white"
   },
   {
     "type": "overmap_terrain",
-    "abstract": "generic_junkyard",
+    "id": "generic_junkyard",
     "name": "generic_junkyard",
-    "land_use_code": "junkyard"
+    "land_use_code": "junkyard",
+    "sym": "V",
+    "color": "white"
   },
   {
     "type": "overmap_terrain",
-    "abstract": "generic_brushland",
+    "id": "generic_brushland",
     "name": "generic_brushland",
-    "land_use_code": "brushland"
+    "land_use_code": "brushland",
+    "sym": "W",
+    "color": "white"
   }
 ]

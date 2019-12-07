@@ -1,0 +1,233 @@
+[
+  {
+    "type": "mapgen",
+    "om_terrain": [ "generic_cropland" ],
+    "weight": 100,
+    "method": "json",
+    "object": { "fill_ter": "t_dirt"}
+  },
+  {
+    "type": "mapgen",
+    "om_terrain": [ "generic_pasture" ],
+    "weight": 100,
+    "method": "json",
+    "object": { "fill_ter": "t_dirt"}
+  },
+  {
+    "type": "mapgen",
+    "om_terrain": [ "generic_forest" ],
+    "weight": 100,
+    "method": "json",
+    "object": { "fill_ter": "t_dirt"}
+  },
+  {
+    "type": "mapgen",
+    "om_terrain": [ "generic_wetland" ],
+    "weight": 100,
+    "method": "json",
+    "object": { "fill_ter": "t_dirt"}
+  },
+  {
+    "type": "mapgen",
+    "om_terrain": [ "generic_mining" ],
+    "weight": 100,
+    "method": "json",
+    "object": { "fill_ter": "t_dirt"}
+  },
+  {
+    "type": "mapgen",
+    "om_terrain": [ "generic_open_land" ],
+    "weight": 100,
+    "method": "json",
+    "object": { "fill_ter": "t_dirt"}
+  },
+  {
+    "type": "mapgen",
+    "om_terrain": [ "generic_recreation_participation" ],
+    "weight": 100,
+    "method": "json",
+    "object": { "fill_ter": "t_dirt"}
+  },
+  {
+    "type": "mapgen",
+    "om_terrain": [ "generic_recreation_spectator" ],
+    "weight": 100,
+    "method": "json",
+    "object": { "fill_ter": "t_dirt"}
+  },
+  {
+    "type": "mapgen",
+    "om_terrain": [ "generic_recreation_water" ],
+    "weight": 100,
+    "method": "json",
+    "object": { "fill_ter": "t_dirt"}
+  },
+  {
+    "type": "mapgen",
+    "om_terrain": [ "generic_residential_multi" ],
+    "weight": 100,
+    "method": "json",
+    "object": { "fill_ter": "t_dirt"}
+  },
+  {
+    "type": "mapgen",
+    "om_terrain": [ "generic_residential_high" ],
+    "weight": 100,
+    "method": "json",
+    "object": { "fill_ter": "t_dirt"}
+  },
+  {
+    "type": "mapgen",
+    "om_terrain": [ "generic_residential_medium" ],
+    "weight": 100,
+    "method": "json",
+    "object": { "fill_ter": "t_dirt"}
+  },
+  {
+    "type": "mapgen",
+    "om_terrain": [ "generic_residential_low" ],
+    "weight": 100,
+    "method": "json",
+    "object": { "fill_ter": "t_dirt"}
+  },
+  {
+    "type": "mapgen",
+    "om_terrain": [ "generic_wetland_saltwater" ],
+    "weight": 100,
+    "method": "json",
+    "object": { "fill_ter": "t_dirt"}
+  },
+  {
+    "type": "mapgen",
+    "om_terrain": [ "generic_commercial" ],
+    "weight": 100,
+    "method": "json",
+    "object": { "fill_ter": "t_dirt"}
+  },
+  {
+    "type": "mapgen",
+    "om_terrain": [ "generic_industrial" ],
+    "weight": 100,
+    "method": "json",
+    "object": { "fill_ter": "t_dirt"}
+  },
+  {
+    "type": "mapgen",
+    "om_terrain": [ "generic_transitional" ],
+    "weight": 100,
+    "method": "json",
+    "object": { "fill_ter": "t_dirt"}
+  },
+  {
+    "type": "mapgen",
+    "om_terrain": [ "generic_transportation" ],
+    "weight": 100,
+    "method": "json",
+    "object": { "fill_ter": "t_dirt"}
+  },
+  {
+    "type": "mapgen",
+    "om_terrain": [ "generic_waste_disposal" ],
+    "weight": 100,
+    "method": "json",
+    "object": { "fill_ter": "t_dirt"}
+  },
+  {
+    "type": "mapgen",
+    "om_terrain": [ "generic_water" ],
+    "weight": 100,
+    "method": "json",
+    "object": { "fill_ter": "t_dirt"}
+  },
+  {
+    "type": "mapgen",
+    "om_terrain": [ "generic_cranberry_bog" ],
+    "weight": 100,
+    "method": "json",
+    "object": { "fill_ter": "t_dirt"}
+  },
+  {
+    "type": "mapgen",
+    "om_terrain": [ "generic_powerline_utility" ],
+    "weight": 100,
+    "method": "json",
+    "object": { "fill_ter": "t_dirt"}
+  },
+  {
+    "type": "mapgen",
+    "om_terrain": [ "generic_saltwater_sandy_beach" ],
+    "weight": 100,
+    "method": "json",
+    "object": { "fill_ter": "t_dirt"}
+  },
+  {
+    "type": "mapgen",
+    "om_terrain": [ "generic_golf_course" ],
+    "weight": 100,
+    "method": "json",
+    "object": { "fill_ter": "t_dirt"}
+  },
+  {
+    "type": "mapgen",
+    "om_terrain": [ "generic_marina" ],
+    "weight": 100,
+    "method": "json",
+    "object": { "fill_ter": "t_dirt"}
+  },
+  {
+    "type": "mapgen",
+    "om_terrain": [ "generic_urban_public_institutional" ],
+    "weight": 100,
+    "method": "json",
+    "object": { "fill_ter": "t_dirt"}
+  },
+  {
+    "type": "mapgen",
+    "om_terrain": [ "generic_cemetery" ],
+    "weight": 100,
+    "method": "json",
+    "object": { "fill_ter": "t_dirt"}
+  },
+  {
+    "type": "mapgen",
+    "om_terrain": [ "generic_orchard" ],
+    "weight": 100,
+    "method": "json",
+    "object": { "fill_ter": "t_dirt"}
+  },
+  {
+    "type": "mapgen",
+    "om_terrain": [ "generic_nursery" ],
+    "weight": 100,
+    "method": "json",
+    "object": { "fill_ter": "t_dirt"}
+  },
+  {
+    "type": "mapgen",
+    "om_terrain": [ "generic_wetland_forest" ],
+    "weight": 100,
+    "method": "json",
+    "object": { "fill_ter": "t_dirt"}
+  },
+  {
+    "type": "mapgen",
+    "om_terrain": [ "generic_residential_very_low" ],
+    "weight": 100,
+    "method": "json",
+    "object": { "fill_ter": "t_dirt"}
+  },
+  {
+    "type": "mapgen",
+    "om_terrain": [ "generic_junkyard" ],
+    "weight": 100,
+    "method": "json",
+    "object": { "fill_ter": "t_dirt"}
+  },
+  {
+    "type": "mapgen",
+    "om_terrain": [ "generic_brushland" ],
+    "weight": 100,
+    "method": "json",
+    "object": { "fill_ter": "t_dirt"}
+  }
+]
