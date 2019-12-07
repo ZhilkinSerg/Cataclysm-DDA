@@ -6,6 +6,7 @@
 #include <string>
 
 #include "enums.h"
+#include "point.h"
 
 enum action_id : int;
 namespace catacurses
@@ -36,6 +37,13 @@ struct special_game {
     virtual void post_action( action_id ) { }
     // Run when the player dies (or the game otherwise ends)
     virtual void game_over() { }
+    /*
+     Run when new overmap should be generated.
+     Takes overmap coordinates and returns true if normal processing should be done.
+    */
+    virtual bool generate_overmap( const tripoint & ) {
+        return true;
+    }
 
 };
 

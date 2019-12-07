@@ -182,6 +182,9 @@ WORLDPTR worldfactory::make_new_world( special_game_id special_type )
         case SGAME_DEFENSE:
             worldname = "DEFENSE";
             break;
+        case SGAME_MA:
+            worldname = "MASSACHUSETTS";
+            break;
         default:
             return nullptr;
     }
@@ -349,7 +352,7 @@ WORLDPTR worldfactory::pick_world( bool show_prompt )
 
     // Filter out special worlds (TUTORIAL | DEFENSE) from world_names.
     for( std::vector<std::string>::iterator it = world_names.begin(); it != world_names.end(); ) {
-        if( *it == "TUTORIAL" || *it == "DEFENSE" ) {
+        if( *it == "TUTORIAL" || *it == "DEFENSE" || *it == "MASSACHUSETTS" ) {
             it = world_names.erase( it );
         } else {
             ++it;
@@ -1310,7 +1313,7 @@ bool worldfactory::valid_worldname( const std::string &name, bool automated )
 {
     std::string msg;
 
-    if( name == "save" || name == "TUTORIAL" || name == "DEFENSE" ) {
+    if( name == "save" || name == "TUTORIAL" || name == "DEFENSE" || name == "MASSACHUSETTS" ) {
         msg = string_format( _( "%s is a reserved name!" ), name );
     } else if( !has_world( name ) ) {
         return true;

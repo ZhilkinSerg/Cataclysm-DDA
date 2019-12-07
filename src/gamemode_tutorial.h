@@ -41,6 +41,9 @@ struct tutorial_game : public special_game {
         void pre_action( action_id &act ) override;
         void post_action( action_id act ) override;
         void game_over() override { }
+        bool generate_overmap( const tripoint & ) override {
+            return true;
+        }
 
     private:
         void add_message( tut_lesson lesson );

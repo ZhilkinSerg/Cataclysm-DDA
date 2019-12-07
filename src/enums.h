@@ -80,6 +80,7 @@ enum special_game_id : int {
     SGAME_NULL = 0,
     SGAME_TUTORIAL,
     SGAME_DEFENSE,
+    SGAME_MA,
     NUM_SPECIAL_GAMES
 };
 

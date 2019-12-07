@@ -1039,8 +1039,10 @@ class game
         /** Is Zone manager open or not - changes graphics of some zone tiles */
         bool zones_manager_open = false;
 
+    public:
         std::unique_ptr<special_game> gamemode;
 
+    private:
         int user_action_counter; // Times the user has input an action
 
         /** How far the tileset should be zoomed out, 16 is default. 32 is zoomed in by x2, 8 is zoomed out by x0.5 */

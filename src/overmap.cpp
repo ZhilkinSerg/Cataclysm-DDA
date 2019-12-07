@@ -49,6 +49,7 @@
 #include "math_defines.h"
 #include "monster.h"
 #include "string_formatter.h"
+#include "gamemode.h"
 
 class map_extra;
 
@@ -1431,6 +1432,12 @@ void overmap::generate( const overmap *north, const overmap *east,
 {
     if( g->gametype() == SGAME_DEFENSE ) {
         dbg( D_INFO ) << "overmap::generate skipped in Defense special game mode!";
+        return;
+    }
+
+    const tripoint om_pos = tripoint( pos(), 0 );
+    if( g->gamemode->generate_overmap( om_pos ) ) {
+        dbg( D_INFO ) << "further processing of overmap::generate skipped in special game mode!";
         return;
     }
 

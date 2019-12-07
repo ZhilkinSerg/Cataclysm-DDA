@@ -60,6 +60,9 @@ struct defense_game : public special_game {
         void pre_action( action_id &act ) override;
         void post_action( action_id act ) override;
         void game_over() override;
+        bool generate_overmap( const tripoint & ) override {
+            return true;
+        }
 
     private:
         void init_to_style( defense_style new_style );
