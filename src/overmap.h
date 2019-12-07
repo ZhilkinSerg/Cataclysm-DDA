@@ -400,6 +400,9 @@ class overmap
 
         void place_roads( const overmap *north, const overmap *east, const overmap *south,
                           const overmap *west );
+    public:
+        void connect_roads_and_trails( int z = 0 );
+    private:
 
         void populate_connections_out_from_neighbors( const overmap *north, const overmap *east,
                 const overmap *south, const overmap *west );

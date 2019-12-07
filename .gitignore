@@ -183,3 +183,4 @@ Xcode/
 /.flatpak-builder/
 /repo/
 /build-dir/
+database/MA.sqlite3

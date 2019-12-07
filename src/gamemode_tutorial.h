@@ -3,6 +3,9 @@
 #define GAMEMODE_TUTORIAL_H
 
 #include "gamemode.h"
+#include "json.h"
+
+struct tripoint;
 
 enum special_game_id : int;
 enum action_id : int;
@@ -44,12 +47,16 @@ struct tutorial_game : public special_game {
 
     private:
         void add_message( tut_lesson lesson );
+        void init_map();
 
         bool tutorials_seen[NUM_LESSONS] = {};
 };
 
 class JsonObject;
 
+void load_tutorial_overmap_from_database( const std::string &path_to_database,
+        const tripoint &om_pos );
+void load_tutorial_overmap( JsonObject &jo );
 void load_tutorial_messages( JsonObject &jo );
 void clear_tutorial_messages();
 

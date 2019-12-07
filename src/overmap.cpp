@@ -837,6 +837,27 @@ const std::vector<oter_t> &overmap_terrains::get_all()
     return terrains.get_all();
 }
 
+oter_id overmap_terrains::get_random_terrain_by_land_use_code( const overmap_land_use_code_id &luc,
+        const oter_id &fallback_ter )
+{
+    std::vector<oter_id> valid;
+    for( const oter_t &t : get_all() ) {
+        if( t.get_land_use_code() == luc ) {
+            valid.push_back( t.id );
+        }
+    }
+    /*
+    if( valid.empty() ) {
+        DebugLog( D_ERROR, D_GAME ) << "cannot find any valid terrains for land use code `"
+                                    << luc.str() << "`";
+    } else {
+        DebugLog( D_ERROR, D_GAME ) << "number of valid terrains for land use code `"
+                                    << luc.str() << "` is: " << valid.size();
+    }
+    */
+    return random_entry( valid, fallback_ter );
+}
+
 bool overmap_special_terrain::can_be_placed_on( const oter_id &oter ) const
 {
     return std::any_of( locations.begin(), locations.end(),
@@ -1429,8 +1450,8 @@ void overmap::generate( const overmap *north, const overmap *east,
                         const overmap *south, const overmap *west,
                         overmap_special_batch &enabled_specials )
 {
-    if( g->gametype() == SGAME_DEFENSE ) {
-        dbg( D_INFO ) << "overmap::generate skipped in Defense special game mode!";
+    if( g->has_gametype() ) {
+        dbg( D_INFO ) << "overmap::generate skipped in special game modes!";
         return;
     }
 
@@ -2705,6 +2726,26 @@ void overmap::place_roads( const overmap *north, const overmap *east, const over
 
     // And finally connect them via roads.
     connect_closest_points( road_points, 0, *local_road );
+}
+
+void overmap::connect_roads_and_trails( int z )
+{
+    std::vector<point> road_points;
+    std::vector<point> trail_points;
+    for( int i = 0; i < OMAPX; i++ ) {
+        for( int j = 0; j < OMAPY; j++ ) {
+            tripoint p( i, j, z );
+            if( is_ot_match( "road", ter( p ), ot_match_type::prefix ) ) {
+                road_points.emplace_back( p.xy() );
+            } else if( is_ot_match( "trail", ter( p ), ot_match_type::prefix ) ) {
+                trail_points.emplace_back( p.xy() );
+            }
+        }
+    }
+    const string_id<overmap_connection> local_road( "local_road" );
+    connect_closest_points( road_points, z, *local_road );
+    const string_id<overmap_connection> forest_trail( "forest_trail" );
+    connect_closest_points( trail_points, z, *forest_trail );
 }
 
 void overmap::place_river( point pa, point pb )

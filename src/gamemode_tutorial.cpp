@@ -3,8 +3,11 @@
 #include <array>
 #include <vector>
 
+#include "sqlite3.h"
+
 #include "action.h"
 #include "avatar.h"
+#include "cata_utility.h"
 #include "coordinate_conversions.h"
 #include "game.h"
 #include "gamemode_tutorial.h"
@@ -13,6 +16,7 @@
 #include "map_iterator.h"
 #include "mapdata.h"
 #include "output.h"
+#include "omdata.h"
 #include "overmap.h"
 #include "overmapbuffer.h"
 #include "player.h"
@@ -34,7 +38,32 @@
 
 const mtype_id mon_zombie( "mon_zombie" );
 
+struct overmap_terrain_data {
+    point omt_pos;
+    overmap_land_use_code_id luc;
+    bool is_road = false;
+    bool is_water = false;
+    std::string suffix;
+    std::string specific_terrain;
+    void clear() {
+        omt_pos = point_zero;
+        suffix.clear();
+        specific_terrain.clear();
+    }
+};
+
+struct overmap_data {
+    std::string id;
+    tripoint om_pos;
+    std::vector<overmap_terrain_data> omt_data;
+    void clear() {
+        om_pos = tripoint_zero;
+        omt_data.clear();
+    }
+};
+
 static std::vector<translation> tut_text;
+static std::vector<overmap_data> MA_overmap_data;
 
 bool tutorial_game::init()
 {
@@ -59,24 +88,11 @@ bool tutorial_game::init()
         g->u.hp_cur[i] = g->u.hp_max[i];
     }
 
-    const oter_id rock( "rock" );
     //~ default name for the tutorial
     g->u.name = _( "John Smith" );
     g->u.prof = profession::generic();
-    // overmap terrain coordinates
-    const tripoint lp( 50, 50, 0 );
-    auto &starting_om = overmap_buffer.get( point_zero );
-    for( int i = 0; i < OMAPX; i++ ) {
-        for( int j = 0; j < OMAPY; j++ ) {
-            tripoint p( i, j, 0 );
-            starting_om.ter_set( p + tripoint_below, rock );
-            // Start with the overmap revealed
-            starting_om.seen( p ) = true;
-        }
-    }
-    starting_om.ter_set( lp, oter_id( "tutorial" ) );
-    starting_om.ter_set( lp + tripoint_below, oter_id( "tutorial" ) );
-    starting_om.clear_mon_groups();
+
+    init_map();
 
     g->u.toggle_trait( trait_id( "QUICK" ) );
     item lighter( "lighter", 0 );
@@ -84,17 +100,127 @@ bool tutorial_game::init()
     g->u.inv.add_item( lighter, true, false );
     g->u.set_skill_level( skill_id( "gun" ), 5 );
     g->u.set_skill_level( skill_id( "melee" ), 5 );
+
+    return true;
+}
+
+void tutorial_game::init_map()
+{
+    const std::string MA_database_path = R"(C:\Projects\Cataclysm-DDA\database\MA.sqlite3)";
+    //const tripoint MA_om_pos = tripoint( 41, 64, 0 );
+    tripoint_range MA_om_tripoint_range( tripoint( 0, 0, 0 ), tripoint( 68, 42, 0 ) );
+    //tripoint_range MA_om_tripoint_range( tripoint( 40, 20, 0 ), tripoint( 45, 25, 0 ) );
+    tripoint MA_start = MA_om_tripoint_range.min() + tripoint_south_east;
+    //size_t i = 0;
+    size_t i_max = MA_om_tripoint_range.size();
+    for( const tripoint &MA_om_pos : MA_om_tripoint_range ) {
+        /*
+        i++;
+        if( i >= i_max / 20 ) {
+            debugmsg( "Loaded 20%% of MA. Stopping loading!" );
+            break;
+        }
+        */
+        load_tutorial_overmap_from_database( MA_database_path, MA_om_pos );
+    }
+
+    //debugmsg( "Loaded successfully using database %s!", MA_database_path );
+
+    /*
+    auto &starting_om = overmap_buffer.get( point_zero );
+    for( int i = 0; i < OMAPX; i++ ) {
+    for( int j = 0; j < OMAPY; j++ ) {
+        overmap_land_use_code_id luc = overmap_land_use_codes::get_random();
+        oter_id new_t = overmap_terrains::get_random_terrain_by_land_use_code( luc, rock );
+        tripoint p( i, j, 0 );
+        starting_om.ter_set( p, new_t );
+        // Start with the overmap revealed
+        starting_om.seen( p ) = true;
+    }
+    }
+    */
+
+    //i = 0;
+    for( const overmap_data &omd : MA_overmap_data ) {
+        /*
+        i++;
+        if( i >= i_max / 20 ) {
+            debugmsg( "Generated 20%% of MA. Stopping generating!" );
+            break;
+        }
+        debugmsg( "Generating: %s using coords %s with size of omd=%d", omd.id, omd.om_pos.to_string(),
+                  omd.omt_data.size() );
+        */
+        overmap_buffer.clear();
+        overmap &om = overmap_buffer.get( omd.om_pos.xy() );
+        for( const overmap_terrain_data &otd : omd.omt_data ) {
+            tripoint p( otd.omt_pos, 0 );
+            oter_id new_t;
+            /*
+            if( !otd.specific_terrain.empty() ) {
+                new_t = oter_id( otd.specific_terrain );
+            }
+            */
+            if( otd.is_road ) {
+                new_t = oter_id( "road_isolated" );
+            } else if( otd.is_water ) {
+                new_t = oter_id( "river_center" );
+            } else {
+                const oter_id fallback_ter( "open_air" );
+                overmap_land_use_code_id luc = otd.luc;
+                if( luc == overmap_land_use_code_id::NULL_ID() ) {
+                    new_t = fallback_ter;
+                } else {
+                    new_t = overmap_terrains::get_random_terrain_by_land_use_code( luc, fallback_ter );
+                }
+            }
+            om.ter_set( p, new_t );
+        }
+
+        ///*
+        for( int i = 0; i < OMAPX; i++ ) {
+            for( int j = 0; j < OMAPY; j++ ) {
+                tripoint p( i, j, 0 );
+                om.seen( p ) = true;
+            }
+        }
+        //*/
+
+        om.connect_roads_and_trails();
+        om.save();
+        DebugLog( D_ERROR, D_GAME ) << "Saved generated overmap: " << omd.om_pos.xy().to_string();
+    }
+
+    //debugmsg( "Generated successfully using MA data from database %s!", MA_database_path );
+
+    // overmap terrain coordinates
+    const tripoint lp( 50, 50, 0 );
+    auto &starting_om = overmap_buffer.get( MA_start.xy() );
+    starting_om.ter_set( lp, oter_id( "tutorial" ) );
+    starting_om.ter_set( lp + tripoint_below, oter_id( "tutorial" ) );
+    starting_om.clear_mon_groups();
+    for( int i = 0; i < OMAPX; i++ ) {
+        for( int j = 0; j < OMAPY; j++ ) {
+            tripoint p( i, j, 0 );
+            starting_om.seen( p ) = true;
+        }
+    }
     g->load_map( omt_to_sm_copy( lp ) );
-    g->u.setx( 2 );
-    g->u.sety( 4 );
+
+    const tripoint offset( OMAPX * MA_start.x, OMAPY * MA_start.y, MA_start.z );
+    const tripoint where( g->u.global_omt_location() + offset );
+    g->place_player_overmap( where );
+
+    //g->u.setx( 2 );
+    //g->u.sety( 4 );
 
     // This shifts the view to center the players pos
-    g->update_map( g->u );
-    return true;
+    g->update_map( g-> u );
 }
 
 void tutorial_game::per_turn()
 {
+    return;
     // note that add_message does nothing if the message was already shown
     add_message( LESSON_INTRO );
     add_message( LESSON_MOVE );
@@ -157,8 +283,8 @@ void tutorial_game::pre_action( action_id &act )
     switch( act ) {
         case ACTION_SAVE:
         case ACTION_QUICKSAVE:
-            popup( _( "You're saving a tutorial - the tutorial world lacks certain features of normal worlds.  "
-                      "Weird things might happen when you load this save.  You have been warned." ) );
+            //popup( _( "You're saving a tutorial - the tutorial world lacks certain features of normal worlds.  "
+            //          "Weird things might happen when you load this save.  You have been warned." ) );
             break;
         default:
             // Other actions are fine.
@@ -266,6 +392,104 @@ void tutorial_game::add_message( tut_lesson lesson )
     tutorials_seen[lesson] = true;
     popup( tut_text[lesson].translated(), PF_ON_TOP );
     g->refresh_all();
+}
+
+void load_tutorial_overmap( JsonObject &jo )
+{
+    ( void ) jo;
+    /*
+    MA_overmap_data.clear();
+    MA_overmap_data.id = jo.get_string( "id" );
+    MA_overmap_data.om_pos = tripoint( jo.get_int( "om_x" ),
+                                        jo.get_int( "om_y" ),
+                                        jo.get_int( "om_z" ) );
+    JsonArray omtd = jo.get_array( "omt_data" );
+    while( omtd.has_more() ) {
+        JsonObject jotd = omtd.next_object();
+        overmap_terrain_data otd;
+        otd.omt_pos = point( jotd.get_int( "x", 0 ), jotd.get_int( "y", 0 ) );
+        const int luc = jotd.get_int( "luc", 0 );
+        if( luc == 0 ) {
+            //DebugLog( D_ERROR, D_GAME ) << "!!!luc at coords=" << otd.omt_pos.to_string() << " equals to " << luc;
+            continue;
+        }
+        //DebugLog( D_ERROR, D_GAME ) << "luc at coords=" << otd.omt_pos.to_string() << " equals to " << luc;
+        otd.luc = overmap_land_use_codes::get_by_land_use_code( luc );
+        otd.is_road = jotd.get_bool( "is_road", false );
+        otd.is_water = jotd.get_bool( "is_water", false );
+        otd.suffix = jotd.get_string( "suffix", "" );
+        otd.specific_terrain = jotd.get_string( "specific_terrain", "" );
+        MA_overmap_data.omt_data.emplace_back( otd );
+    }
+    */
+}
+
+void load_tutorial_overmap_from_database( const std::string &path_to_database,
+        const tripoint &om_pos )
+{
+    sqlite3 *db;
+    char *zErrMsg = nullptr;
+    int rc = sqlite3_open( path_to_database.c_str(), &db );
+    //const char *data = "Callback function called";
+
+    if( rc ) {
+        debugmsg( "Can't open database: %s", sqlite3_errmsg( db ) );
+        return;
+    }
+
+    overmap_data temp_od;
+    temp_od.clear();
+    temp_od.id = string_format( "MA_%s", om_pos.to_string() );
+    temp_od.om_pos = om_pos;
+    DebugLog( D_ERROR, D_GAME ) << "Loading from database: " << temp_od.om_pos.to_string();
+    //debugmsg( "trying to load: %s, %s", temp_od.id, temp_od.om_pos.to_string() );
+    const std::string my_select_sql = string_format(
+                                          "select omt_x, omt_y, land_use_code from omt where om_x = %1$d and om_y = %2$d order by omt_x, omt_y;",
+                                          om_pos.x, om_pos.y );
+    sqlite3_stmt *statement;
+    int x = tripoint_min.x;
+    int y = tripoint_min.y;
+    int land_use_code = 0;
+    //debugmsg( "%s", my_select_sql );
+    rc = sqlite3_prepare( db, my_select_sql.c_str(), my_select_sql.length(), &statement, nullptr );
+    /*
+    if( rc != SQLITE_OK && rc != SQLITE_DONE ) {
+        debugmsg( "sqlite3_prepare error: %d", rc );
+    }
+    */
+    overmap_terrain_data otd;
+    for( size_t i = 0; i < OMAPX * OMAPY; ++i ) {
+        //DebugLog( D_ERROR, D_GAME ) << "i:" << i;
+        rc = sqlite3_step( statement );
+        if( rc == SQLITE_DONE || rc != SQLITE_ROW ) {
+            break;
+        }
+        otd.clear();
+        x = sqlite3_column_int( statement, 0 );
+        y = sqlite3_column_int( statement, 1 );
+        land_use_code = sqlite3_column_int( statement, 2 );
+        // bool is_road = sqlite3_column_int( statement, 2 );
+        otd.omt_pos = point( x, y );
+        //debugmsg( "LUC on MA_%s at %s=%d", om_pos.to_string(), otd.omt_pos.to_string(), land_use_code );
+        /*
+        if( luc == 0 ) {
+            //DebugLog( D_ERROR, D_GAME ) << "!!!luc at coords=" << otd.omt_pos.to_string() << " equals to " <<
+            //                            land_use_code;
+            continue;
+        }
+        */
+        otd.luc = overmap_land_use_codes::get_by_land_use_code( land_use_code );
+        temp_od.omt_data.emplace_back( otd );
+    }
+    /*
+    rc = sqlite3_finalize( statement );
+    if( rc != SQLITE_OK ) {
+        debugmsg( "SQL error: %s", zErrMsg );
+        sqlite3_free( zErrMsg );
+    }
+    */
+    sqlite3_close( db );
+    MA_overmap_data.emplace_back( temp_od );
 }
 
 void load_tutorial_messages( JsonObject &jo )

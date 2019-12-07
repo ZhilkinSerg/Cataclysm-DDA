@@ -21,6 +21,7 @@
 #include "translations.h"
 #include "type_id.h"
 #include "optional.h"
+#include "rng.h"
 
 struct city;
 class overmap_land_use_code;
@@ -468,6 +469,8 @@ void finalize();
 void reset();
 
 const std::vector<oter_t> &get_all();
+oter_id get_random_terrain_by_land_use_code( const overmap_land_use_code_id &luc,
+        const oter_id &fallback_ter );
 
 } // namespace overmap_terrains
 
@@ -480,6 +483,21 @@ void check_consistency();
 void reset();
 
 const std::vector<overmap_land_use_code> &get_all();
+
+inline overmap_land_use_code_id get_by_land_use_code( int land_use_code )
+{
+    for( const overmap_land_use_code &luc : get_all() ) {
+        if( luc.land_use_code == land_use_code ) {
+            return luc.id;
+        }
+    }
+    return overmap_land_use_code_id::NULL_ID();
+}
+
+inline overmap_land_use_code_id get_random()
+{
+    return random_entry( get_all() ).id;
+}
 
 } // namespace overmap_land_use_codes
 
