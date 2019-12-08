@@ -10,6 +10,9 @@
 #include "overmap.h"
 #include "game_constants.h"
 #include "point.h"
+#include "coordinate_conversions.h"
+#include "avatar.h"
+#include "profession.h"
 
 enum class land_use_code : int {
     none = 0,
@@ -108,6 +111,28 @@ struct overmap_terrain_data {
 bool ma_game::init()
 {
     popup( "Beware! Certain overmaps would be generated using Massachusetts state geodata!" );
+    g->weather.temperature = 65;
+    // We use a Z-factor of 10 so that we don't plop down tutorial rooms in the
+    // middle of the "real" game world
+    g->u.normalize();
+    g->u.str_cur = g->u.str_max;
+    g->u.per_cur = g->u.per_max;
+    g->u.int_cur = g->u.int_max;
+    g->u.dex_cur = g->u.dex_max;
+    for( int i = 0; i < num_hp_parts; i++ ) {
+        g->u.hp_cur[i] = g->u.hp_max[i];
+    }
+    //~ default name for the tutorial
+    g->u.name = _( "John Smith" );
+    g->u.prof = profession::generic();
+    // overmap terrain coordinates
+    const tripoint lp( 50, 50, 0 );
+    g->load_map( omt_to_sm_copy( lp ) );
+    g->u.setx( 2 );
+    g->u.sety( 4 );
+
+    // This shifts the view to center the players pos
+    g->update_map( g->u );
     return true;
 }
 
