@@ -130,12 +130,13 @@ bool ma_game::init()
     const tripoint offset( OMAPX * 45, OMAPY * 12, 0 );
     const tripoint where( g->u.global_omt_location() + offset );
     g->place_player_overmap( where );
+    g->load_map( omt_to_sm_copy( where ) );
 
     // overmap terrain coordinates
-    const tripoint lp( 50, 50, 0 );
-    g->load_map( omt_to_sm_copy( lp ) );
-    g->u.setx( 2 );
-    g->u.sety( 4 );
+    //const tripoint lp( 50, 50, 0 );
+    //g->load_map( omt_to_sm_copy( lp ) );
+    //g->u.setx( 2 );
+    //g->u.sety( 4 );
 
     // This shifts the view to center the players pos
     g->update_map( g->u );
