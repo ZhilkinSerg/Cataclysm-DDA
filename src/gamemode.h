@@ -39,10 +39,17 @@ struct special_game {
     virtual void game_over() { }
     /*
      Run when new overmap should be generated.
-     Takes overmap coordinates and returns true if normal processing should be done.
+     Takes overmap coordinates and returns true if normal processing should be skipped.
     */
     virtual bool generate_overmap( const tripoint & ) {
-        return true;
+        return false;
+    }
+    /*
+     Run when cities should be place on overmap.
+     Takes overmap coordinates and returns true if normal processing should be skipped.
+    */
+    virtual bool place_cities( const tripoint & ) {
+        return false;
     }
 
 };

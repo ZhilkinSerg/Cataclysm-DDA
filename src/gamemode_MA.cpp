@@ -6,6 +6,7 @@
 #include "sqlite3.h"
 
 #include "game.h"
+#include "omdata.h"
 #include "output.h"
 #include "overmap.h"
 #include "game_constants.h"
@@ -125,6 +126,11 @@ bool ma_game::init()
     //~ default name for the tutorial
     g->u.name = _( "John Smith" );
     g->u.prof = profession::generic();
+
+    const tripoint offset( OMAPX * 45, OMAPY * 12, 0 );
+    const tripoint where( g->u.global_omt_location() + offset );
+    g->place_player_overmap( where );
+
     // overmap terrain coordinates
     const tripoint lp( 50, 50, 0 );
     g->load_map( omt_to_sm_copy( lp ) );
@@ -138,6 +144,7 @@ bool ma_game::init()
 
 bool ma_game::generate_overmap( const tripoint &om_pos )
 {
+    return false;
     const int z = om_pos.z;
     sqlite3 *MA_db;
     int rc = sqlite3_open( MA_database_path.c_str(), &MA_db );
@@ -296,5 +303,57 @@ bool ma_game::generate_overmap( const tripoint &om_pos )
     }
     om.save();
     overmap_buffer.clear();
-    return false;
+    return true;
+}
+
+bool ma_game::place_cities( const tripoint &om_pos )
+{
+
+    const int z = om_pos.z;
+    sqlite3 *MA_db;
+    int rc = sqlite3_open( MA_database_path.c_str(), &MA_db );
+    if( rc ) {
+        debugmsg( "Can't open database: %s", sqlite3_errmsg( MA_db ) );
+        return false;
+    }
+    const std::string MA_sql = string_format(
+                                   "select town_name, omt_x, omt_y from towns where om_x = %1$d and om_y = %2$d;",
+                                   om_pos.x, om_pos.y );
+    sqlite3_stmt *MA_statement;
+    rc = sqlite3_prepare( MA_db, MA_sql.c_str(), MA_sql.length(), &MA_statement, nullptr );
+    if( rc ) {
+        debugmsg( "Can't prepare sql statement %s", sqlite3_errmsg( MA_db ) );
+        sqlite3_close( MA_db );
+        return false;
+    }
+
+    overmap &om = overmap_buffer.get( om_pos.xy() );
+    const string_id<overmap_connection> local_road_id( "local_road" );
+    const overmap_connection &local_road( *local_road_id );
+
+    for( size_t row = 0; row <= OMAPX * OMAPY; ++row ) {
+        rc = sqlite3_step( MA_statement );
+        if( rc == SQLITE_DONE || rc != SQLITE_ROW ) {
+            debugmsg( "Can't step next row %s", sqlite3_errmsg( MA_db ) );
+            break;
+        }
+        int col = 0;
+        const int cx = sqlite3_column_int( MA_statement, col++ );
+        const int cy = sqlite3_column_int( MA_statement, col++ );
+        const std::string cname = ( char * ) sqlite3_column_text( MA_statement, col );
+        const int size = rng( 1, 16 );
+        const tripoint p( cx, cy, om_pos.z );
+        city tmp;
+        tmp.pos = p.xy();
+        tmp.name = cname;
+        om.cities.push_back( tmp );
+        om.ter_set( p, oter_id( "road_nesw" ) ); // every city starts with an intersection
+        const auto start_dir = om_direction::random();
+        auto cur_dir = start_dir;
+        do {
+            om.build_city_street( local_road, tmp.pos, size, cur_dir, tmp );
+        } while( ( cur_dir = om_direction::turn_right( cur_dir ) ) != start_dir );
+    }
+    sqlite3_close( MA_db );
+    return true;
 }

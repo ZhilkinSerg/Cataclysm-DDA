@@ -23,6 +23,7 @@ struct ma_game : public special_game {
         }
         void game_over() override { }
         bool generate_overmap( const tripoint &om_pos ) override;
+        bool place_cities( const tripoint &om_pos ) override;
     private:
         const std::string MA_database_path = R"(C:\Projects\Cataclysm-DDA\mods\MA\MA.sqlite3)";
 };

@@ -410,8 +410,10 @@ class overmap
         void place_cities();
         void place_building( const tripoint &p, om_direction::type dir, const city &town );
 
+    public:
         void build_city_street( const overmap_connection &connection, const point &p, int cs,
                                 om_direction::type dir, const city &town, int block_width = 2 );
+    private:
         bool build_lab( const tripoint &p, int s, std::vector<point> *lab_train_points,
                         const std::string &prefix, int train_odds );
         void build_anthill( const tripoint &p, int s );
