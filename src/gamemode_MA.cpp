@@ -111,8 +111,8 @@ struct overmap_terrain_data {
 
 bool ma_game::init()
 {
-    popup( "Beware! Certain overmaps would be generated using Massachusetts state geodata!" );
-    g->weather.temperature = 65;
+    //popup( "Beware! Certain overmaps would be generated using Massachusetts state geodata!" );
+    //g->weather.temperature = 65;
     // We use a Z-factor of 10 so that we don't plop down tutorial rooms in the
     // middle of the "real" game world
     g->u.normalize();
@@ -145,7 +145,7 @@ bool ma_game::init()
 
 bool ma_game::generate_overmap( const tripoint &om_pos )
 {
-    return false;
+    //return false;
     const int z = om_pos.z;
     sqlite3 *MA_db;
     int rc = sqlite3_open( MA_database_path.c_str(), &MA_db );
@@ -187,110 +187,124 @@ bool ma_game::generate_overmap( const tripoint &om_pos )
         for( int y = 0; y < OMAPY; y++ ) {
             tripoint p( x, y, z );
             const overmap_terrain_data &otd = MA_omt[x][y];
-            oter_id new_t = oter_id( "open_air" );
+            std::string new_ter_id = "open_air";
+            std::string new_ter_rot = om_direction::name( om_direction::random() );
             if( otd.ocean == 1 ) {
-                new_t = oter_id( "river_center" );
+                new_ter_id = "river_center" ;
             } else {
                 const land_use_code luc = static_cast<land_use_code>( otd.land_use_code );
                 switch( luc ) {
                     case land_use_code::cropland:
-                        new_t = oter_id( "field" );
+                        new_ter_id = "field";
+                        new_ter_rot.clear();
                         break;
                     case land_use_code::pasture:
-                        new_t = oter_id( "field" );
+                        new_ter_id = "field";
+                        new_ter_rot.clear();
                         break;
                     case land_use_code::forest:
-                        new_t = oter_id( "forest" );
+                        new_ter_id = "forest";
+                        new_ter_rot.clear();
                         break;
                     case land_use_code::wetland:
-                        new_t = oter_id( "swamp" );
+                        new_ter_id = "swamp";
+                        new_ter_rot.clear();
                         break;
                     case land_use_code::mining:
-                        new_t = oter_id( "crater" );
+                        new_ter_id = "crater";
+                        new_ter_rot.clear();
                         break;
                     case land_use_code::open_land:
-                        new_t = oter_id( "field" );
+                        new_ter_id = "field";
+                        new_ter_rot.clear();
                         break;
                     case land_use_code::recreation_participation:
-                        new_t = oter_id( "skate_park" );
+                        new_ter_id = "skate_park";
                         break;
                     case land_use_code::recreation_spectator:
-                        new_t = oter_id( "football_field_a1" );
+                        new_ter_id = "football_field_a1";
                         break;
                     case land_use_code::recreation_water:
-                        new_t = oter_id( "pool" );
+                        new_ter_id = "pool";
                         break;
                     case land_use_code::residential_multi:
-                        new_t = oter_id( "house" );
+                        new_ter_id = "house";
                         break;
                     case land_use_code::residential_high:
-                        new_t = oter_id( "house" );
+                        new_ter_id = "house";
                         break;
                     case land_use_code::residential_medium:
-                        new_t = oter_id( "house" );
+                        new_ter_id = "house";
                         break;
                     case land_use_code::residential_low:
-                        new_t = oter_id( "house" );
+                        new_ter_id = "house";
                         break;
                     case land_use_code::wetland_saltwater:
-                        new_t = oter_id( "swamp" );
+                        new_ter_id = "swamp";
+                        new_ter_rot.clear();
                         break;
                     case land_use_code::commercial:
-                        new_t = oter_id( "s_gas" );
+                        new_ter_id = "s_gas";
                         break;
                     case land_use_code::industrial:
-                        new_t = oter_id( "warehouse" );
+                        new_ter_id = "warehouse";
                         break;
                     case land_use_code::transitional:
-                        new_t = oter_id( "field" );
+                        new_ter_id = "field";
+                        new_ter_rot.clear();
                         break;
                     case land_use_code::transportation:
-                        new_t = oter_id( "road_nesw" );
+                        new_ter_id = "road_nesw";
+                        new_ter_rot.clear();
                         break;
                     case land_use_code::waste_disposal:
-                        new_t = oter_id( "toxic_dump" );
+                        new_ter_id = "toxic_dump";
                         break;
                     case land_use_code::water:
-                        new_t = oter_id( "river_center" );
+                        new_ter_id = "river_center";
                         break;
                     case land_use_code::cranberry_bog:
-                        new_t = oter_id( "swamp" );
+                        new_ter_id = "swamp";
+                        new_ter_rot.clear();
                         break;
                     case land_use_code::powerline_utility:
-                        new_t = oter_id( "sai" );
+                        new_ter_id = "sai";
                         break;
                     case land_use_code::saltwater_sandy_beach:
-                        new_t = oter_id( "swamp" );
+                        new_ter_id = "swamp";
+                        new_ter_rot.clear();
                         break;
                     case land_use_code::golf_course:
-                        new_t = oter_id( "golfcourse_00" );
+                        new_ter_id = "golfcourse_00";
                         break;
                     case land_use_code::marina:
-                        new_t = oter_id( "marina_1_north" );
+                        new_ter_id = "marina_1_north";
                         break;
                     case land_use_code::urban_public_institutional:
-                        new_t = oter_id( "church" );
+                        new_ter_id = "church";
                         break;
                     case land_use_code::cemetery:
-                        new_t = oter_id( "cemetery" );
+                        new_ter_id = "cemetery";
                         break;
                     case land_use_code::orchard:
-                        new_t = oter_id( "orchard_tree_apple" );
+                        new_ter_id = "orchard_tree_apple";
                         break;
                     case land_use_code::nursery:
-                        new_t = oter_id( "TreeFarm_1b" );
+                        new_ter_id = "TreeFarm_1b";
                         break;
                     case land_use_code::wetland_forest:
-                        new_t = oter_id( "forest_water" );
+                        new_ter_id = "forest_water";
+                        new_ter_rot.clear();
                         break;
                     case land_use_code::residential_very_low:
-                        new_t = oter_id( "house" );
+                        new_ter_id = "house";
                         break;
                     case land_use_code::junkyard:
-                        new_t = oter_id( "junkyard_1a" );
+                        new_ter_id = "junkyard_1a";
                         break;
                     case land_use_code::brushland:
-                        new_t = oter_id( "field" );
+                        new_ter_id = "field";
+                        new_ter_rot.clear();
                         break;
                     case land_use_code::none:
                     case land_use_code::NUM_LAND_USE_CODE:
@@ -299,11 +313,20 @@ bool ma_game::generate_overmap( const tripoint &om_pos )
                 }
 
             }
+            oter_id new_t = oter_id( new_ter_id + ( new_ter_rot.empty() ? "" : "_" + new_ter_rot ) );
             om.ter_set( p, new_t );
         }
     }
+
+    for( int i = 0; i < OMAPX; i++ ) {
+        for( int j = 0; j < OMAPY; j++ ) {
+            //for( int k = -OVERMAP_DEPTH; k <= OVERMAP_HEIGHT; k++ ) {
+            om.seen( { i, j, 0 } ) = true;
+            //}
+        }
+    }
     om.save();
-    overmap_buffer.clear();
+    //overmap_buffer.clear();
     return true;
 }
 
@@ -318,7 +341,7 @@ bool ma_game::place_cities( const tripoint &om_pos )
         return false;
     }
     const std::string MA_sql = string_format(
-                                   "select town_name, omt_x, omt_y from towns where om_x = %1$d and om_y = %2$d;",
+                                   "select town_id, town_name, omt_x, omt_y from towns where om_x = %1$d and om_y = %2$d;",
                                    om_pos.x, om_pos.y );
     sqlite3_stmt *MA_statement;
     rc = sqlite3_prepare( MA_db, MA_sql.c_str(), MA_sql.length(), &MA_statement, nullptr );
@@ -339,14 +362,15 @@ bool ma_game::place_cities( const tripoint &om_pos )
             break;
         }
         int col = 0;
+        const int cid = sqlite3_column_int( MA_statement, col++ );
+        const std::string cname = ( char * )sqlite3_column_text( MA_statement, col++ );
         const int cx = sqlite3_column_int( MA_statement, col++ );
         const int cy = sqlite3_column_int( MA_statement, col++ );
-        const std::string cname = ( char * ) sqlite3_column_text( MA_statement, col );
         const int size = rng( 1, 16 );
         const tripoint p( cx, cy, om_pos.z );
         city tmp;
         tmp.pos = p.xy();
-        tmp.name = cname;
+        tmp.name = string_format( "%d-%s", cid, cname );
         om.cities.push_back( tmp );
         om.ter_set( p, oter_id( "road_nesw" ) ); // every city starts with an intersection
         const auto start_dir = om_direction::random();
@@ -355,6 +379,15 @@ bool ma_game::place_cities( const tripoint &om_pos )
             om.build_city_street( local_road, tmp.pos, size, cur_dir, tmp );
         } while( ( cur_dir = om_direction::turn_right( cur_dir ) ) != start_dir );
     }
+
+    for( int i = 0; i < OMAPX; i++ ) {
+        for( int j = 0; j < OMAPY; j++ ) {
+            //for( int k = -OVERMAP_DEPTH; k <= OVERMAP_HEIGHT; k++ ) {
+            om.seen( { i, j, 0 } ) = true;
+            //}
+        }
+    }
+
     sqlite3_close( MA_db );
     return true;
 }

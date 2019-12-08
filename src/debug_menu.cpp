@@ -83,6 +83,7 @@
 #include "string_id.h"
 #include "units.h"
 #include "weather_gen.h"
+#include "string_input_popup.h"
 
 class vehicle;
 
@@ -149,7 +150,8 @@ enum debug_menu_index {
     DEBUG_DISPLAY_LIGHTING,
     DEBUG_DISPLAY_RADIATION,
     DEBUG_LEARN_SPELLS,
-    DEBUG_LEVEL_SPELLS
+    DEBUG_LEVEL_SPELLS,
+    DEBUG_OM_SPECIFIC_TELEPORT
 };
 
 class mission_debug
@@ -232,6 +234,7 @@ static int teleport_uilist()
         { uilist_entry( DEBUG_SHORT_TELEPORT, true, 's', _( "Teleport - short range" ) ) },
         { uilist_entry( DEBUG_LONG_TELEPORT, true, 'l', _( "Teleport - long range" ) ) },
         { uilist_entry( DEBUG_OM_TELEPORT, true, 'o', _( "Teleport - adjacent overmap" ) ) },
+        { uilist_entry( DEBUG_OM_SPECIFIC_TELEPORT, true, 't', _( "Teleport - specific overmap" ) ) },
     };
 
     return uilist( _( "Teleport…" ), uilist_initializer );
@@ -356,14 +359,29 @@ void teleport_long()
     add_msg( _( "You teleport to submap (%d,%d,%d)." ), where.x, where.y, where.z );
 }
 
-void teleport_overmap()
+void teleport_overmap( bool specific_overmap )
 {
-    const cata::optional<tripoint> dir_ = choose_direction( _( "Where is the desired overmap?" ) );
-    if( !dir_ ) {
-        return;
+    tripoint offset;
+    if( specific_overmap ) {
+        const auto text = string_input_popup()
+                          .title( "Teleport where?" )
+                          .width( 20 )
+                          .query_string();
+        if( text.empty() ) {
+            return;
+        }
+        offset = tripoint(
+                     std::atoi( string_split( text, ',' )[0].c_str() ),
+                     std::atoi( string_split( text, ',' )[1].c_str() ),
+                     0 );
+    } else {
+        const cata::optional<tripoint> dir_ = choose_direction( _( "Where is the desired overmap?" ) );
+        if( !dir_ ) {
+            return;
+        }
+        offset = tripoint( OMAPX * dir_->x, OMAPY * dir_->y, dir_->z );
     }
 
-    const tripoint offset( OMAPX * dir_->x, OMAPY * dir_->y, dir_->z );
     const tripoint where( g->u.global_omt_location() + offset );
 
     g->place_player_overmap( where );
@@ -1498,6 +1516,9 @@ void debug()
 
         case DEBUG_OM_TELEPORT:
             debug_menu::teleport_overmap();
+            break;
+        case DEBUG_OM_SPECIFIC_TELEPORT:
+            debug_menu::teleport_overmap( true );
             break;
         case DEBUG_TRAIT_GROUP:
             trait_group::debug_spawn();

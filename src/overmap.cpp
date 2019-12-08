@@ -1430,6 +1430,9 @@ void overmap::generate( const overmap *north, const overmap *east,
                         const overmap *south, const overmap *west,
                         overmap_special_batch &enabled_specials )
 {
+    if( !g->gamemode->place_cities( tripoint( pos(), 0 ) ) ) {
+        place_cities();
+    }
     if( g->gamemode->generate_overmap( tripoint( pos(), 0 ) ) ) {
         return;
     }
@@ -2805,10 +2808,6 @@ spawns happen at... <cue Clue music>
 20:56 <kevingranade>: game:pawn_mon() in game.cpp:7380*/
 void overmap::place_cities()
 {
-    if( g->gamemode->place_cities( tripoint( pos(), 0 ) ) ) {
-        return;
-    }
-
     int op_city_size = get_option<int>( "CITY_SIZE" );
     if( op_city_size <= 0 ) {
         return;
