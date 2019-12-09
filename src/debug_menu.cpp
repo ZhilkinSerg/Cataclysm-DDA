@@ -361,6 +361,7 @@ void teleport_long()
 
 void teleport_overmap( bool specific_overmap )
 {
+    tripoint where;
     tripoint offset;
     if( specific_overmap ) {
         const auto text = string_input_popup()
@@ -370,20 +371,18 @@ void teleport_overmap( bool specific_overmap )
         if( text.empty() ) {
             return;
         }
-        offset = tripoint(
-                     OMAPX * std::atoi( string_split( text, ',' )[0].c_str() ),
-                     OMAPY * std::atoi( string_split( text, ',' )[1].c_str() ),
-                     0 );
+        where = tripoint(
+                    OMAPX * std::atoi( string_split( text, ',' )[0].c_str() ),
+                    OMAPY * std::atoi( string_split( text, ',' )[1].c_str() ),
+                    0 );
     } else {
         const cata::optional<tripoint> dir_ = choose_direction( _( "Where is the desired overmap?" ) );
         if( !dir_ ) {
             return;
         }
         offset = tripoint( OMAPX * dir_->x, OMAPY * dir_->y, dir_->z );
+        where = g->u.global_omt_location() + offset;
     }
-
-    const tripoint where( g->u.global_omt_location() + offset );
-
     g->place_player_overmap( where );
 
     const tripoint new_pos( omt_to_om_copy( g->u.global_omt_location() ) );
