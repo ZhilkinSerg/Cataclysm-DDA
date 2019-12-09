@@ -280,7 +280,7 @@ bool ma_game::generate_overmap( const tripoint &om_pos )
                         new_ter_id = "golfcourse_00";
                         break;
                     case land_use_code::marina:
-                        new_ter_id = "marina_1_north";
+                        new_ter_id = "marina_1";
                         break;
                     case land_use_code::urban_public_institutional:
                         new_ter_id = "church";
