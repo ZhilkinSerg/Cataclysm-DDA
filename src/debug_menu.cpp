@@ -371,8 +371,8 @@ void teleport_overmap( bool specific_overmap )
             return;
         }
         offset = tripoint(
-                     std::atoi( string_split( text, ',' )[0].c_str() ),
-                     std::atoi( string_split( text, ',' )[1].c_str() ),
+                     OMAPX * std::atoi( string_split( text, ',' )[0].c_str() ),
+                     OMAPY * std::atoi( string_split( text, ',' )[1].c_str() ),
                      0 );
     } else {
         const cata::optional<tripoint> dir_ = choose_direction( _( "Where is the desired overmap?" ) );

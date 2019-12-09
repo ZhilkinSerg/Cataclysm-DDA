@@ -358,7 +358,7 @@ bool ma_game::place_cities( const tripoint &om_pos )
     for( size_t row = 0; row <= OMAPX * OMAPY; ++row ) {
         rc = sqlite3_step( MA_statement );
         if( rc == SQLITE_DONE || rc != SQLITE_ROW ) {
-            debugmsg( "Can't step next row %s", sqlite3_errmsg( MA_db ) );
+            //debugmsg( "Can't step next row %s", sqlite3_errmsg( MA_db ) );
             break;
         }
         int col = 0;
