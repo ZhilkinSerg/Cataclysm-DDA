@@ -150,7 +150,7 @@ bool ma_game::generate_overmap( const tripoint &om_pos )
     sqlite3 *MA_db;
     int rc = sqlite3_open( MA_database_path.c_str(), &MA_db );
     if( rc ) {
-        debugmsg( "Can't open database: %s", sqlite3_errmsg( MA_db ) );
+        //debugmsg( "Can't open database: %s", sqlite3_errmsg( MA_db ) );
         return false;
     }
     const std::string MA_sql = string_format(
@@ -159,7 +159,7 @@ bool ma_game::generate_overmap( const tripoint &om_pos )
     sqlite3_stmt *MA_statement;
     rc = sqlite3_prepare( MA_db, MA_sql.c_str(), MA_sql.length(), &MA_statement, nullptr );
     if( rc ) {
-        debugmsg( "Can't prepare sql statement %s", sqlite3_errmsg( MA_db ) );
+        //debugmsg( "Can't prepare sql statement %s", sqlite3_errmsg( MA_db ) );
         sqlite3_close( MA_db );
         return false;
     }
@@ -168,7 +168,7 @@ bool ma_game::generate_overmap( const tripoint &om_pos )
     for( size_t row = 0; row <= OMAPX * OMAPY; ++row ) {
         rc = sqlite3_step( MA_statement );
         if( rc == SQLITE_DONE || rc != SQLITE_ROW ) {
-            debugmsg( "Can't step next row %s", sqlite3_errmsg( MA_db ) );
+            //debugmsg( "Can't step next row %s", sqlite3_errmsg( MA_db ) );
             break;
         }
         int col = 0;
@@ -190,7 +190,8 @@ bool ma_game::generate_overmap( const tripoint &om_pos )
             std::string new_ter_id = "open_air";
             std::string new_ter_rot = om_direction::name( om_direction::random() );
             if( otd.ocean == 1 ) {
-                new_ter_id = "river_center" ;
+                new_ter_id = "river_center";
+                new_ter_rot.clear();
             } else {
                 const land_use_code luc = static_cast<land_use_code>( otd.land_use_code );
                 switch( luc ) {
@@ -207,7 +208,7 @@ bool ma_game::generate_overmap( const tripoint &om_pos )
                         new_ter_rot.clear();
                         break;
                     case land_use_code::wetland:
-                        new_ter_id = "swamp";
+                        new_ter_id = "forest_water";
                         new_ter_rot.clear();
                         break;
                     case land_use_code::mining:
@@ -240,7 +241,7 @@ bool ma_game::generate_overmap( const tripoint &om_pos )
                         new_ter_id = "house";
                         break;
                     case land_use_code::wetland_saltwater:
-                        new_ter_id = "swamp";
+                        new_ter_id = "forest_water";
                         new_ter_rot.clear();
                         break;
                     case land_use_code::commercial:
@@ -262,16 +263,17 @@ bool ma_game::generate_overmap( const tripoint &om_pos )
                         break;
                     case land_use_code::water:
                         new_ter_id = "river_center";
+                        new_ter_rot.clear();
                         break;
                     case land_use_code::cranberry_bog:
-                        new_ter_id = "swamp";
+                        new_ter_id = "forest_water";
                         new_ter_rot.clear();
                         break;
                     case land_use_code::powerline_utility:
                         new_ter_id = "sai";
                         break;
                     case land_use_code::saltwater_sandy_beach:
-                        new_ter_id = "swamp";
+                        new_ter_id = "forest_water";
                         new_ter_rot.clear();
                         break;
                     case land_use_code::golf_course:
@@ -309,6 +311,7 @@ bool ma_game::generate_overmap( const tripoint &om_pos )
                     case land_use_code::none:
                     case land_use_code::NUM_LAND_USE_CODE:
                     default:
+                        new_ter_rot.clear();
                         break;
                 }
 
@@ -337,7 +340,7 @@ bool ma_game::place_cities( const tripoint &om_pos )
     sqlite3 *MA_db;
     int rc = sqlite3_open( MA_database_path.c_str(), &MA_db );
     if( rc ) {
-        debugmsg( "Can't open database: %s", sqlite3_errmsg( MA_db ) );
+        //debugmsg( "Can't open database: %s", sqlite3_errmsg( MA_db ) );
         return false;
     }
     const std::string MA_sql = string_format(
@@ -346,7 +349,7 @@ bool ma_game::place_cities( const tripoint &om_pos )
     sqlite3_stmt *MA_statement;
     rc = sqlite3_prepare( MA_db, MA_sql.c_str(), MA_sql.length(), &MA_statement, nullptr );
     if( rc ) {
-        debugmsg( "Can't prepare sql statement %s", sqlite3_errmsg( MA_db ) );
+        //debugmsg( "Can't prepare sql statement %s", sqlite3_errmsg( MA_db ) );
         sqlite3_close( MA_db );
         return false;
     }
