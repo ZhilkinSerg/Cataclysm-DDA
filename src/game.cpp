@@ -172,11 +172,9 @@ const mtype_id mon_manhack( "mon_manhack" );
 
 const skill_id skill_melee( "melee" );
 const skill_id skill_dodge( "dodge" );
-const skill_id skill_driving( "driving" );
 const skill_id skill_firstaid( "firstaid" );
 const skill_id skill_survival( "survival" );
 const skill_id skill_electronics( "electronics" );
-const skill_id skill_mechanics( "mechanics" );
 const skill_id skill_computer( "computer" );
 
 const species_id ZOMBIE( "ZOMBIE" );
@@ -5164,7 +5162,8 @@ void game::moving_vehicle_dismount( const tripoint &dest_loc )
         return;
     }
     tileray ray( dest_loc.xy() + point( -u.posx(), -u.posy() ) );
-    const int d = ray.dir(); // TODO:: make dir() const correct!
+    // TODO:: make dir() const correct!
+    const int d = ray.dir();
     add_msg( _( "You dive from the %s." ), veh->name );
     m.unboard_vehicle( u.pos() );
     u.moves -= 200;
@@ -6019,20 +6018,17 @@ static void zones_manager_shortcuts( const catacurses::window &w_info )
     tmpx += shortcut_print( w_info, point( tmpx, 1 ), c_white, c_light_green, _( "<A>dd" ) ) + 2;
     tmpx += shortcut_print( w_info, point( tmpx, 1 ), c_white, c_light_green, _( "<R>emove" ) ) + 2;
     tmpx += shortcut_print( w_info, point( tmpx, 1 ), c_white, c_light_green, _( "<E>nable" ) ) + 2;
-    // NOLINTNEXTLINE(clang-analyzer-deadcode.DeadStores)
-    tmpx += shortcut_print( w_info, point( tmpx, 1 ), c_white, c_light_green, _( "<D>isable" ) ) + 2;
+    shortcut_print( w_info, point( tmpx, 1 ), c_white, c_light_green, _( "<D>isable" ) );
 
     tmpx = 1;
     tmpx += shortcut_print( w_info, point( tmpx, 2 ), c_white, c_light_green,
                             _( "<+-> Move up/down" ) ) + 2;
-    // NOLINTNEXTLINE(clang-analyzer-deadcode.DeadStores)
-    tmpx += shortcut_print( w_info, point( tmpx, 2 ), c_white, c_light_green, _( "<Enter>-Edit" ) ) + 2;
+    shortcut_print( w_info, point( tmpx, 2 ), c_white, c_light_green, _( "<Enter>-Edit" ) );
 
     tmpx = 1;
     tmpx += shortcut_print( w_info, point( tmpx, 3 ), c_white, c_light_green,
                             _( "<S>how all / hide distant" ) ) + 2;
-    // NOLINTNEXTLINE(clang-analyzer-deadcode.DeadStores)
-    tmpx += shortcut_print( w_info, point( tmpx, 3 ), c_white, c_light_green, _( "<M>ap" ) ) + 2;
+    shortcut_print( w_info, point( tmpx, 3 ), c_white, c_light_green, _( "<M>ap" ) );
 
     wrefresh( w_info );
 }
@@ -9079,8 +9075,19 @@ bool game::walk_move( const tripoint &dest_loc )
     }
     u.set_underwater( false );
 
-    if( !shifting_furniture && !pushing && !prompt_dangerous_tile( dest_loc ) ) {
-        return true;
+
+    if( !shifting_furniture && !pushing && is_dangerous_tile( dest_loc ) ) {
+        if( !u.movement_mode_is( CMM_RUN ) ) {
+            std::vector<std::string> harmful_stuff = get_dangerous_tile( dest_loc );
+            add_msg( m_warning,
+                     _( "Stepping into that %1$s looks risky. Run into it if you wish to enter anyway." ),
+                     enumerate_as_string( harmful_stuff ) );
+            return true;
+        } else if( !get_option<bool>( "DANGEROUS_RUNNING" ) ) {
+            if( !prompt_dangerous_tile( dest_loc ) ) {
+                return true;
+            }
+        }
     }
     // Used to decide whether to print a 'moving is slow message
     const int mcost_from = m.move_cost( u.pos() ); //calculate this _before_ calling grabbed_move
@@ -10308,7 +10315,7 @@ void game::vertical_move( int movez, bool force )
         for( monster &critter : all_monsters() ) {
             // if its a ladder instead of stairs - most zombies cant climb that.
             // unless that have a special flag to allow them to do so.
-            if( ( m.has_flag( "DIFFICULT_Z", u.pos() ) && !critter.has_flag( MF_CLIMBS ) ) ||
+            if( ( m.has_flag( "DIFFICULT_Z", u.pos() ) && !critter.climbs() ) ||
                 critter.has_effect( effect_ridden ) ||
                 critter.has_effect( effect_tied ) ) {
                 continue;
@@ -10342,7 +10349,7 @@ void game::vertical_move( int movez, bool force )
     if( m.has_zlevels() && abs( movez ) == 1 ) {
         bool ladder = m.has_flag( "DIFFICULT_Z", u.pos() );
         for( monster &critter : all_monsters() ) {
-            if( ladder && !critter.has_flag( MF_CLIMBS ) ) {
+            if( ladder && !critter.climbs() ) {
                 continue;
             }
             if( critter.attack_target() == &g->u || ( !critter.has_effect( effect_ridden ) &&
