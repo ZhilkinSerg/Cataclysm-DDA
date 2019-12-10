@@ -187,7 +187,15 @@ bool ma_game::generate_overmap( const tripoint &om_pos )
         for( int y = 0; y < OMAPY; y++ ) {
             tripoint p( x, y, z );
             const overmap_terrain_data &otd = MA_omt[x][y];
-            std::string new_ter_id = "open_air";
+            land_use_code luc_north      = static_cast<land_use_code>( MA_omt[x][y - 1].land_use_code );
+            land_use_code luc_south      = static_cast<land_use_code>( MA_omt[x][y + 1].land_use_code );
+            land_use_code luc_east       = static_cast<land_use_code>( MA_omt[x + 1][y].land_use_code );
+            land_use_code luc_west       = static_cast<land_use_code>( MA_omt[x - 1][y].land_use_code );
+            land_use_code luc_north_east = static_cast<land_use_code>( MA_omt[x + 1][y - 1].land_use_code );
+            land_use_code luc_south_east = static_cast<land_use_code>( MA_omt[x + 1][y + 1].land_use_code );
+            land_use_code luc_north_west = static_cast<land_use_code>( MA_omt[x - 1][y - 1].land_use_code );
+            land_use_code luc_south_west = static_cast<land_use_code>( MA_omt[x - 1][y + 1].land_use_code );
+            std::string new_ter_id = "field";
             std::string new_ter_rot = om_direction::name( om_direction::random() );
             if( otd.ocean == 1 ) {
                 new_ter_id = "river_center";
@@ -206,13 +214,25 @@ bool ma_game::generate_overmap( const tripoint &om_pos )
                     case land_use_code::forest:
                         new_ter_id = "forest";
                         new_ter_rot.clear();
+                        if(
+                            luc_north == land_use_code::forest &&
+                            luc_south == land_use_code::forest &&
+                            luc_east == land_use_code::forest &&
+                            luc_west == land_use_code::forest &&
+                            luc_north_east == land_use_code::forest &&
+                            luc_north_west == land_use_code::forest &&
+                            luc_south_east == land_use_code::forest &&
+                            luc_south_west == land_use_code::forest
+                        ) {
+                            new_ter_id = "forest_thick";
+                        }
                         break;
                     case land_use_code::wetland:
                         new_ter_id = "forest_water";
                         new_ter_rot.clear();
                         break;
                     case land_use_code::mining:
-                        new_ter_id = "crater";
+                        new_ter_id = "field";
                         new_ter_rot.clear();
                         break;
                     case land_use_code::open_land:
@@ -220,35 +240,44 @@ bool ma_game::generate_overmap( const tripoint &om_pos )
                         new_ter_rot.clear();
                         break;
                     case land_use_code::recreation_participation:
-                        new_ter_id = "skate_park";
+                        new_ter_id = "field";
+                        new_ter_rot.clear();
                         break;
                     case land_use_code::recreation_spectator:
-                        new_ter_id = "football_field_a1";
+                        new_ter_id = "field";
+                        new_ter_rot.clear();
                         break;
                     case land_use_code::recreation_water:
-                        new_ter_id = "pool";
+                        new_ter_id = "field";
+                        new_ter_rot.clear();
                         break;
                     case land_use_code::residential_multi:
-                        new_ter_id = "house";
+                        new_ter_id = "field";
+                        new_ter_rot.clear();
                         break;
                     case land_use_code::residential_high:
-                        new_ter_id = "house";
+                        new_ter_id = "field";
+                        new_ter_rot.clear();
                         break;
                     case land_use_code::residential_medium:
-                        new_ter_id = "house";
+                        new_ter_id = "field";
+                        new_ter_rot.clear();
                         break;
                     case land_use_code::residential_low:
-                        new_ter_id = "house";
+                        new_ter_id = "field";
+                        new_ter_rot.clear();
                         break;
                     case land_use_code::wetland_saltwater:
                         new_ter_id = "forest_water";
                         new_ter_rot.clear();
                         break;
                     case land_use_code::commercial:
-                        new_ter_id = "s_gas";
+                        new_ter_id = "field";
+                        new_ter_rot.clear();
                         break;
                     case land_use_code::industrial:
-                        new_ter_id = "warehouse";
+                        new_ter_id = "field";
+                        new_ter_rot.clear();
                         break;
                     case land_use_code::transitional:
                         new_ter_id = "field";
@@ -259,7 +288,8 @@ bool ma_game::generate_overmap( const tripoint &om_pos )
                         new_ter_rot.clear();
                         break;
                     case land_use_code::waste_disposal:
-                        new_ter_id = "toxic_dump";
+                        new_ter_id = "field";
+                        new_ter_rot.clear();
                         break;
                     case land_use_code::water:
                         new_ter_id = "river_center";
@@ -270,39 +300,48 @@ bool ma_game::generate_overmap( const tripoint &om_pos )
                         new_ter_rot.clear();
                         break;
                     case land_use_code::powerline_utility:
-                        new_ter_id = "sai";
+                        new_ter_id = "field";
+                        new_ter_rot.clear();
                         break;
                     case land_use_code::saltwater_sandy_beach:
                         new_ter_id = "forest_water";
                         new_ter_rot.clear();
                         break;
                     case land_use_code::golf_course:
-                        new_ter_id = "golfcourse_00";
+                        new_ter_id = "field";
+                        new_ter_rot.clear();
                         break;
                     case land_use_code::marina:
-                        new_ter_id = "marina_1";
+                        new_ter_id = "field";
+                        new_ter_rot.clear();
                         break;
                     case land_use_code::urban_public_institutional:
-                        new_ter_id = "church";
+                        new_ter_id = "field";
+                        new_ter_rot.clear();
                         break;
                     case land_use_code::cemetery:
-                        new_ter_id = "cemetery";
+                        new_ter_id = "field";
+                        new_ter_rot.clear();
                         break;
                     case land_use_code::orchard:
-                        new_ter_id = "orchard_tree_apple";
+                        new_ter_id = "field";
+                        new_ter_rot.clear();
                         break;
                     case land_use_code::nursery:
-                        new_ter_id = "TreeFarm_1b";
+                        new_ter_id = "field";
+                        new_ter_rot.clear();
                         break;
                     case land_use_code::wetland_forest:
                         new_ter_id = "forest_water";
                         new_ter_rot.clear();
                         break;
                     case land_use_code::residential_very_low:
-                        new_ter_id = "house";
+                        new_ter_id = "field";
+                        new_ter_rot.clear();
                         break;
                     case land_use_code::junkyard:
-                        new_ter_id = "junkyard_1a";
+                        new_ter_id = "field";
+                        new_ter_rot.clear();
                         break;
                     case land_use_code::brushland:
                         new_ter_id = "field";
@@ -321,13 +360,51 @@ bool ma_game::generate_overmap( const tripoint &om_pos )
         }
     }
 
+    //oter_id t_field( "field" );
+    //oter_id t_forest( "forest" );
+    //oter_id t_forest_thick( "forest_thick" );
     for( int i = 0; i < OMAPX; i++ ) {
         for( int j = 0; j < OMAPY; j++ ) {
+            /*
+            tripoint p( i, j, 0 );
+            oter_id t = om.ter( p );
+            oter_id t_north = om.ter( p + point_north );
+            oter_id t_east = om.ter( p + point_east );
+            oter_id t_south = om.ter( p + point_south );
+            oter_id t_west = om.ter( p + point_west );
+            oter_id t_northeast = om.ter( p + point_north_east );
+            oter_id t_southeast = om.ter( p + point_south_east );
+            oter_id t_southwest = om.ter( p + point_south_west );
+            oter_id t_northwest = om.ter( p + point_north_west );
+            if( ( t == t_field || t == t_forest || t == t_forest_thick ) &&
+                ( t_north == t_forest || t_north == t_forest_thick ) &&
+                ( t_east == t_forest || t_east == t_forest_thick ) &&
+                ( t_south == t_forest || t_south == t_forest_thick ) &&
+                ( t_west == t_forest || t_west == t_forest_thick ) &&
+                ( t_northeast == t_forest || t_northeast == t_forest_thick ) &&
+                ( t_southeast == t_forest || t_southeast == t_forest_thick ) &&
+                ( t_southwest == t_forest || t_southwest == t_forest_thick ) &&
+                ( t_northwest == t_forest || t_northwest == t_forest_thick )
+              ) {
+                om.ter_set( p, t_forest_thick );
+            }
+
+            if( ( t == t_field ) &&
+                ( t_north == t_forest || t_north == t_forest_thick ) &&
+                ( t_east == t_forest || t_east == t_forest_thick ) &&
+                ( t_south == t_forest || t_south == t_forest_thick ) &&
+                ( t_west == t_forest || t_west == t_forest_thick )
+              ) {
+                om.ter_set( p, t_forest_thick );
+            }
+            */
+
             //for( int k = -OVERMAP_DEPTH; k <= OVERMAP_HEIGHT; k++ ) {
             om.seen( { i, j, 0 } ) = true;
             //}
         }
     }
+
     om.save();
     //overmap_buffer.clear();
     return true;
