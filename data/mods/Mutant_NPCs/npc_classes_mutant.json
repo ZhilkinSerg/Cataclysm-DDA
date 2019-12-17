@@ -22,6 +22,7 @@
     "id": "NC_NPC_MUTANT_MEDICAL",
     "name": "Medical Mutant",
     "job_description": "I'm looking for medical mutagen… this world is no place for humans anymore, and I don't plan to keep being one.",
+
     "skills": [
       { "skill": "dodge", "bonus": { "rng": [ 3, 6 ] } },
       { "skill": "melee", "bonus": { "rng": [ 3, 6 ] } },
@@ -40,6 +41,7 @@
     "id": "NC_NPC_MUTANT_BIRD",
     "name": "Bird Mutant",
     "job_description": "I'm looking for bird mutagen… this world is no place for humans anymore, and I don't plan to keep being one.",
+
     "skills": [
       { "skill": "dodge", "bonus": { "rng": [ 4, 8 ] } },
       { "skill": "melee", "bonus": { "rng": [ 3, 6 ] } },
