@@ -2291,6 +2291,14 @@ map_memory_tile cata_tiles::get_vpart_memory_at( const tripoint &p ) const
     return {};
 }
 
+map_memory_tile cata_tiles::get_field_memory_at( const tripoint &p ) const
+{
+    if( g->u.should_show_map_memory() ) {
+        return g->u.get_memorized_tile( g->m.getabs( p ), map_memory_layer::field );
+    }
+    return {};
+}
+
 bool cata_tiles::draw_furniture( const tripoint &p, const lit_level ll, int &height_3d,
                                  const bool ( &invisible )[5] )
 {
@@ -2480,8 +2488,19 @@ bool cata_tiles::draw_field_or_item( const tripoint &p, const lit_level ll, int 
         int rotation = 0;
         get_tile_values( fld, neighborhood, subtile, rotation );
 
-        ret_draw_field = draw_from_id_string( fld.id().str(), C_FIELD, empty_string, p, subtile,
+        const std::string &fld_name = fld.id().str();
+        if( g->m.check_and_set_seen_cache( p, map_memory_layer::field ) ) {
+            g->u.memorize_tile( g->m.getabs( p ), fld_name, subtile, rotation, map_memory_layer::field );
+        }
+        ret_draw_field = draw_from_id_string( fld_name, C_FIELD, empty_string, p, subtile,
                                               rotation, lit, nv );
+    } else if( invisible[0] && has_terrain_memory_at( p ) ) {
+        // try drawing memory if invisible and not overridden
+        const auto &f = get_field_memory_at( p );
+        if( !f.tile.empty() ) {
+            ret_draw_field = draw_from_id_string( f.tile, C_FIELD, empty_string, p, f.subtile, f.rotation,
+                                                  LL_MEMORIZED, nv_goggles_activated, height_3d );
+        }
     }
     if( fld.obj().display_items ) {
         const auto it_override = item_override.find( p );

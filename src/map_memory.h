@@ -23,6 +23,7 @@ enum class map_memory_layer : int {
     furniture,
     trap,
     vpart,
+    field,
     num_map_memory_layer
 };
 

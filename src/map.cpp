@@ -1359,10 +1359,12 @@ uint8_t map::get_known_connections( const tripoint &p, int connect_group,
     if( use_tiles ) {
         is_memorized =
         [&]( const tripoint & q ) {
-            return !g->u.get_memorized_tile( getabs( q ), map_memory_layer::terrain ).tile.empty() ||
-                   !g->u.get_memorized_tile( getabs( q ), map_memory_layer::furniture ).tile.empty() ||
-                   !g->u.get_memorized_tile( getabs( q ), map_memory_layer::trap ).tile.empty() ||
-                   !g->u.get_memorized_tile( getabs( q ), map_memory_layer::vpart ).tile.empty();
+            for( int i = 0; i < static_cast<int>( map_memory_layer::num_map_memory_layer ); i++ ) {
+                if( !g->u.get_memorized_tile( getabs( q ), static_cast<map_memory_layer>( i ) ).tile.empty() ) {
+                    return true;
+                }
+            }
+            return false;
         };
     } else {
 #endif

@@ -332,6 +332,7 @@ class cata_tiles
         map_memory_tile get_furniture_memory_at( const tripoint &p ) const;
         map_memory_tile get_trap_memory_at( const tripoint &p ) const;
         map_memory_tile get_vpart_memory_at( const tripoint &p ) const;
+        map_memory_tile get_field_memory_at( const tripoint &p ) const;
 
         /** Drawing Layers */
         bool would_apply_vision_effects( visibility_type visibility ) const;

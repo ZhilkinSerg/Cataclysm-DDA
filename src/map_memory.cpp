@@ -17,6 +17,7 @@ std::string enum_to_string<map_memory_layer>( map_memory_layer data )
         case map_memory_layer::furniture: return "mmtl_furniture";
         case map_memory_layer::trap: return "mmtl_trap";
         case map_memory_layer::vpart: return "mmtl_vpart";
+        case map_memory_layer::field: return "mmtl_field";
             // *INDENT-ON*
         case map_memory_layer::num_map_memory_layer:
             break;
