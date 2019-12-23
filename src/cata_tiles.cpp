@@ -2176,8 +2176,8 @@ bool cata_tiles::draw_terrain( const tripoint &p, const lit_level ll, int &heigh
             // do something to get other terrain orientation values
         }
         const std::string &tname = t.id().str();
-        if( g->m.check_and_set_seen_cache( p ) ) {
-            g->u.memorize_tile( g->m.getabs( p ), tname, subtile, rotation );
+        if( g->m.check_and_set_seen_cache( p, map_memory_layer::terrain ) ) {
+            g->u.memorize_tile( g->m.getabs( p ), tname, subtile, rotation, map_memory_layer::terrain );
         }
         // draw the actual terrain if there's no override
         if( !neighborhood_overridden ) {
@@ -2219,8 +2219,10 @@ bool cata_tiles::draw_terrain( const tripoint &p, const lit_level ll, int &heigh
 bool cata_tiles::has_memory_at( const tripoint &p ) const
 {
     if( g->u.should_show_map_memory() ) {
-        const memorized_terrain_tile t = g->u.get_memorized_tile( g->m.getabs( p ) );
-        return !t.tile.empty();
+        return has_terrain_memory_at( p ) ||
+               has_furniture_memory_at( p ) ||
+               has_trap_memory_at( p ) ||
+               has_vpart_memory_at( p );
     }
     return false;
 }
@@ -2228,10 +2230,7 @@ bool cata_tiles::has_memory_at( const tripoint &p ) const
 bool cata_tiles::has_terrain_memory_at( const tripoint &p ) const
 {
     if( g->u.should_show_map_memory() ) {
-        const memorized_terrain_tile t = g->u.get_memorized_tile( g->m.getabs( p ) );
-        if( t.tile.substr( 0, 2 ) == "t_" ) {
-            return true;
-        }
+        return !g->u.get_memorized_tile( g->m.getabs( p ), map_memory_layer::terrain ).tile.empty();
     }
     return false;
 }
@@ -2239,10 +2238,7 @@ bool cata_tiles::has_terrain_memory_at( const tripoint &p ) const
 bool cata_tiles::has_furniture_memory_at( const tripoint &p ) const
 {
     if( g->u.should_show_map_memory() ) {
-        const memorized_terrain_tile t = g->u.get_memorized_tile( g->m.getabs( p ) );
-        if( t.tile.substr( 0, 2 ) == "f_" ) {
-            return true;
-        }
+        return !g->u.get_memorized_tile( g->m.getabs( p ), map_memory_layer::furniture ).tile.empty();
     }
     return false;
 }
@@ -2250,10 +2246,7 @@ bool cata_tiles::has_furniture_memory_at( const tripoint &p ) const
 bool cata_tiles::has_trap_memory_at( const tripoint &p ) const
 {
     if( g->u.should_show_map_memory() ) {
-        const memorized_terrain_tile t = g->u.get_memorized_tile( g->m.getabs( p ) );
-        if( t.tile.substr( 0, 3 ) == "tr_" ) {
-            return true;
-        }
+        return !g->u.get_memorized_tile( g->m.getabs( p ), map_memory_layer::trap ).tile.empty();
     }
     return false;
 }
@@ -2261,54 +2254,39 @@ bool cata_tiles::has_trap_memory_at( const tripoint &p ) const
 bool cata_tiles::has_vpart_memory_at( const tripoint &p ) const
 {
     if( g->u.should_show_map_memory() ) {
-        const memorized_terrain_tile t = g->u.get_memorized_tile( g->m.getabs( p ) );
-        if( t.tile.substr( 0, 3 ) == "vp_" ) {
-            return true;
-        }
+        return !g->u.get_memorized_tile( g->m.getabs( p ), map_memory_layer::vpart ).tile.empty();
     }
     return false;
 }
 
-memorized_terrain_tile cata_tiles::get_terrain_memory_at( const tripoint &p ) const
+map_memory_tile cata_tiles::get_terrain_memory_at( const tripoint &p ) const
 {
     if( g->u.should_show_map_memory() ) {
-        const memorized_terrain_tile t = g->u.get_memorized_tile( g->m.getabs( p ) );
-        if( t.tile.substr( 0, 2 ) == "t_" ) {
-            return t;
-        }
+        return g->u.get_memorized_tile( g->m.getabs( p ), map_memory_layer::terrain );
     }
     return {};
 }
 
-memorized_terrain_tile cata_tiles::get_furniture_memory_at( const tripoint &p ) const
+map_memory_tile cata_tiles::get_furniture_memory_at( const tripoint &p ) const
 {
     if( g->u.should_show_map_memory() ) {
-        const memorized_terrain_tile t = g->u.get_memorized_tile( g->m.getabs( p ) );
-        if( t.tile.substr( 0, 2 ) == "f_" ) {
-            return t;
-        }
+        return g->u.get_memorized_tile( g->m.getabs( p ), map_memory_layer::furniture );
     }
     return {};
 }
 
-memorized_terrain_tile cata_tiles::get_trap_memory_at( const tripoint &p ) const
+map_memory_tile cata_tiles::get_trap_memory_at( const tripoint &p ) const
 {
     if( g->u.should_show_map_memory() ) {
-        const memorized_terrain_tile t = g->u.get_memorized_tile( g->m.getabs( p ) );
-        if( t.tile.substr( 0, 3 ) == "tr_" ) {
-            return t;
-        }
+        return g->u.get_memorized_tile( g->m.getabs( p ), map_memory_layer::trap );
     }
     return {};
 }
 
-memorized_terrain_tile cata_tiles::get_vpart_memory_at( const tripoint &p ) const
+map_memory_tile cata_tiles::get_vpart_memory_at( const tripoint &p ) const
 {
     if( g->u.should_show_map_memory() ) {
-        const memorized_terrain_tile t = g->u.get_memorized_tile( g->m.getabs( p ) );
-        if( t.tile.substr( 0, 3 ) == "vp_" ) {
-            return t;
-        }
+        return g->u.get_memorized_tile( g->m.getabs( p ), map_memory_layer::vpart );
     }
     return {};
 }
@@ -2340,8 +2318,8 @@ bool cata_tiles::draw_furniture( const tripoint &p, const lit_level ll, int &hei
         int rotation = 0;
         get_tile_values( f, neighborhood, subtile, rotation );
         const std::string &fname = f.id().str();
-        if( g->m.check_and_set_seen_cache( p ) ) {
-            g->u.memorize_tile( g->m.getabs( p ), fname, subtile, rotation );
+        if( g->m.check_and_set_seen_cache( p, map_memory_layer::furniture ) ) {
+            g->u.memorize_tile( g->m.getabs( p ), fname, subtile, rotation, map_memory_layer::furniture );
         }
         // draw the actual furniture if there's no override
         if( !neighborhood_overridden ) {
@@ -2414,8 +2392,8 @@ bool cata_tiles::draw_trap( const tripoint &p, const lit_level ll, int &height_3
         int rotation = 0;
         get_tile_values( tr, neighborhood, subtile, rotation );
         const std::string trname = tr.id().str();
-        if( g->m.check_and_set_seen_cache( p ) ) {
-            g->u.memorize_tile( g->m.getabs( p ), trname, subtile, rotation );
+        if( g->m.check_and_set_seen_cache( p, map_memory_layer::trap ) ) {
+            g->u.memorize_tile( g->m.getabs( p ), trname, subtile, rotation, map_memory_layer::trap );
         }
         // draw the actual trap if there's no override
         if( !neighborhood_overridden ) {
@@ -2580,8 +2558,8 @@ bool cata_tiles::draw_vpart( const tripoint &p, lit_level ll, int &height_3d,
         const int rotation = veh.face.dir();
         const std::string vpname = "vp_" + vp_id.str();
         if( !veh.forward_velocity() && !veh.player_in_control( g->u ) &&
-            g->m.check_and_set_seen_cache( p ) ) {
-            g->u.memorize_tile( g->m.getabs( p ), vpname, subtile, rotation );
+            g->m.check_and_set_seen_cache( p, map_memory_layer::vpart ) ) {
+            g->u.memorize_tile( g->m.getabs( p ), vpname, subtile, rotation, map_memory_layer::vpart );
         }
         if( !overridden ) {
             const cata::optional<vpart_reference> cargopart = vp.part_with_feature( "CARGO", true );
