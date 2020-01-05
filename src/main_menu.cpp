@@ -98,7 +98,7 @@ void main_menu::print_menu_items( const catacurses::window &w_in,
             text += std::string( spacing, ' ' );
         }
 
-        std::string temp = shortcut_text( c_white, vItems[i] );
+        std::string temp = shortcut_text( c_white, vItems[i] );q
         if( iSel == i ) {
             text += string_format( "[%s]", colorize( remove_color_tags( temp ), h_white ) );
         } else {

@@ -331,10 +331,14 @@ bool Character::is_warm() const
     return true;
 }
 
-const std::string &Character::symbol() const
+uint32_t Character::codepoint() const
 {
-    static const std::string character_symbol( "@" );
-    return character_symbol;
+    return AMPERSAND_UNICODE;
+}
+
+std::string Character::symbol() const
+{
+    return utf32_to_utf8( codepoint() );
 }
 
 void Character::mod_stat( const std::string &stat, float modifier )

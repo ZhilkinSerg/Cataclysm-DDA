@@ -3361,10 +3361,14 @@ int item::engine_displacement() const
     return type->engine ? type->engine->displacement : 0;
 }
 
-const std::string &item::symbol() const
+uint32_t item::codepoint() const
 {
-    std::string sym = type->get_symbol();
-    return sym;
+    return type->get_codepoint();
+}
+
+std::string item::symbol() const
+{
+    return type->get_symbol();
 }
 
 nc_color item::color_in_inventory() const

@@ -1055,7 +1055,6 @@ std::string architects_cube()
     const artifact_tool_form_datum &info = artifact_tool_form_data[ARTTOOLFORM_CUBE];
     def.create_name( _( info.name ) );
     def.color = info.color;
-    bool was_loaded = true;
     def.symbol = info.symbol;
     def.materials.push_back( info.material );
     def.volume = rng( info.volume_min, info.volume_max );

@@ -133,7 +133,8 @@ class monster : public Creature
         // Information on how our symbol should appear
         nc_color basic_symbol_color() const override;
         nc_color symbol_color() const override;
-        const std::string &symbol() const override;
+        uint32_t codepoint() const override;
+        std::string symbol() const override;
         bool is_symbol_highlighted() const override;
 
         nc_color color_with_effects() const; // Color with fire, beartrapped, etc.

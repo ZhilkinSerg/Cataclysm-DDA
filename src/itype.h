@@ -964,6 +964,9 @@ struct itype {
         item_category_id category_force;
 
         uint32_t symbol = NULL_UNICODE;
+        uint32_t get_codepoint() const {
+            return symbol;
+        }
         std::string get_symbol() const {
             return utf32_to_utf8( symbol );
         }

@@ -721,7 +721,8 @@ class Creature
 
         virtual nc_color symbol_color() const = 0;
         virtual nc_color basic_symbol_color() const = 0;
-        virtual const std::string &symbol() const = 0;
+        virtual uint32_t codepoint() const = 0;
+        virtual std::string symbol() const = 0;
         virtual bool is_symbol_highlighted() const;
 
     protected:

@@ -761,7 +761,12 @@ std::string monster::extended_description() const
     return replace_colors( ss );
 }
 
-const std::string &monster::symbol() const
+uint32_t monster::codepoint() const
+{
+    return type->get_codepoint();
+}
+
+std::string monster::symbol() const
 {
     return type->get_symbol();
 }

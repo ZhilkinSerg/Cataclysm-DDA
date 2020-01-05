@@ -475,7 +475,8 @@ class item : public visitable<item>
         void serialize( JsonOut &json ) const;
         void deserialize( JsonIn &jsin );
 
-        const std::string &symbol() const;
+        uint32_t codepoint() const;
+        std::string symbol() const;
         /**
          * Returns the monetary value of an item.
          * If `practical` is false, returns pre-cataclysm market value,

@@ -226,7 +226,8 @@ class Character : public Creature, public visitable<Character>
         bool is_warm() const override;
         bool in_species( const species_id &spec ) const override;
 
-        const std::string &symbol() const override;
+        uint32_t codepoint() const override;
+        std::string symbol() const override;
 
         enum stat {
             STRENGTH,
