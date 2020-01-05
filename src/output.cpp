@@ -919,23 +919,23 @@ char rand_char()
 
 // this translates symbol y, u, n, b to NW, NE, SE, SW lines correspondingly
 // h, j, c to horizontal, vertical, cross correspondingly
-int special_symbol( int sym )
+uint32_t special_symbol( uint32_t sym )
 {
     switch( sym ) {
-        case 'j':
-            return LINE_XOXO;
-        case 'h':
-            return LINE_OXOX;
-        case 'c':
-            return LINE_XXXX;
-        case 'y':
-            return LINE_OXXO;
-        case 'u':
-            return LINE_OOXX;
-        case 'n':
-            return LINE_XOOX;
-        case 'b':
-            return LINE_XXOO;
+        case LATIN_SMALL_LETTER_J_UNICODE:
+            return LINE_XOXO_UNICODE;
+        case LATIN_SMALL_LETTER_H_UNICODE:
+            return LINE_OXOX_UNICODE;
+        case LATIN_SMALL_LETTER_C_UNICODE:
+            return LINE_XXXX_UNICODE;
+        case LATIN_SMALL_LETTER_Y_UNICODE:
+            return LINE_OXXO_UNICODE;
+        case LATIN_SMALL_LETTER_U_UNICODE:
+            return LINE_OOXX_UNICODE;
+        case LATIN_SMALL_LETTER_N_UNICODE:
+            return LINE_XOOX_UNICODE;
+        case LATIN_SMALL_LETTER_B_UNICODE:
+            return LINE_XXOO_UNICODE;
         default:
             return sym;
     }

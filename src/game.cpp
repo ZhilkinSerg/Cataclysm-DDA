@@ -3868,11 +3868,11 @@ void game::mon_info( const catacurses::window &w, int hor_padding )
         const int typeshere = typeshere_mon + typeshere_npc;
         for( int j = 0; j < typeshere && j < symroom; j++ ) {
             nc_color c;
-            std::string sym;
+            uint32_t sym;
             if( symroom < typeshere && j == symroom - 1 ) {
                 // We've run out of room!
                 c = c_white;
-                sym = "+";
+                sym = PLUS_SIGN_UNICODE;
             } else if( j < typeshere_npc ) {
                 switch( unique_types[i][j]->get_attitude() ) {
                     case NPCATT_KILL:
@@ -3885,13 +3885,13 @@ void game::mon_info( const catacurses::window &w, int hor_padding )
                         c = c_pink;
                         break;
                 }
-                sym = "@";
+                sym = COMMERCIAL_AT_UNICODE;
             } else {
                 const mtype &mt = *unique_mons[i][j - typeshere_npc];
                 c = mt.color;
-                sym = mt.sym;
+                sym = mt.get_codepoint();
             }
-            mvwprintz( w, pr, c, sym );
+            mvwputch( w, pr, c, sym );
 
             pr.x++;
         }
@@ -3930,7 +3930,7 @@ void game::mon_info( const catacurses::window &w, int hor_padding )
             }
 
             if( pr.y < maxheight ) { // Don't print if we've overflowed
-                mvwprintz( w, pr, mt.color, mt.sym );
+                mvwputch( w, pr, mt.color, mt.get_codepoint() );
                 pr.x += 2; // symbol and space
                 nc_color danger = c_dark_gray;
                 if( mt.difficulty >= 30 ) {

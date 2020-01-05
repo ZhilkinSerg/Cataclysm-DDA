@@ -307,7 +307,7 @@ furn_t null_furniture_t()
     furn_t new_furniture;
     new_furniture.id = furn_str_id::NULL_ID();
     new_furniture.name_ = translate_marker( "nothing" );
-    new_furniture.symbol_.fill( ' ' );
+    new_furniture.symbol_.fill( SPACE_UNICODE );
     new_furniture.color_.fill( c_white );
     new_furniture.light_emitted = 0;
     new_furniture.movecost = 0;
@@ -329,7 +329,7 @@ ter_t null_terrain_t()
 
     new_terrain.id = ter_str_id::NULL_ID();
     new_terrain.name_ = translate_marker( "nothing" );
-    new_terrain.symbol_.fill( ' ' );
+    new_terrain.symbol_.fill( SPACE_UNICODE );
     new_terrain.color_.fill( c_white );
     new_terrain.light_emitted = 0;
     new_terrain.movecost = 0;
@@ -378,15 +378,13 @@ void map_data_common_t::load_symbol( const JsonObject &jo )
     }
     jo.read( "looks_like", looks_like );
 
-    load_season_array( jo, "symbol", symbol_, [&jo]( const std::string & str ) {
-        if( str == "LINE_XOXO" ) {
-            return LINE_XOXO;
-        } else if( str == "LINE_OXOX" ) {
-            return LINE_OXOX;
-        } else if( str.length() != 1 ) {
-            jo.throw_error( "Symbol string must be exactly 1 character long.", "symbol" );
+    static const std::string symbol_member_name = "symbol";
+    load_season_array( jo, symbol_member_name, symbol_, [&jo]( const std::string & str ) {
+        uint32_t sym_as_codepoint = UTF8_getch( str );
+        if( mk_wcwidth( sym_as_codepoint ) != 1 ) {
+            jo.throw_error( "Symbol must be exactly one console cell wide.", symbol_member_name );
         }
-        return static_cast<int>( str[0] );
+        return sym_as_codepoint;
     } );
 
     const bool has_color = jo.has_member( "color" );
@@ -402,7 +400,7 @@ void map_data_common_t::load_symbol( const JsonObject &jo )
     }
 }
 
-int map_data_common_t::symbol() const
+uint32_t map_data_common_t::get_codepoint() const
 {
     return symbol_[season_of_year( calendar::turn )];
 }

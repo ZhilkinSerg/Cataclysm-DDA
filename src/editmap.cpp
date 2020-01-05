@@ -219,12 +219,12 @@ void editmap_hilight::draw( editmap &em, bool update )
             // but only if there's no vehicles/mobs/npcs on a point
             if( !g->m.veh_at( p ) && !g->critter_at( p ) ) {
                 const ter_t &terrain = g->m.ter( p ).obj();
-                char t_sym = terrain.symbol();
+                std::string t_sym = terrain.get_symbol();
                 nc_color t_col = terrain.color();
 
                 if( g->m.furn( p ) > 0 ) {
                     const furn_t &furniture_type = g->m.furn( p ).obj();
-                    t_sym = furniture_type.symbol();
+                    t_sym = furniture_type.get_symbol();
                     t_col = furniture_type.color();
                 }
                 const field &t_field = g->m.field_at( p );
@@ -402,7 +402,7 @@ void editmap::uber_draw_ter( const catacurses::window &w, map *m )
         hilights["mplan"].points.clear();
     }
     for( const tripoint &p : tripoint_range( start, end ) ) {
-        int sym = game_map ? '%' : ' ';
+        uint32_t sym = game_map ? PERCENT_SIGN_UNICODE : SPACE_UNICODE;
         if( p.x >= 0 && p.x < msize && p.y >= 0 && p.y < msize ) {
             if( game_map ) {
                 Creature *critter = g->critter_at( p );
@@ -494,12 +494,12 @@ void editmap::update_view_with_help( const std::string &txt, const std::string &
                 // but only if there's no vehicles/mobs/npcs on a point
                 if( !g->m.veh_at( p ) && !g->critter_at( p ) ) {
                     const ter_t &terrain = g->m.ter( p ).obj();
-                    char t_sym = terrain.symbol();
+                    std::string t_sym = terrain.get_symbol();
                     nc_color t_col = terrain.color();
 
                     if( g->m.has_furn( p ) ) {
                         const furn_t &furniture_type = g->m.furn( p ).obj();
-                        t_sym = furniture_type.symbol();
+                        t_sym = furniture_type.get_symbol();
                         t_col = furniture_type.color();
                     }
                     const field &t_field = g->m.field_at( p );
@@ -532,10 +532,10 @@ void editmap::update_view_with_help( const std::string &txt, const std::string &
     // draw arrows if altblink is set (ie, [m]oving a large selection
     if( blink && altblink ) {
         const point mp = tmax / 2 + point_south_east;
-        mvwputch( g->w_terrain, point( 1, mp.y ), c_yellow, '<' );
-        mvwputch( g->w_terrain, point( tmax.x - 1, mp.y ), c_yellow, '>' );
-        mvwputch( g->w_terrain, point( mp.x, 1 ), c_yellow, '^' );
-        mvwputch( g->w_terrain, point( mp.x, tmax.y - 1 ), c_yellow, 'v' );
+        mvwputch( g->w_terrain, point( 1, mp.y ), c_yellow, PSEUDO_WEST_UNICODE );
+        mvwputch( g->w_terrain, point( tmax.x - 1, mp.y ), c_yellow, PSEUDO_EAST_UNICODE );
+        mvwputch( g->w_terrain, point( mp.x, 1 ), c_yellow, PSEUDO_NORTH_UNICODE );
+        mvwputch( g->w_terrain, point( mp.x, tmax.y - 1 ), c_yellow, PSEUDO_SOUTH_UNICODE );
     }
 
     wrefresh( g->w_terrain );
@@ -562,14 +562,14 @@ void editmap::update_view_with_help( const std::string &txt, const std::string &
 
     mvwprintz( w_info, point( 2, 0 ), c_light_gray, "< %d,%d >", target.x, target.y );
 
-    mvwputch( w_info, point( 2, off ), terrain_type.color(), terrain_type.symbol() );
+    mvwputch( w_info, point( 2, off ), terrain_type.color(), terrain_type.get_symbol() );
     mvwprintw( w_info, point( 4, off ), _( "%d: %s; movecost %d" ), g->m.ter( target ).to_i(),
                terrain_type.name(),
                terrain_type.movecost
              );
     off++; // 2
     if( g->m.furn( target ) > 0 ) {
-        mvwputch( w_info, point( 2, off ), furniture_type.color(), furniture_type.symbol() );
+        mvwputch( w_info, point( 2, off ), furniture_type.color(), furniture_type.get_symbol() );
         mvwprintw( w_info, point( 4, off ), _( "%d: %s; movecost %d movestr %d" ),
                    g->m.furn( target ).to_i(),
                    furniture_type.name(),
@@ -745,22 +745,22 @@ trap_id feature<trap_id>( const tripoint &p )
 }
 
 template<typename T_t>
-static int symbol( const T_t &t );
+static uint32_t symbol( const T_t &t );
 
 template<>
-int symbol( const ter_t &t )
+uint32_t symbol( const ter_t &t )
 {
-    return t.symbol();
+    return t.get_codepoint();
 }
 
 template<>
-int symbol( const furn_t &t )
+uint32_t symbol( const furn_t &t )
 {
-    return t.symbol();
+    return t.get_codepoint();
 }
 
 template<>
-int symbol( const trap &t )
+uint32_t symbol( const trap &t )
 {
     return t.sym;
 }
@@ -850,10 +850,10 @@ void apply<ter_t>( const ter_t &t, const shapetype editshape, const tripoint &ta
     int altb = -1;
     const ter_id sel_ter = t.id.id();
     if( editshape == editmap_rect ) {
-        if( t.symbol() == LINE_XOXO || t.symbol() == '|' ) {
+        if( t.get_codepoint() == LINE_XOXO_UNICODE || t.get_codepoint() == VERTICAL_LINE_UNICODE ) {
             isvert = true;
             teralt = get_alt_ter( isvert, sel_ter );
-        } else if( t.symbol() == LINE_OXOX || t.symbol() == '-' ) {
+        } else if( t.get_codepoint() == LINE_OXOX_UNICODE || t.get_codepoint() == HYPHEN_MINUS_UNICODE ) {
             ishori = true;
             teralt = get_alt_ter( isvert, sel_ter );
         }

@@ -570,7 +570,7 @@ inline bool one_char_symbol_reader( const JsonObject &jo, const std::string &mem
 }
 
 /**
- * Reads a UTF-8 string (or int as legacy fallback) and stores Unicode codepoint of it in `symbol`.
+ * Reads a UTF-8 string (or int as legacy fallback) and stores Unicode codepoint of it in `member`.
  * Throws if the inputs width is more than one console cell wide.
  */
 inline bool unicode_codepoint_from_symbol_reader( const JsonObject &jo,

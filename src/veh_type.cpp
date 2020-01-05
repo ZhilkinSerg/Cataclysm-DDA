@@ -15,6 +15,7 @@
 #include "debug.h"
 #include "flag.h"
 #include "game.h"
+#include "generic_factory.h"
 #include "init.h"
 #include "item_group.h"
 #include "itype.h"
@@ -370,12 +371,11 @@ void vpart_info::load( const JsonObject &jo, const std::string &src )
                        def.repair_moves );
     }
 
-    if( jo.has_member( "symbol" ) ) {
-        def.sym = jo.get_string( "symbol" )[ 0 ];
-    }
-    if( jo.has_member( "broken_symbol" ) ) {
-        def.sym_broken = jo.get_string( "broken_symbol" )[ 0 ];
-    }
+    bool was_loaded = false;
+    optional( jo, was_loaded, "symbol", def.sym, unicode_codepoint_from_symbol_reader, NULL_UNICODE );
+    optional( jo, was_loaded, "broken_symbol", def.sym_broken, unicode_codepoint_from_symbol_reader,
+              PSEUDO_VEHICLE_BROKEN_PART_UNICODE );
+
     jo.read( "looks_like", def.looks_like );
 
     if( jo.has_member( "color" ) ) {

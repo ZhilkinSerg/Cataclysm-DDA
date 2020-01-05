@@ -12,6 +12,7 @@
 #include "color.h"
 #include "int_id.h"
 #include "optional.h"
+#include "output.h"
 #include "string_id.h"
 #include "translations.h"
 #include "type_id.h"
@@ -240,7 +241,7 @@ struct map_data_common_t {
         * a single square gets drawn and that some symbols are "reserved" such
         * as * and % to do programmatic behavior.
         */
-        std::array<int, NUM_SEASONS> symbol_;
+        std::array<uint32_t, NUM_SEASONS> symbol_;
 
         int light_emitted;
         int movecost;   // The amount of movement points required to pass this terrain by default.
@@ -288,7 +289,10 @@ struct map_data_common_t {
             return connect_group != TERCONN_NONE && connect_group == test_connect_group;
         }
 
-        int symbol() const;
+        uint32_t get_codepoint() const;
+        std::string get_symbol() const {
+            return utf32_to_utf8( get_codepoint() );
+        };
         nc_color color() const;
 
         const harvest_id &get_harvest() const;
@@ -379,9 +383,6 @@ struct furn_t : map_data_common_t {
 
 void load_furniture( const JsonObject &jo, const std::string &src );
 void load_terrain( const JsonObject &jo, const std::string &src );
-
-void verify_furniture();
-void verify_terrain();
 
 /*
 runtime index: ter_id

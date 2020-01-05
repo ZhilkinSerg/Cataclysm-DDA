@@ -1609,21 +1609,21 @@ bool cata_tiles::draw_from_id_string( std::string id, TILE_CATEGORY category,
             const furn_str_id fid( id );
             if( fid.is_valid() ) {
                 const furn_t &f = fid.obj();
-                sym = f.symbol();
+                sym = f.get_codepoint();
                 col = f.color();
             }
         } else if( category == C_TERRAIN ) {
             const ter_str_id tid( id );
             if( tid.is_valid() ) {
                 const ter_t &t = tid.obj();
-                sym = t.symbol();
+                sym = t.get_codepoint();
                 col = t.color();
             }
         } else if( category == C_MONSTER ) {
             const mtype_id mid( id );
             if( mid.is_valid() ) {
                 const mtype &mt = mid.obj();
-                sym = UTF8_getch( mt.sym );
+                sym = mt.get_codepoint();
                 col = mt.color;
             }
         } else if( category == C_VEHICLE_PART ) {
@@ -1632,7 +1632,7 @@ bool cata_tiles::draw_from_id_string( std::string id, TILE_CATEGORY category,
                 const vpart_info &v = vpid.obj();
 
                 if( subtile == open_ ) {
-                    sym = '\'';
+                    sym = PSEUDO_VEHICLE_OPEN_DOOR_UNICODE;
                 } else if( subtile == broken ) {
                     sym = v.sym_broken;
                 } else {

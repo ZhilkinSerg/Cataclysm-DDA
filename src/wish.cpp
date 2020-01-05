@@ -400,7 +400,7 @@ void debug_menu::wishmonster( const cata::optional<tripoint> &p )
     int i = 0;
     for( const mtype &montype : MonsterGenerator::generator().get_all_mtypes() ) {
         wmenu.addentry( i, true, 0, montype.nname() );
-        wmenu.entries[i].extratxt.txt = montype.sym;
+        wmenu.entries[i].extratxt.txt = montype.get_symbol();
         wmenu.entries[i].extratxt.color = montype.color;
         wmenu.entries[i].extratxt.left = 1;
         ++i;

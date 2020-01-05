@@ -5597,20 +5597,20 @@ bool map::draw_maptile( const catacurses::window &w, const player &u, const trip
     const furn_t &curr_furn = curr_maptile.get_furn_t();
     const trap &curr_trap = curr_maptile.get_trap().obj();
     const field &curr_field = curr_maptile.get_field();
-    int sym;
+    uint32_t sym;
     bool hi = false;
     bool graf = false;
     bool draw_item_sym = false;
 
-    int terrain_sym;
+    uint32_t terrain_sym;
     if( curr_ter.has_flag( TFLAG_AUTO_WALL_SYMBOL ) ) {
         terrain_sym = determine_wall_corner( p );
     } else {
-        terrain_sym = curr_ter.symbol();
+        terrain_sym = curr_ter.get_codepoint();
     }
 
     if( curr_furn.id ) {
-        sym = curr_furn.symbol();
+        sym = curr_furn.get_codepoint();
         tercol = curr_furn.color();
     } else {
         sym = terrain_sym;
@@ -5623,22 +5623,22 @@ bool map::draw_maptile( const catacurses::window &w, const player &u, const trip
     // If there's a trap here, and we have sufficient perception, draw that instead
     if( curr_trap.can_see( p, g->u ) ) {
         tercol = curr_trap.color;
-        if( curr_trap.sym == '%' ) {
+        if( curr_trap.sym == PERCENT_SIGN_UNICODE ) {
             switch( rng( 1, 5 ) ) {
                 case 1:
-                    sym = '*';
+                    sym = ASTERISK_UNICODE;
                     break;
                 case 2:
-                    sym = '0';
+                    sym = DIGIT_ZERO_UNICODE;
                     break;
                 case 3:
-                    sym = '8';
+                    sym = DIGIT_EIGHT_UNICODE;
                     break;
                 case 4:
-                    sym = '&';
+                    sym = AMPERSAND_UNICODE;
                     break;
                 case 5:
-                    sym = '+';
+                    sym = PLUS_SIGN_UNICODE;
                     break;
             }
         } else {
@@ -5648,47 +5648,47 @@ bool map::draw_maptile( const catacurses::window &w, const player &u, const trip
     if( curr_field.field_count() > 0 ) {
         const field_type_id &fid = curr_field.displayed_field_type();
         const field_entry *fe = curr_field.find_field( fid );
-        const auto field_symbol = fid->get_symbol();
-        if( field_symbol == "&" || fe == nullptr ) {
+        const uint32_t field_symbol = fid->get_codepoint();
+        if( field_symbol == AMPERSAND_UNICODE || fe == nullptr ) {
             // Do nothing, a '&' indicates invisible fields.
-        } else if( field_symbol == "*" ) {
+        } else if( field_symbol == ASTERISK_UNICODE ) {
             // A random symbol.
             switch( rng( 1, 5 ) ) {
                 case 1:
-                    sym = '*';
+                    sym = ASTERISK_UNICODE;
                     break;
                 case 2:
-                    sym = '0';
+                    sym = DIGIT_ZERO_UNICODE;
                     break;
                 case 3:
-                    sym = '8';
+                    sym = DIGIT_EIGHT_UNICODE;
                     break;
                 case 4:
-                    sym = '&';
+                    sym = AMPERSAND_UNICODE;
                     break;
                 case 5:
-                    sym = '+';
+                    sym = PLUS_SIGN_UNICODE;
                     break;
             }
         } else {
-            // A field symbol '%' indicates the field should not hide
-            // items/terrain. When the symbol is not '%' it will
+            // A field symbol PERCENT_SIGN_UNICODE indicates the field should not hide
+            // items/terrain. When the symbol is not PERCENT_SIGN_UNICODE it will
             // hide items (the color is still inverted if there are items,
             // but the tile symbol is not changed).
             // draw_item_sym indicates that the item symbol should be used
-            // even if sym is not '.'.
+            // even if sym is not FULL_STOP_UNICODE.
             // As we don't know at this stage if there are any items
             // (that are visible to the player!), we always set the symbol.
             // If there are items and the field does not hide them,
             // the code handling items will override it.
-            draw_item_sym = ( field_symbol == "'%" );
+            draw_item_sym = ( field_symbol == PERCENT_SIGN_UNICODE );
             // If field display_priority is > 1, and the field is set to hide items,
             //draw the field as it obscures what's under it.
-            if( ( field_symbol != "%" && fid.obj().priority > 1 ) || ( field_symbol != "%" &&
-                    sym == '.' ) )  {
-                // default terrain '.' and
+            if( field_symbol != PERCENT_SIGN_UNICODE && ( fid.obj().priority > 1 ||
+                    sym == FULL_STOP_UNICODE ) ) {
+                // default terrain FULL_STOP_UNICODE and
                 // non-default field symbol -> field symbol overrides terrain
-                sym = field_symbol[0];
+                sym = field_symbol;
             }
             tercol = fe->color();
         }
@@ -5701,9 +5701,9 @@ bool map::draw_maptile( const catacurses::window &w, const player &u, const trip
 
     // If there are items here, draw those instead
     if( show_items && curr_maptile.get_item_count() > 0 && sees_some_items( p, g->u ) ) {
-        // if there's furniture/terrain/trap/fields (sym!='.')
+        // if there's furniture/terrain/trap/fields (sym!=FULL_STOP_UNICODE)
         // and we should not override it, then only highlight the square
-        if( sym != '.' && sym != '%' && !draw_item_sym ) {
+        if( sym != FULL_STOP_UNICODE && sym != PERCENT_SIGN_UNICODE && !draw_item_sym ) {
             hi = true;
         } else {
             // otherwise override with the symbol of the last item
@@ -5717,7 +5717,7 @@ bool map::draw_maptile( const catacurses::window &w, const player &u, const trip
         }
     }
 
-    int memory_sym = sym;
+    uint32_t memory_sym = sym;
     int veh_part = 0;
     const vehicle *veh = veh_at_internal( p, veh_part );
     if( veh != nullptr ) {
@@ -5776,7 +5776,7 @@ bool map::draw_maptile( const catacurses::window &w, const player &u, const trip
         }
     }
 
-    return !zlevels || sym != ' ' || !item_sym.empty() || p.z <= -OVERMAP_DEPTH ||
+    return !zlevels || sym != SPACE_UNICODE || !item_sym.empty() || p.z <= -OVERMAP_DEPTH ||
            !curr_ter.has_flag( TFLAG_NO_FLOOR );
 }
 
@@ -5786,20 +5786,18 @@ void map::draw_from_above( const catacurses::window &w, const player &u, const t
                            const tripoint &view_center,
                            bool low_light, bool bright_light, bool inorder ) const
 {
-    static const int AUTO_WALL_PLACEHOLDER = 2; // this should never appear as a real symbol!
-
     nc_color tercol = c_dark_gray;
-    int sym = ' ';
+    uint32_t sym = SPACE_UNICODE;
 
     const ter_t &curr_ter = curr_tile.get_ter_t();
     const furn_t &curr_furn = curr_tile.get_furn_t();
     int part_below;
     const vehicle *veh;
     if( curr_furn.has_flag( TFLAG_SEEN_FROM_ABOVE ) ) {
-        sym = curr_furn.symbol();
+        sym = curr_furn.get_codepoint();
         tercol = curr_furn.color();
     } else if( curr_furn.movecost < 0 ) {
-        sym = '.';
+        sym = FULL_STOP_UNICODE;
         tercol = curr_furn.color();
     } else if( ( veh = veh_at_internal( p, part_below ) ) != nullptr ) {
         const int roof = veh->roof_at_part( part_below );
@@ -5810,18 +5808,18 @@ void map::draw_from_above( const catacurses::window &w, const player &u, const t
                                    part_below ).obstacle_at_part() ) ? c_light_gray : c_light_gray_cyan;
     } else if( curr_ter.has_flag( TFLAG_SEEN_FROM_ABOVE ) ) {
         if( curr_ter.has_flag( TFLAG_AUTO_WALL_SYMBOL ) ) {
-            sym = AUTO_WALL_PLACEHOLDER;
+            sym = PSEUDO_AUTO_WALL_PLACEHOLDER;
         } else if( curr_ter.has_flag( TFLAG_RAMP ) ) {
-            sym = '>';
+            sym = GREATER_THAN_SIGN_UNICODE;
         } else {
-            sym = curr_ter.symbol();
+            sym = curr_ter.get_codepoint();
         }
         tercol = curr_ter.color();
     } else if( curr_ter.movecost == 0 ) {
-        sym = '.';
+        sym = FULL_STOP_UNICODE;
         tercol = curr_ter.color();
     } else if( !curr_ter.has_flag( TFLAG_NO_FLOOR ) ) {
-        sym = '.';
+        sym = FULL_STOP_UNICODE;
         if( curr_ter.color() != c_cyan ) {
             // Need a special case here, it doesn't cyanize well
             tercol = cyan_background( curr_ter.color() );
@@ -5829,11 +5827,11 @@ void map::draw_from_above( const catacurses::window &w, const player &u, const t
             tercol = c_black_cyan;
         }
     } else {
-        sym = curr_ter.symbol();
+        sym = curr_ter.get_codepoint();
         tercol = curr_ter.color();
     }
 
-    if( sym == AUTO_WALL_PLACEHOLDER ) {
+    if( sym == PSEUDO_AUTO_WALL_PLACEHOLDER ) {
         sym = determine_wall_corner( p );
     }
 
@@ -7398,7 +7396,7 @@ bool map::has_graffiti_at( const tripoint &p ) const
     return current_submap->has_graffiti( l );
 }
 
-int map::determine_wall_corner( const tripoint &p ) const
+uint32_t map::determine_wall_corner( const tripoint &p ) const
 {
     int test_connect_group = ter( p ).obj().connect_group;
     uint8_t connections = get_known_connections( p, test_connect_group );
@@ -7406,46 +7404,46 @@ int map::determine_wall_corner( const tripoint &p ) const
     // constants are NESW, so we want values in 8 | 2 | 1 | 4 order.
     switch( connections ) {
         case 8 | 2 | 1 | 4:
-            return LINE_XXXX;
+            return LINE_XXXX_UNICODE;
         case 0 | 2 | 1 | 4:
-            return LINE_OXXX;
+            return LINE_OXXX_UNICODE;
 
         case 8 | 0 | 1 | 4:
-            return LINE_XOXX;
+            return LINE_XOXX_UNICODE;
         case 0 | 0 | 1 | 4:
-            return LINE_OOXX;
+            return LINE_OOXX_UNICODE;
 
         case 8 | 2 | 0 | 4:
-            return LINE_XXOX;
+            return LINE_XXOX_UNICODE;
         case 0 | 2 | 0 | 4:
-            return LINE_OXOX;
+            return LINE_OXOX_UNICODE;
         case 8 | 0 | 0 | 4:
-            return LINE_XOOX;
+            return LINE_XOOX_UNICODE;
         case 0 | 0 | 0 | 4:
-            return LINE_OXOX; // LINE_OOOX would be better
+            return LINE_OXOX_UNICODE; // LINE_OOOX_UNICODE would be better
 
         case 8 | 2 | 1 | 0:
-            return LINE_XXXO;
+            return LINE_XXXO_UNICODE;
         case 0 | 2 | 1 | 0:
-            return LINE_OXXO;
+            return LINE_OXXO_UNICODE;
         case 8 | 0 | 1 | 0:
-            return LINE_XOXO;
+            return LINE_XOXO_UNICODE;
         case 0 | 0 | 1 | 0:
-            return LINE_XOXO; // LINE_OOXO would be better
+            return LINE_XOXO_UNICODE; // LINE_OOXO_UNICODE would be better
         case 8 | 2 | 0 | 0:
-            return LINE_XXOO;
+            return LINE_XXOO_UNICODE;
         case 0 | 2 | 0 | 0:
-            return LINE_OXOX; // LINE_OXOO would be better
+            return LINE_OXOX_UNICODE; // LINE_OXOO_UNICODE would be better
         case 8 | 0 | 0 | 0:
-            return LINE_XOXO; // LINE_XOOO would be better
+            return LINE_XOXO_UNICODE; // LINE_XOOO_UNICODE would be better
 
         case 0 | 0 | 0 | 0:
-            return ter( p ).obj().symbol(); // technically just a column
+            return ter( p ).obj().get_codepoint(); // technically just a column
 
         default:
             // assert( false );
             // this shall not happen
-            return '?';
+            return QUESTION_MARK_UNICODE;
     }
 }
 

@@ -7,6 +7,7 @@
 #include <vector>
 #include <string>
 
+#include "catacharset.h"
 #include "color.h"
 #include "optional.h"
 #include "damage.h"
@@ -229,8 +230,7 @@ struct mtype {
         std::set<species_id> species;
         std::set<std::string> categories;
         std::vector<material_id> mat;
-        /** UTF-8 encoded symbol, should be exactly one cell wide. */
-        std::string sym;
+        uint32_t symbol;
         /** hint for tilesets that don't have a tile for this monster */
         std::string looks_like;
         mfaction_id default_faction;
@@ -379,7 +379,12 @@ struct mtype {
         int get_meat_chunks_count() const;
         std::string get_description() const;
         std::string get_footsteps() const;
-
+        uint32_t get_codepoint() const {
+            return symbol;
+        }
+        std::string get_symbol() const {
+            return utf32_to_utf8( symbol );
+        }
         // Historically located in monstergenerator.cpp
         void load( const JsonObject &jo, const std::string &src );
 };

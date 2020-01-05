@@ -8,6 +8,7 @@
 #include <string>
 #include <tuple>
 
+#include "catacharset.h"
 #include "color.h"
 #include "int_id.h"
 #include "string_id.h"
@@ -91,7 +92,7 @@ struct trap {
 
         bool was_loaded = false;
 
-        int sym;
+        uint32_t sym = PERCENT_SIGN_UNICODE;
         nc_color color;
     private:
         // 1 to ??, affects detection

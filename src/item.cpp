@@ -3363,7 +3363,8 @@ int item::engine_displacement() const
 
 const std::string &item::symbol() const
 {
-    return type->sym;
+    std::string sym = type->get_symbol();
+    return sym;
 }
 
 nc_color item::color_in_inventory() const

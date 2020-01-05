@@ -62,12 +62,12 @@ std::string kill_tracker::get_kills_text() const
     std::vector<std::string> data;
     int totalkills = 0;
 
-    std::map<std::tuple<std::string, std::string, nc_color>, int> kill_counts;
+    std::map<std::tuple<std::string, uint32_t, nc_color>, int> kill_counts;
 
     // map <name, sym, color> to kill count
     for( const std::pair<mtype_id, int> &elem : kills ) {
         const mtype &m = elem.first.obj();
-        auto key = std::make_tuple( m.nname(), m.sym, m.color );
+        auto key = std::make_tuple( m.nname(), m.get_codepoint(), m.color );
         kill_counts[key] += elem.second;
         totalkills += elem.second;
     }
@@ -75,9 +75,9 @@ std::string kill_tracker::get_kills_text() const
     for( const auto &entry : kill_counts ) {
         const int num_kills = entry.second;
         const std::string &mname = std::get<0>( entry.first );
-        const std::string &symbol = std::get<1>( entry.first );
+        const uint32_t &symbol = std::get<1>( entry.first );
         const nc_color color = std::get<2>( entry.first );
-        data.push_back( string_format( "%4d ", num_kills ) + colorize( symbol,
+        data.push_back( string_format( "%4d ", num_kills ) + colorize( utf32_to_utf8( symbol ),
                         color ) + " " + colorize( mname, c_light_gray ) );
     }
     for( const auto &npc_name : npc_kills ) {

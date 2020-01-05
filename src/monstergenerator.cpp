@@ -623,12 +623,7 @@ void mtype::load( const JsonObject &jo, const std::string &src )
         default_faction = monfactions::get_or_add_faction( faction );
     }
 
-    if( !was_loaded || jo.has_member( "symbol" ) ) {
-        sym = jo.get_string( "symbol" );
-        if( utf8_wrapper( sym ).display_width() != 1 ) {
-            jo.throw_error( "monster symbol should be exactly one console cell width", "symbol" );
-        }
-    }
+    optional( jo, was_loaded, "symbol", symbol, unicode_codepoint_from_symbol_reader, SPACE_UNICODE );
     if( was_loaded && jo.has_member( "copy-from" ) && looks_like.empty() ) {
         looks_like = jo.get_string( "copy-from" );
     }

@@ -17,6 +17,7 @@
 #include "catacharset.h"
 #include "debug.h"
 #include "enums.h"
+#include "generic_factory.h"
 #include "init.h"
 #include "item.h"
 #include "item_category.h"
@@ -875,12 +876,6 @@ void Item_factory::check_definitions() const
             if( mat_id.str() == "null" || !mat_id.is_valid() ) {
                 msg += string_format( "invalid material %s\n", mat_id.c_str() );
             }
-        }
-
-        if( type->sym.empty() ) {
-            msg += "symbol not defined\n";
-        } else if( utf8_width( type->sym ) != 1 ) {
-            msg += "symbol must be exactly one console cell width\n";
         }
 
         for( const auto &_a : type->techniques ) {
@@ -2083,9 +2078,9 @@ void Item_factory::load_basic_info( const JsonObject &jo, itype &def, const std:
         jo.read( "description", def.description );
     }
 
-    if( jo.has_string( "symbol" ) ) {
-        def.sym = jo.get_string( "symbol" );
-    }
+    bool was_loaded = true;
+    optional( jo, was_loaded, "symbol", def.symbol, unicode_codepoint_from_symbol_reader,
+              NULL_UNICODE );
 
     if( jo.has_string( "color" ) ) {
         def.color = color_from_string( jo.get_string( "color" ) );

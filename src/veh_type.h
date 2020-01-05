@@ -166,8 +166,8 @@ class vpart_info
          * y, u, n, b to NW, NE, SE, SW lines correspondingly
          * h, j, c to horizontal, vertical, cross correspondingly
          */
-        int sym = 0;
-        char sym_broken = '#';
+        uint32_t sym = NULL_UNICODE;
+        uint32_t sym_broken = PSEUDO_VEHICLE_BROKEN_PART_UNICODE;
 
         /** hint to tilesets for what tile to use if this part doesn't have one */
         std::string looks_like;

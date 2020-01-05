@@ -18,7 +18,7 @@ mtype::mtype()
 {
     id = mtype_id::NULL_ID();
     name = pl_translation( "human", "humans" );
-    sym = " ";
+    symbol = SPACE_UNICODE;
     color = c_white;
     size = MS_MEDIUM;
     volume = 62499_ml;

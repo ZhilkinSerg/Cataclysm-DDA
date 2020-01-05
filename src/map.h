@@ -1661,7 +1661,7 @@ class map
                               const tripoint &view_center,
                               bool low_light, bool bright_light, bool inorder ) const;
 
-        int determine_wall_corner( const tripoint &p ) const;
+        uint32_t determine_wall_corner( const tripoint &p ) const;
         // apply a circular light pattern immediately, however it's best to use...
         void apply_light_source( const tripoint &p, float luminance );
         // ...this, which will apply the light after at the end of generate_lightmap, and prevent redundant

@@ -68,17 +68,17 @@ using chtype = int;
 #define LINE_OXXX_S "┬" // '^|^' Tee pointing down. ncurses: ACS_TTEE; Unicode: U+252C
 #define LINE_XXXX_S "┼" // '-|-' Large Plus or cross over. ncurses: ACS_PLUS; Unicode: U+253C
 
-#define LINE_XOXO_UNICODE 0x2502
-#define LINE_OXOX_UNICODE 0x2500
-#define LINE_XXOO_UNICODE 0x2514
-#define LINE_OXXO_UNICODE 0x250C
-#define LINE_OOXX_UNICODE 0x2510
-#define LINE_XOOX_UNICODE 0x2518
-#define LINE_XXXO_UNICODE 0x251C
-#define LINE_XXOX_UNICODE 0x2534
-#define LINE_XOXX_UNICODE 0x2524
-#define LINE_OXXX_UNICODE 0x252C
-#define LINE_XXXX_UNICODE 0x253C
+static constexpr uint32_t LINE_XOXO_UNICODE = 0x2502;
+static constexpr uint32_t LINE_OXOX_UNICODE = 0x2500;
+static constexpr uint32_t LINE_XXOO_UNICODE = 0x2514;
+static constexpr uint32_t LINE_OXXO_UNICODE = 0x250C;
+static constexpr uint32_t LINE_OOXX_UNICODE = 0x2510;
+static constexpr uint32_t LINE_XOOX_UNICODE = 0x2518;
+static constexpr uint32_t LINE_XXXO_UNICODE = 0x251C;
+static constexpr uint32_t LINE_XXOX_UNICODE = 0x2534;
+static constexpr uint32_t LINE_XOXX_UNICODE = 0x2524;
+static constexpr uint32_t LINE_OXXX_UNICODE = 0x252C;
+static constexpr uint32_t LINE_XXXX_UNICODE = 0x253C;
 
 // Supports line drawing
 inline std::string string_from_int( const catacurses::chtype ch )
@@ -539,7 +539,7 @@ void draw_item_filter_rules( const catacurses::window &win, int starty, int heig
                              item_filter_type type );
 
 char rand_char();
-int special_symbol( int sym );
+uint32_t special_symbol( uint32_t sym );
 
 // Remove spaces from the start and the end of a string.
 std::string trim( const std::string &s );

@@ -11,6 +11,7 @@
 
 #include "assign.h"
 #include "cata_utility.h"
+#include "generic_factory.h"
 #include "item_factory.h"
 #include "json.h"
 #include "rng.h"
@@ -185,7 +186,7 @@ enum artifact_weapon_type {
 
 struct artifact_tool_form_datum {
     std::string name;
-    char sym;
+    uint32_t symbol;
     deferred_color color;
     // Most things had 0 to 1 material.
     material_id material;
@@ -681,7 +682,7 @@ std::string new_artifact()
         const artifact_tool_form_datum &info = random_entry_ref( artifact_tool_form_data );
         def.create_name( _( info.name ) );
         def.color = info.color;
-        def.sym = std::string( 1, info.sym );
+        def.symbol = info.symbol;
         def.materials.push_back( info.material );
         def.volume = rng( info.volume_min, info.volume_max );
         def.weight = rng( info.weight_min, info.weight_max );
@@ -824,7 +825,7 @@ std::string new_artifact()
 
         def.create_name( _( info.name ) );
         // Armor is always [
-        def.sym = "[";
+        def.symbol = LEFT_SQUARE_BRACKET_UNICODE;
         def.color = info.color;
         def.materials.push_back( info.material );
         def.volume = info.volume;
@@ -939,7 +940,7 @@ std::string new_natural_artifact( artifact_natural_property prop )
                     ARTPROP_MAX - 1 ) ) );
     const artifact_property_datum &property_data = artifact_property_data[property];
 
-    def.sym = ":";
+    def.symbol = COLON_UNICODE;
     def.color = c_yellow;
     def.materials.push_back( material_id( "stone" ) );
     def.volume = rng( shape_data.volume_min, shape_data.volume_max );
@@ -1054,7 +1055,8 @@ std::string architects_cube()
     const artifact_tool_form_datum &info = artifact_tool_form_data[ARTTOOLFORM_CUBE];
     def.create_name( _( info.name ) );
     def.color = info.color;
-    def.sym = std::string( 1, info.sym );
+    bool was_loaded = true;
+    def.symbol = info.symbol;
     def.materials.push_back( info.material );
     def.volume = rng( info.volume_min, info.volume_max );
     def.weight = rng( info.weight_min, info.weight_max );
@@ -1145,11 +1147,8 @@ void it_artifact_tool::deserialize( const JsonObject &jo )
     id = jo.get_string( "id" );
     name = no_translation( jo.get_string( "name" ) );
     description = no_translation( jo.get_string( "description" ) );
-    if( jo.has_int( "sym" ) ) {
-        sym = std::string( 1, jo.get_int( "sym" ) );
-    } else {
-        sym = jo.get_string( "sym" );
-    }
+    bool was_loaded = true;
+    optional( jo, was_loaded, "sym", symbol, unicode_codepoint_from_symbol_reader, NULL_UNICODE );
     jo.read( "color", color );
     assign( jo, "price", price, false, 0_cent );
     // LEGACY: Since it seems artifacts get serialized out to disk, and they're
@@ -1253,11 +1252,8 @@ void it_artifact_armor::deserialize( const JsonObject &jo )
     id = jo.get_string( "id" );
     name = no_translation( jo.get_string( "name" ) );
     description = no_translation( jo.get_string( "description" ) );
-    if( jo.has_int( "sym" ) ) {
-        sym = std::string( 1, jo.get_int( "sym" ) );
-    } else {
-        sym = jo.get_string( "sym" );
-    }
+    bool was_loaded = true;
+    optional( jo, was_loaded, "sym", symbol, unicode_codepoint_from_symbol_reader, NULL_UNICODE );
     jo.read( "color", color );
     assign( jo, "price", price, false, 0_cent );
     // LEGACY: Since it seems artifacts get serialized out to disk, and they're
@@ -1346,7 +1342,7 @@ void it_artifact_tool::serialize( JsonOut &json ) const
     // so `translated()` here only retrieves the underlying string
     json.member( "name", name.translated() );
     json.member( "description", description.translated() );
-    json.member( "sym", sym );
+    json.member( "sym", symbol );
     json.member( "color", color );
     json.member( "price", units::to_cent( price ) );
     json.member( "materials" );
@@ -1402,7 +1398,7 @@ void it_artifact_armor::serialize( JsonOut &json ) const
     // so `translated()` here only retrieves the underlying string
     json.member( "name", name.translated() );
     json.member( "description", description.translated() );
-    json.member( "sym", sym );
+    json.member( "sym", symbol );
     json.member( "color", color );
     json.member( "price", units::to_cent( price ) );
     json.member( "materials" );

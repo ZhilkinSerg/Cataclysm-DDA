@@ -217,19 +217,19 @@ void memorial_logger::write( std::ostream &file, const std::string &epitaph ) co
 
     int total_kills = 0;
 
-    std::map<std::tuple<std::string, std::string>, int> kill_counts;
+    std::map<std::tuple<std::string, uint32_t>, int> kill_counts;
 
     // map <name, sym> to kill count
     const kill_tracker &kills = g->get_kill_tracker();
     for( const mtype &type : MonsterGenerator::generator().get_all_mtypes() ) {
         int this_count = kills.kill_count( type.id );
         if( this_count > 0 ) {
-            kill_counts[std::make_tuple( type.nname(), type.sym )] += this_count;
+            kill_counts[std::make_tuple( type.nname(), type.get_codepoint() )] += this_count;
             total_kills += this_count;
         }
     }
 
-    for( const std::pair<std::tuple<std::string, std::string>, int> &entry : kill_counts ) {
+    for( const std::pair<std::tuple<std::string, uint32_t>, int> &entry : kill_counts ) {
         file << "  " << std::get<1>( entry.first ) << " - "
              << string_format( "%4d", entry.second ) << " "
              << std::get<0>( entry.first ) << eol;

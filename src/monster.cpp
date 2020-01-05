@@ -763,7 +763,7 @@ std::string monster::extended_description() const
 
 const std::string &monster::symbol() const
 {
-    return type->sym;
+    return type->get_symbol();
 }
 
 nc_color monster::basic_symbol_color() const

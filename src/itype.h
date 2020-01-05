@@ -9,6 +9,7 @@
 #include <array>
 
 #include "bodypart.h" // body_part::num_bp
+#include "catacharset.h"
 #include "calendar.h"
 #include "color.h" // nc_color
 #include "damage.h"
@@ -962,7 +963,10 @@ struct itype {
         /** If set via JSON forces item category to this (preventing automatic assignment) */
         item_category_id category_force;
 
-        std::string sym;
+        uint32_t symbol = NULL_UNICODE;
+        std::string get_symbol() const {
+            return utf32_to_utf8( symbol );
+        }
         nc_color color = c_white; // Color on the map (color.h)
 
         static constexpr int damage_scale = 1000; /** Damage scale compared to the old float damage value */
