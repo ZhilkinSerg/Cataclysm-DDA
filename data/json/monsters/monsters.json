@@ -2692,7 +2692,7 @@
     "hp": 80,
     "speed": 70,
     "material": [ "flesh" ],
-    "symbol": "Z",
+    "symbol": "⛅",
     "color": "light_green",
     "aggression": 100,
     "morale": 100,
