@@ -1971,7 +1971,7 @@
     "id": "t_grass",
     "name": "grass",
     "description": "An area of hardy Kentucky bluegrass about ankle high.  Cutting the grass short enough would destroy the root system, causing this area to turn into a patch of dirt.",
-    "symbol": "❀",
+    "symbol": "▓",
     "color": "green",
     "move_cost": 2,
     "flags": [ "TRANSPARENT", "DIGGABLE", "FLAT", "PLOWABLE" ],
