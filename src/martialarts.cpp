@@ -86,29 +86,17 @@ class ma_skill_reader : public generic_typed_reader<ma_skill_reader>
 class ma_weapon_damage_reader : public generic_typed_reader<ma_weapon_damage_reader>
 {
     public:
-        std::map<std::string, damage_type> dt_map = get_dt_map();
-
         std::pair<damage_type, int> get_next( JsonIn &jin ) const {
             JsonObject jo = jin.get_object();
-            std::string type = jo.get_string( "type" );
-            const auto iter = get_dt_map().find( type );
-            if( iter == get_dt_map().end() ) {
-                jo.throw_error( "Invalid damage type" );
-            }
-            const damage_type dt = iter->second;
-            return std::pair<damage_type, int>( dt, jo.get_int( "min" ) );
+            damage_type dt = io::string_to_enum<damage_type>( jo.get_string( "damage_type" ) );
+            return std::pair<damage_type, int>( dt, jo.get_int( "amount" ) );
         }
         template<typename C>
         void erase_next( JsonIn &jin, C &container ) const {
             JsonObject jo = jin.get_object();
-            std::string type = jo.get_string( "type" );
-            const auto iter = get_dt_map().find( type );
-            if( iter == get_dt_map().end() ) {
-                jo.throw_error( "Invalid damage type" );
-            }
-            damage_type id = iter->second;
-            reader_detail::handler<C>().erase_if( container, [&id]( const std::pair<damage_type, int> &e ) {
-                return e.first == id;
+            damage_type dt = io::string_to_enum<damage_type>( jo.get_string( "damage_type" ) );
+            reader_detail::handler<C>().erase_if( container, [&dt]( const std::pair<damage_type, int> &e ) {
+                return e.first == dt;
             } );
         }
 };

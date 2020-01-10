@@ -111,7 +111,6 @@ struct resistances {
     resistances &operator+=( const resistances &other );
 };
 
-const std::map<std::string, damage_type> &get_dt_map();
 damage_type dt_by_name( const std::string &name );
 std::string name_by_dt( const damage_type &dt );
 
