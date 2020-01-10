@@ -14,6 +14,33 @@
 #include "translations.h"
 #include "cata_utility.h"
 
+namespace io
+{
+template<>
+std::string enum_to_string<damage_type>( damage_type data )
+{
+    switch( data ) {
+        // *INDENT-OFF*
+        case damage_type::DT_NULL: return "null";
+        case damage_type::DT_TRUE: return "true";
+        case damage_type::DT_BIOLOGICAL: return "biological";
+        case damage_type::DT_BASH: return "bash";
+        case damage_type::DT_CUT: return "cut";
+        case damage_type::DT_STAB: return "stab";
+        case damage_type::DT_ACID: return "acid";
+        case damage_type::DT_HEAT: return "heat";
+        case damage_type::DT_COLD: return "cold";
+        case damage_type::DT_ELECTRIC: return "electric";
+        // *INDENT-ON*
+        case damage_type::NUM_DT:
+            break;
+    }
+    debugmsg( "Invalid damage type value '%d'.", data );
+    return "invalid";
+}
+
+} // namespace io
+
 bool damage_unit::operator==( const damage_unit &other ) const
 {
     return type == other.type &&
