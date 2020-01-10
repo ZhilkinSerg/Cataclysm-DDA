@@ -450,24 +450,7 @@ void mutation_branch::load( const JsonObject &jo, const std::string & )
         restricts_gear.insert( get_body_part_token( line ) );
     }
 
-    for( JsonObject ao : jo.get_array( "armor" ) ) {
-        auto parts = ao.get_tags( "parts" );
-        std::set<body_part> bps;
-        for( const std::string &part_string : parts ) {
-            if( part_string == "ALL" ) {
-                // Shorthand, since many mutations protect whole body
-                bps.insert( all_body_parts.begin(), all_body_parts.end() );
-            } else {
-                bps.insert( get_body_part_token( part_string ) );
-            }
-        }
-
-        resistances res = load_resistances_instance( ao );
-
-        for( body_part bp : bps ) {
-            armor[ bp ] = res;
-        }
-    }
+    armor = load_resistances_map( jo.get_array( "armor" ) );
 
     if( jo.has_array( "attacks" ) ) {
         for( JsonObject ao : jo.get_array( "attacks" ) ) {

@@ -131,11 +131,7 @@ void bonus_container::load( JsonArray &jarr, bool mult )
         }
 
         if( needs_damage_type( as ) ) {
-            const std::string damage_string = qualifiers.next_string();
-            dt = dt_by_name( damage_string );
-            if( dt == DT_NULL ) {
-                jarr.throw_error( "Invalid damage type" );
-            }
+            dt = io::string_to_enum<damage_type>( qualifiers.next_string() );
         }
 
         effect_scaling es;

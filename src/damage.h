@@ -111,18 +111,14 @@ struct resistances {
     resistances &operator+=( const resistances &other );
 };
 
-damage_type dt_by_name( const std::string &name );
-std::string name_by_dt( const damage_type &dt );
-
+std::string name_by_dt( damage_type dt );
 const skill_id &skill_by_dt( damage_type dt );
 
 damage_instance load_damage_instance( const JsonObject &jo );
 damage_instance load_damage_instance( const JsonArray &jarr );
 
-resistances load_resistances_instance( const JsonObject &jo );
+std::map<body_part, resistances> load_resistances_map( const JsonArray &jsarr );
 
-// Returns damage or resistance data
-// Handles some shorthands
 std::array<float, NUM_DT> load_damage_array( const JsonObject &jo );
 
 #endif

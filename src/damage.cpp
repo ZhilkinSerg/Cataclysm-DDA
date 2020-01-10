@@ -251,40 +251,22 @@ resistances &resistances::operator+=( const resistances &other )
     return *this;
 }
 
-static const std::map<std::string, damage_type> dt_map = {
-    { translate_marker_context( "damage type", "true" ), DT_TRUE },
-    { translate_marker_context( "damage type", "biological" ), DT_BIOLOGICAL },
-    { translate_marker_context( "damage type", "bash" ), DT_BASH },
-    { translate_marker_context( "damage type", "cut" ), DT_CUT },
-    { translate_marker_context( "damage type", "acid" ), DT_ACID },
-    { translate_marker_context( "damage type", "stab" ), DT_STAB },
-    { translate_marker_context( "damage type", "heat" ), DT_HEAT },
-    { translate_marker_context( "damage type", "cold" ), DT_COLD },
-    { translate_marker_context( "damage type", "electric" ), DT_ELECTRIC }
+static const std::map<damage_type, std::string> dt_map = {
+    { DT_NULL, translate_marker_context( "damage type", "null" ) },
+    { DT_TRUE, translate_marker_context( "damage type", "true" ) },
+    { DT_BIOLOGICAL, translate_marker_context( "damage type", "biological" ) },
+    { DT_BASH, translate_marker_context( "damage type", "bash" )  },
+    { DT_CUT, translate_marker_context( "damage type", "cut" ) },
+    { DT_STAB, translate_marker_context( "damage type", "stab" ) },
+    { DT_ACID, translate_marker_context( "damage type", "acid" ) },
+    { DT_HEAT, translate_marker_context( "damage type", "heat" ) },
+    { DT_COLD, translate_marker_context( "damage type", "cold" ) },
+    { DT_ELECTRIC, translate_marker_context( "damage type", "electric" ), }
 };
 
+std::string name_by_dt( damage_type dt )
 {
-damage_type dt_by_name( const std::string &name )
-{
-    const auto &iter = dt_map.find( name );
-    if( iter == dt_map.end() ) {
-        return DT_NULL;
-    }
-
-    return iter->second;
-}
-
-std::string name_by_dt( const damage_type &dt )
-{
-    auto iter = dt_map.cbegin();
-    while( iter != dt_map.cend() ) {
-        if( iter->second == dt ) {
-            return pgettext( "damage type", iter->first.c_str() );
-        }
-        iter++;
-    }
-    static const std::string err_msg( "dt_not_found" );
-    return err_msg;
+    return pgettext( "damage type", dt_map.at( dt ).c_str() ) ;
 }
 
 const skill_id &skill_by_dt( damage_type dt )
@@ -310,11 +292,7 @@ const skill_id &skill_by_dt( damage_type dt )
 
 static damage_unit load_damage_unit( const JsonObject &curr )
 {
-    damage_type dt = dt_by_name( curr.get_string( "damage_type" ) );
-    if( dt == DT_NULL ) {
-        curr.throw_error( "Invalid damage type" );
-    }
-
+    damage_type dt = io::string_to_enum<damage_type>( curr.get_string( "damage_type" ) );
     float amount = curr.get_float( "amount" );
     int arpen = curr.get_int( "armor_penetration", 0 );
     float armor_mul = curr.get_float( "armor_multiplier", 1.0f );
@@ -346,6 +324,51 @@ damage_instance load_damage_instance( const JsonArray &jarr )
     return di;
 }
 
+std::map<body_part, resistances> load_resistances_map( const JsonArray &jarr )
+{
+    std::map<body_part, resistances> ret;
+
+    for( const JsonObject &jo : jarr ) {
+        std::set<std::string> parts = jo.get_tags( "body_parts" );
+        std::set<body_part> bps;
+        for( const std::string &part_string : parts ) {
+            if( part_string == "ALL" ) {
+                // Shorthand for all body parts
+                bps.insert( all_body_parts.begin(), all_body_parts.end() );
+            } else {
+                bps.insert( io::string_to_enum<body_part>( part_string ) );
+            }
+        }
+
+        resistances res;
+        for( const JsonObject &job : jo.get_array( "bonus" ) ) {
+            std::string damage_type_string = job.get_string( "damage_type" );
+            if( damage_type_string == "ALL" ) {
+
+            } else {
+                res.resist_vals[io::string_to_enum<damage_type>( damage_type_string )] =
+                    job.get_float( "amount" );
+            }
+        }
+
+        /*
+        resistances res;
+        res.resist_vals = load_resist_values( ao.get_array( "bonus" ) );
+
+        for( body_part bp : bps ) {
+            ret[bp] = res;
+        }
+
+        resistances ret;
+        for( const JsonObject &jo : jarr ) {
+            ret.resist_vals = load_resist_values( jo );
+        }
+        */
+    }
+
+    return ret;
+}
+
 std::array<float, NUM_DT> load_damage_array( const JsonObject &jo )
 {
     std::array<float, NUM_DT> ret;
@@ -365,12 +388,5 @@ std::array<float, NUM_DT> load_damage_array( const JsonObject &jo )
 
     // DT_TRUE should never be resisted
     ret[ DT_TRUE ] = 0.0f;
-    return ret;
-}
-
-resistances load_resistances_instance( const JsonObject &jo )
-{
-    resistances ret;
-    ret.resist_vals = load_damage_array( jo );
     return ret;
 }

@@ -42,7 +42,7 @@
 "unarmed_weapons_allowed" : true,    // Does this technique require the character to be actually unarmed or does it allow unarmed weapons
 "melee_allowed" : true,     // Means that ANY melee weapon can be used, NOT just the martial art's weapons 
 "skill_requirements": [ { "name": "melee", "level": 3 } ],     // Skills and their minimum levels required to use this technique. Can be any skill.
-"weapon_damage_requirements": [ { "type": "bash", "min": 5 } ],     // Minimum weapon damage required to use this technique. Can be any damage type.
+"weapon_damage_requirements": [ { "damage_type": "bash", "amount": 5 } ],     // Minimum weapon damage required to use this technique. Can be any damage type.
 "req_buffs": [ "eskrima_hit_buff" ],    // This technique requires a named buff to be active
 "crit_tec" : true,          // This technique only works on a critical hit
 "crit_ok" : true,           // This technique works on both normal and critical hits
