@@ -826,6 +826,15 @@ class Character : public Creature, public visitable<Character>
         bool has_power() const;
         bool has_max_power() const;
         bool enough_power_for( const bionic_id &bid ) const;
+
+        /**
+         * Returns resistances on a body part provided by bionics
+         */
+        // TODO: Cache this, it's kinda expensive to compute
+        resistances bionic_armor( body_part bp ) const;
+        float bionic_armor( body_part bp, damage_type dt ) const;
+        float bionic_armor( body_part bp, const damage_unit &du ) const;
+
         // --------------- Generic Item Stuff ---------------
 
         struct has_mission_item_filter {

@@ -18,17 +18,32 @@ class JsonIn;
 enum body_part : int;
 
 enum damage_type : int {
-    DT_NULL = 0, // null damage, doesn't exist
-    DT_TRUE, // typeless damage, should always go through
-    DT_BIOLOGICAL, // internal damage, like from smoke or poison
-    DT_BASH, // bash damage
-    DT_CUT, // cut damage
-    DT_ACID, // corrosive damage, e.g. acid
-    DT_STAB, // stabbing/piercing damage
-    DT_HEAT, // e.g. fire, plasma
-    DT_COLD, // e.g. heatdrain, cryogrenades
-    DT_ELECTRIC, // e.g. electrical discharge
+    // null damage, doesn't exist
+    DT_NULL = 0,
+    // typeless damage, should always go through
+    DT_TRUE,
+    // internal damage, like from smoke or poison
+    DT_BIOLOGICAL,
+    // bash damage
+    DT_BASH,
+    // cut damage
+    DT_CUT,
+    // stabbing/piercing damage
+    DT_STAB,
+    // corrosive damage, e.g. acid
+    DT_ACID,
+    // e.g. fire, plasma
+    DT_HEAT,
+    // e.g. heatdrain, cryogrenades
+    DT_COLD,
+    // e.g. electrical discharge
+    DT_ELECTRIC,
     NUM_DT
+};
+
+template<>
+struct enum_traits<damage_type> {
+    static constexpr damage_type last = damage_type::NUM_DT;
 };
 
 struct damage_unit {
@@ -117,6 +132,6 @@ resistances load_resistances_instance( const JsonObject &jo );
 
 // Returns damage or resistance data
 // Handles some shorthands
-std::array<float, NUM_DT> load_damage_array( const JsonObject &jo );
+std::array<float, NUM_DT> load_damage_array( const JsonArray &jarr );
 
 #endif

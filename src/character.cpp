@@ -65,12 +65,6 @@
 #include "vpart_position.h"
 
 static const bionic_id bio_ads( "bio_ads" );
-static const bionic_id bio_armor_arms( "bio_armor_arms" );
-static const bionic_id bio_armor_eyes( "bio_armor_eyes" );
-static const bionic_id bio_armor_head( "bio_armor_head" );
-static const bionic_id bio_armor_legs( "bio_armor_legs" );
-static const bionic_id bio_armor_torso( "bio_armor_torso" );
-static const bionic_id bio_carbon( "bio_carbon" );
 static const bionic_id bio_climate( "bio_climate" );
 static const bionic_id bio_earplugs( "bio_earplugs" );
 static const bionic_id bio_ears( "bio_ears" );
@@ -4755,6 +4749,26 @@ float Character::mutation_armor( body_part bp, const damage_unit &du ) const
     return mutation_armor( bp ).get_effective_resist( du );
 }
 
+resistances Character::bionic_armor( body_part bp ) const
+{
+    resistances res;
+    for( bionic &i : *my_bionics ) {
+        res += i.damage_resistance( bp );
+    }
+
+    return res;
+}
+
+float Character::bionic_armor( body_part bp, damage_type dt ) const
+{
+    return bionic_armor( bp ).type_resist( dt );
+}
+
+float Character::bionic_armor( body_part bp, const damage_unit &du ) const
+{
+    return bionic_armor( bp ).get_effective_resist( du );
+}
+
 int Character::ammo_count_for( const item &gun )
 {
     int ret = item::INFINITE_CHARGES;
@@ -5324,6 +5338,7 @@ int Character::get_armor_type( damage_type dt, body_part bp ) const
                 }
             }
 
+            ret += bionic_armor( bp, dt );
             ret += mutation_armor( bp, dt );
             return ret;
         }
@@ -5345,25 +5360,7 @@ int Character::get_armor_bash_base( body_part bp ) const
             ret += i.bash_resist();
         }
     }
-    if( has_bionic( bio_carbon ) ) {
-        ret += 2;
-    }
-    if( bp == bp_head && has_bionic( bio_armor_head ) ) {
-        ret += 3;
-    }
-    if( ( bp == bp_arm_l || bp == bp_arm_r ) && has_bionic( bio_armor_arms ) ) {
-        ret += 3;
-    }
-    if( bp == bp_torso && has_bionic( bio_armor_torso ) ) {
-        ret += 3;
-    }
-    if( ( bp == bp_leg_l || bp == bp_leg_r ) && has_bionic( bio_armor_legs ) ) {
-        ret += 3;
-    }
-    if( bp == bp_eyes && has_bionic( bio_armor_eyes ) ) {
-        ret += 3;
-    }
-
+    ret += bionic_armor( bp, DT_BASH );
     ret += mutation_armor( bp, DT_BASH );
     return ret;
 }
@@ -5376,21 +5373,7 @@ int Character::get_armor_cut_base( body_part bp ) const
             ret += i.cut_resist();
         }
     }
-    if( has_bionic( bio_carbon ) ) {
-        ret += 4;
-    }
-    if( bp == bp_head && has_bionic( bio_armor_head ) ) {
-        ret += 3;
-    } else if( ( bp == bp_arm_l || bp == bp_arm_r ) && has_bionic( bio_armor_arms ) ) {
-        ret += 3;
-    } else if( bp == bp_torso && has_bionic( bio_armor_torso ) ) {
-        ret += 3;
-    } else if( ( bp == bp_leg_l || bp == bp_leg_r ) && has_bionic( bio_armor_legs ) ) {
-        ret += 3;
-    } else if( bp == bp_eyes && has_bionic( bio_armor_eyes ) ) {
-        ret += 3;
-    }
-
+    ret += bionic_armor( bp, DT_CUT );
     ret += mutation_armor( bp, DT_CUT );
     return ret;
 }
@@ -6116,7 +6099,7 @@ void Character::passive_absorb_hit( body_part bp, damage_unit &du ) const
             du.amount -= mutation_armor( bp, du );
         }
     }
-    du.amount -= bionic_armor_bonus( bp, du.type ); //Check for passive armor bionics
+    du.amount -= bionic_armor( bp, du.type );
     du.amount -= mabuff_armor_bonus( du.type );
     du.amount = std::max( 0.0f, du.amount );
 }
@@ -6367,37 +6350,6 @@ bool Character::armor_absorb( damage_unit &du, item &armor )
 
     return armor.mod_damage( armor.has_flag( "FRAGILE" ) ?
                              rng( 2 * itype::damage_scale, 3 * itype::damage_scale ) : itype::damage_scale, du.type );
-}
-
-float Character::bionic_armor_bonus( body_part bp, damage_type dt ) const
-{
-    float result = 0.0f;
-    // We only check the passive bionics
-    if( has_bionic( bio_carbon ) ) {
-        if( dt == DT_BASH ) {
-            result += 2;
-        } else if( dt == DT_CUT || dt == DT_STAB ) {
-            result += 4;
-        }
-    }
-    // All the other bionic armors reduce bash/cut/stab by 3
-    // Map body parts to a set of bionics that protect it
-    // TODO: JSONize passive bionic armor instead of hardcoding it
-    static const std::map< body_part, bionic_id > armor_bionics = {
-        { bp_head, { bio_armor_head } },
-        { bp_arm_l, { bio_armor_arms } },
-        { bp_arm_r, { bio_armor_arms } },
-        { bp_torso, { bio_armor_torso } },
-        { bp_leg_l, { bio_armor_legs } },
-        { bp_leg_r, { bio_armor_legs } },
-        { bp_eyes, { bio_armor_eyes } }
-    };
-    auto iter = armor_bionics.find( bp );
-    if( iter != armor_bionics.end() && has_bionic( iter->second ) &&
-        ( dt == DT_BASH || dt == DT_CUT || dt == DT_STAB ) ) {
-        result += 3;
-    }
-    return result;
 }
 
 int Character::get_armor_fire( body_part bp ) const

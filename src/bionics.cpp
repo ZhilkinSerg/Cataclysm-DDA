@@ -2342,6 +2342,24 @@ void load_bionic( const JsonObject &jsobj )
                                                ja.get_int( 1 ) );
     }
 
+    for( JsonObject ao : jsobj.get_array( "armor" ) ) {
+        auto parts = ao.get_tags( "parts" );
+        std::set<body_part> bps;
+        for( const std::string &part_string : parts ) {
+            if( part_string == "ALL" ) {
+                bps.insert( all_body_parts.begin(), all_body_parts.end() );
+            } else {
+                bps.insert( get_body_part_token( part_string ) );
+            }
+        }
+
+        resistances res = load_resistances_instance( ao );
+
+        for( body_part bp : bps ) {
+            new_bionic.armor[ bp ] = res;
+        }
+    }
+
     for( JsonArray ja : jsobj.get_array( "env_protec" ) ) {
         new_bionic.env_protec.emplace( get_body_part_token( ja.get_string( 0 ) ),
                                        ja.get_int( 1 ) );
@@ -2498,6 +2516,17 @@ float bionic::get_auto_start_thresh() const
 bool bionic::is_auto_start_on() const
 {
     return get_auto_start_thresh() > -1.0;
+}
+
+const resistances &bionic::damage_resistance( body_part bp ) const
+{
+    const auto iter = info().armor.find( bp );
+    if( iter == info().armor.end() ) {
+        static const resistances nulres;
+        return nulres;
+    }
+
+    return iter->second;
 }
 
 void bionic::serialize( JsonOut &json ) const

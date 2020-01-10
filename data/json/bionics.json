@@ -43,6 +43,16 @@
     "name": "Alloy Plating - Arms",
     "description": "The flesh on your arms has been surgically replaced by alloy plating.  Provides passive protection and can be used in conjunction with bionic martial arts.",
     "occupied_bodyparts": [ [ "ARM_L", 4 ], [ "ARM_R", 4 ] ],
+    "armor": [
+      {
+        "parts": [ "ARM_L", "ARM_R" ],
+        "bonus": [
+          { "damage_type": "bash", "amount": 3 },
+          { "damage_type": "stab", "amount": 3 },
+          { "damage_type": "cut", "amount": 3 }
+        ]
+      }
+    ],
     "flags": [ "BIONIC_NPC_USABLE", "BIONIC_SHOCKPROOF" ]
   },
   {
@@ -51,6 +61,16 @@
     "name": "Protective Lenses",
     "description": "Your eye sockets have been surgically sealed with highly protective mirrored lenses and your tear ducts have been re-routed to your mouth.  When you cry, you must spit out or swallow your tears.",
     "occupied_bodyparts": [ [ "EYES", 1 ] ],
+    "armor": [
+      {
+        "parts": "EYES",
+        "bonus": [
+          { "damage_type": "bash", "amount": 3 },
+          { "damage_type": "stab", "amount": 3 },
+          { "damage_type": "cut", "amount": 3 }
+        ]
+      }
+    ],
     "env_protec": [ [ "EYES", 7 ] ],
     "flags": [ "BIONIC_NPC_USABLE", "BIONIC_SHOCKPROOF" ]
   },
@@ -60,6 +80,16 @@
     "name": "Alloy Plating - Head",
     "description": "The flesh on your head has been surgically replaced by alloy plating, protecting both your head and jaw regions.",
     "occupied_bodyparts": [ [ "HEAD", 5 ], [ "MOUTH", 1 ] ],
+    "armor": [
+      {
+        "parts": [ "HEAD", "MOUTH" ],
+        "bonus": [
+          { "damage_type": "bash", "amount": 3 },
+          { "damage_type": "stab", "amount": 3 },
+          { "damage_type": "cut", "amount": 3 }
+        ]
+      }
+    ],
     "flags": [ "BIONIC_NPC_USABLE", "BIONIC_SHOCKPROOF" ]
   },
   {
@@ -68,6 +98,16 @@
     "name": "Alloy Plating - Legs",
     "description": "The flesh on your legs has been surgically replaced by alloy plating.  Provides passive protection and can be used in conjunction with bionic martial arts.",
     "occupied_bodyparts": [ [ "LEG_L", 6 ], [ "LEG_R", 6 ] ],
+    "armor": [
+      {
+        "parts": [ "LEG_L", "LEG_R" ],
+        "bonus": [
+          { "damage_type": "bash", "amount": 3 },
+          { "damage_type": "stab", "amount": 3 },
+          { "damage_type": "cut", "amount": 3 }
+        ]
+      }
+    ],
     "flags": [ "BIONIC_NPC_USABLE", "BIONIC_SHOCKPROOF" ]
   },
   {
@@ -76,6 +116,16 @@
     "name": "Alloy Plating - Torso",
     "description": "The flesh on your torso has been surgically replaced by alloy plating, protecting it from physical trauma.",
     "occupied_bodyparts": [ [ "TORSO", 10 ] ],
+    "armor": [
+      {
+        "parts": "TORSO",
+        "bonus": [
+          { "damage_type": "bash", "amount": 3 },
+          { "damage_type": "stab", "amount": 3 },
+          { "damage_type": "cut", "amount": 3 }
+        ]
+      }
+    ],
     "flags": [ "BIONIC_NPC_USABLE", "BIONIC_SHOCKPROOF" ]
   },
   {
@@ -159,6 +209,16 @@
       [ "LEG_R", 3 ],
       [ "FOOT_L", 1 ],
       [ "FOOT_R", 1 ]
+    ],
+    "armor": [
+      {
+        "parts": "ALL",
+        "bonus": [
+          { "damage_type": "bash", "amount": 2 },
+          { "damage_type": "stab", "amount": 4 },
+          { "damage_type": "cut", "amount": 4 }
+        ]
+      }
     ],
     "flags": [ "BIONIC_NPC_USABLE", "BIONIC_SHOCKPROOF" ]
   },

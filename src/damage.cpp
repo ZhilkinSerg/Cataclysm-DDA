@@ -7,12 +7,40 @@
 #include <utility>
 
 #include "debug.h"
+#include "enums.h"
 #include "item.h"
 #include "json.h"
 #include "monster.h"
 #include "mtype.h"
 #include "translations.h"
 #include "cata_utility.h"
+
+namespace io
+{
+template<>
+std::string enum_to_string<damage_type>( damage_type data )
+{
+    switch( data ) {
+        // *INDENT-OFF*
+        case damage_type::DT_NULL: return "null";
+        case damage_type::DT_TRUE: return "true";
+        case damage_type::DT_BIOLOGICAL: return "biological";
+        case damage_type::DT_BASH: return "bash";
+        case damage_type::DT_CUT: return "cut";
+        case damage_type::DT_STAB: return "stab";
+        case damage_type::DT_ACID: return "acid";
+        case damage_type::DT_HEAT: return "heat";
+        case damage_type::DT_COLD: return "cold";
+        case damage_type::DT_ELECTRIC: return "electric";
+        // *INDENT-ON*
+        case damage_type::NUM_DT:
+            break;
+    }
+    debugmsg( "Invalid damage type value '%d'.", data );
+    return "invalid";
+}
+
+} // namespace io
 
 bool damage_unit::operator==( const damage_unit &other ) const
 {
@@ -69,7 +97,7 @@ float damage_instance::type_damage( damage_type dt ) const
     }
     return ret;
 }
-//This returns the damage from this damage_instance. The damage done to the target will be reduced by their armor.
+// This returns the damage from this damage_instance. The damage done to the target will be reduced by their armor.
 float damage_instance::total_damage() const
 {
     float ret = 0;
@@ -323,9 +351,12 @@ damage_instance load_damage_instance( const JsonArray &jarr )
     return di;
 }
 
-std::array<float, NUM_DT> load_damage_array( const JsonObject &jo )
+std::array<float, NUM_DT> load_damage_array( const JsonArray &ja )
 {
     std::array<float, NUM_DT> ret;
+    for( const JsonObject &jo : ja ) {
+        ja.
+    }
     float init_val = jo.get_float( "all", 0.0f );
 
     float phys = jo.get_float( "physical", init_val );
@@ -345,9 +376,9 @@ std::array<float, NUM_DT> load_damage_array( const JsonObject &jo )
     return ret;
 }
 
-resistances load_resistances_instance( const JsonObject &jo )
+resistances load_resistances_instance( const JsonObject &jo, const std::string &node_name )
 {
     resistances ret;
-    ret.resist_vals = load_damage_array( jo );
+    ret.resist_vals = load_damage_array( jo.get_array( node_name ) );
     return ret;
 }

@@ -104,6 +104,10 @@ struct bionic_data {
      */
     std::map<body_part, size_t> occupied_bodyparts;
     /**
+     * Bionic armor data
+     */
+    std::map<body_part, resistances> armor;
+    /**
      * Body part encumbered by this bionic, mapped to the amount of encumbrance caused.
      */
     std::map<body_part, int> encumbrance;
@@ -171,6 +175,8 @@ struct bionic {
         void set_auto_start_thresh( float val );
         float get_auto_start_thresh() const;
         bool is_auto_start_on() const;
+
+        const resistances &damage_resistance( body_part bp ) const;
 
         void serialize( JsonOut &json ) const;
         void deserialize( JsonIn &jsin );
