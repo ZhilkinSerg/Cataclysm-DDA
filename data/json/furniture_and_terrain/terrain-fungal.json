@@ -21,6 +21,7 @@
     "color": "light_gray",
     "move_cost": 3,
     "flags": [ "TRANSPARENT", "FLAMMABLE_ASH", "DIGGABLE", "FUNGUS", "NOCOLLIDE" ],
+    "dies_into": "t_dirt",
     "bash": {
       "sound": "smash",
       "//": "muffled because fungus",

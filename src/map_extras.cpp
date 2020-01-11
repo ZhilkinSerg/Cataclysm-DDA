@@ -1958,19 +1958,6 @@ static void burned_ground_parser( map &m, const tripoint &loc )
         m.furn_set( tri, f_wreckage );
     }
 
-    // grass is converted separately
-    // this method is deliberate to allow adding new post-terrains
-    // (TODO: expand this list when new destroyed terrain is added)
-    static const std::map<ter_id, ter_str_id> dies_into {{
-            {t_grass, ter_str_id( "t_grass_dead" )},
-            {t_grass_long, ter_str_id( "t_grass_dead" )},
-            {t_grass_tall, ter_str_id( "t_grass_dead" )},
-            {t_moss, ter_str_id( "t_grass_dead" )},
-            {t_fungus, ter_str_id( "t_dirt" )},
-            {t_grass_golf, ter_str_id( "t_grass_dead" )},
-            {t_grass_white, ter_str_id( "t_grass_dead" )},
-        }};
-
     const auto iter = dies_into.find( tid );
     if( iter != dies_into.end() ) {
         if( one_in( 6 ) ) {
@@ -1979,7 +1966,7 @@ static void burned_ground_parser( map &m, const tripoint &loc )
         } else if( one_in( 10 ) ) {
             // do nothing, save some spots from fire
         } else {
-            m.ter_set( loc, iter->second );
+            m.ter_set( loc );
         }
     }
 

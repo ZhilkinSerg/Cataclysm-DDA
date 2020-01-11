@@ -320,7 +320,7 @@ furn_t null_furniture_t()
 }
 
 ter_t::ter_t() : open( ter_str_id::NULL_ID() ), close( ter_str_id::NULL_ID() ),
-    transforms_into( ter_str_id::NULL_ID() ),
+    transforms_into( ter_str_id::NULL_ID() ), dies_into( ter_str_id::NULL_ID() ),
     roof( ter_str_id::NULL_ID() ), trap( tr_null ) {}
 
 ter_t null_terrain_t()
@@ -1163,10 +1163,20 @@ void ter_t::load( const JsonObject &jo, const std::string &src )
     optional( jo, was_loaded, "open", open, ter_str_id::NULL_ID() );
     optional( jo, was_loaded, "close", close, ter_str_id::NULL_ID() );
     optional( jo, was_loaded, "transforms_into", transforms_into, ter_str_id::NULL_ID() );
+    optional( jo, was_loaded, "dies_into", dies_into, ter_str_id::NULL_ID() );
     optional( jo, was_loaded, "roof", roof, ter_str_id::NULL_ID() );
 
     bash.load( jo, "bash", false );
     deconstruct.load( jo, "deconstruct", false );
+
+    // Some fallback values for dies_into
+    if( dies_into == ter_str_id::NULL_ID() ) {
+        if( has_flag( "SHRUB" ) ) {
+            dies_into = ter_str_id( "t_dirt" );
+        } else if( has_flag( "TREE" ) ) {
+            dies_into = ter_str_id( "t_tree_dead" );
+        }
+    }
 }
 
 static void check_bash_items( const map_bash_info &mbi, const std::string &id, bool is_terrain )
@@ -1218,6 +1228,9 @@ void ter_t::check() const
     if( !transforms_into.is_valid() ) {
         debugmsg( "invalid transforms_into %s for %s", transforms_into.c_str(), id.c_str() );
     }
+    if( !dies_into.is_valid() ) {
+        debugmsg( "invalid dies_into %s for %s", dies_into.c_str(), id.c_str() );
+    }
     if( !open.is_valid() ) {
         debugmsg( "invalid terrain %s for opening %s", open.c_str(), id.c_str() );
     }
@@ -1226,6 +1239,9 @@ void ter_t::check() const
     }
     if( transforms_into && transforms_into == id ) {
         debugmsg( "%s transforms_into itself", id.c_str() );
+    }
+    if( dies_into && dies_into == id ) {
+        debugmsg( "%s dies_into itself", id.c_str() );
     }
 }
 

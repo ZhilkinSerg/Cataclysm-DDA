@@ -666,7 +666,12 @@ class map
          */
         const std::set<std::string> &get_harvest_names( const tripoint &p ) const;
         ter_id get_ter_transforms_into( const tripoint &p ) const;
+        ter_id get_ter_dies_into( const tripoint &p ) const;
 
+        bool ter_die( const tripoint &p );
+        bool ter_die( const point &p ) {
+            return ter_die( tripoint( p, abs_sub.z ) );
+        }
         bool ter_set( const tripoint &p, const ter_id &new_terrain );
         bool ter_set( const point &p, const ter_id &new_terrain ) {
             return ter_set( tripoint( p, abs_sub.z ), new_terrain );

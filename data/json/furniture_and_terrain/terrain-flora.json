@@ -337,6 +337,7 @@
     "//": "barren in winter",
     "move_cost": 4,
     "flags": [ "TRANSPARENT", "FLAMMABLE_ASH", "NOITEM", "YOUNG", "REDUCE_SCENT" ],
+    "dies_into": "t_dirt",
     "bash": {
       "str_min": 4,
       "str_max": 50,
@@ -852,6 +853,7 @@
     "coverage": 80,
     "flags": [ "FLAMMABLE_ASH", "NOITEM", "SUPPORTS_ROOF", "TREE", "REDUCE_SCENT" ],
     "transforms_into": "t_tree_pine_harvested",
+    "dies_into": "t_tree_deadpine",
     "examine_action": "harvest_ter",
     "harvest_by_season": [
       {
@@ -914,6 +916,7 @@
     "flags": [ "FLAMMABLE_ASH", "NOITEM", "SUPPORTS_ROOF", "TREE", "REDUCE_SCENT" ],
     "examine_action": "harvest_ter",
     "transforms_into": "t_tree_birch_harvested",
+    "dies_into": "t_tree_birch_harvested",
     "harvest_by_season": [
       { "seasons": [ "spring", "summer", "autumn", "winter" ], "entries": [ { "drop": "birchbark", "base_num": [ 2, 8 ] } ] }
     ],
@@ -961,6 +964,7 @@
     "flags": [ "FLAMMABLE_ASH", "NOITEM", "SUPPORTS_ROOF", "TREE", "REDUCE_SCENT" ],
     "examine_action": "harvest_ter",
     "transforms_into": "t_tree_willow_harvested",
+    "dies_into": "t_tree_willow_harvested",
     "harvest_by_season": [
       { "seasons": [ "spring", "summer", "autumn", "winter" ], "entries": [ { "drop": "willowbark", "base_num": [ 2, 8 ] } ] }
     ],
@@ -1053,6 +1057,7 @@
       { "seasons": [ "autumn" ], "entries": [ { "drop": "hickory_nut", "base_num": [ 5, 12 ], "scale_num": [ 0, 0.5 ] } ] }
     ],
     "transforms_into": "t_tree_hickory_harvested",
+    "dies_into": "t_tree_hickory_dead",
     "bash": {
       "str_min": 80,
       "str_max": 180,
@@ -1076,6 +1081,7 @@
     "flags": [ "FLAMMABLE_ASH", "NOITEM", "SUPPORTS_ROOF", "TREE", "REDUCE_SCENT", "HARVESTED" ],
     "examine_action": "tree_hickory",
     "transforms_into": "t_tree_hickory",
+    "dies_into": "t_tree_hickory_dead",
     "bash": {
       "str_min": 80,
       "str_max": 180,
@@ -1964,6 +1970,7 @@
     "color": "light_green",
     "move_cost": 2,
     "flags": [ "TRANSPARENT", "DIGGABLE", "FLAT" ],
+    "dies_into": "t_grass_dead",
     "bash": { "sound": "thump", "ter_set": "t_null", "str_min": 40, "str_max": 100, "str_min_supported": 100, "bash_below": true }
   },
   {
@@ -1975,6 +1982,7 @@
     "color": "green",
     "move_cost": 2,
     "flags": [ "TRANSPARENT", "DIGGABLE", "FLAT", "PLOWABLE" ],
+    "dies_into": "t_grass_dead",
     "bash": { "sound": "thump", "ter_set": "t_null", "str_min": 40, "str_max": 100, "str_min_supported": 100, "bash_below": true }
   },
   {
@@ -1987,6 +1995,7 @@
     "color": "white",
     "move_cost": 2,
     "flags": [ "TRANSPARENT", "DIGGABLE", "FLAT", "PLOWABLE" ],
+    "dies_into": "t_grass_dead",
     "bash": { "sound": "thump", "ter_set": "t_null", "str_min": 40, "str_max": 100, "str_min_supported": 100, "bash_below": true }
   },
   {
@@ -1999,6 +2008,7 @@
     "color": "green",
     "move_cost": 3,
     "flags": [ "TRANSPARENT", "DIGGABLE", "FLAT", "PLOWABLE" ],
+    "dies_into": "t_grass_dead",
     "bash": { "sound": "thump", "ter_set": "t_null", "str_min": 40, "str_max": 100, "str_min_supported": 100, "bash_below": true }
   },
   {
@@ -2012,6 +2022,7 @@
     "move_cost": 5,
     "coverage": 50,
     "flags": [ "TRANSPARENT", "DIGGABLE", "PLOWABLE" ],
+    "dies_into": "t_grass_dead",
     "bash": { "sound": "thump", "ter_set": "t_null", "str_min": 40, "str_max": 100, "str_min_supported": 100, "bash_below": true }
   },
   {
@@ -2036,6 +2047,7 @@
     "color": "light_green",
     "move_cost": 2,
     "flags": [ "TRANSPARENT", "DIGGABLE", "FLAT", "PLOWABLE" ],
+    "dies_into": "t_grass_dead",
     "bash": { "ter_set": "t_null", "str_min": 50, "str_max": 400, "str_min_supported": 100, "bash_below": true }
   },
   {
@@ -2048,6 +2060,7 @@
     "color": "white",
     "move_cost": 2,
     "flags": [ "TRANSPARENT", "DIGGABLE", "FLAT", "PLOWABLE" ],
+    "dies_into": "t_grass_dead",
     "bash": { "ter_set": "t_null", "str_min": 50, "str_max": 400, "str_min_supported": 100, "bash_below": true }
   },
   {
@@ -2064,6 +2077,7 @@
     "examine_action": "harvest_ter_nectar",
     "harvest_by_season": [ { "seasons": [ "spring" ], "entries": [ { "drop": "fiddlehead_raw", "base_num": [ 1, 4 ] } ] } ],
     "transforms_into": "t_fern_harvested",
+    "dies_into": "t_dirt",
     "bash": {
       "str_min": 2,
       "str_max": 6,

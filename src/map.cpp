@@ -1451,6 +1451,14 @@ ter_id map::get_ter_transforms_into( const tripoint &p ) const
     return ter( p ).obj().transforms_into.id();
 }
 
+/*
+ * Get the terrain dies_into id (what will the terrain dies into)
+ */
+ter_id map::get_ter_dies_into( const tripoint &p ) const
+{
+    return ter( p ).obj().dies_into.id();
+}
+
 /**
  * Examines the tile pos, with character as the "examinator"
  * Casts Character to player because player/NPC split isn't done yet
@@ -1469,6 +1477,18 @@ bool map::is_harvestable( const tripoint &pos ) const
 {
     const auto &harvest_here = get_harvest( pos );
     return !harvest_here.is_null() && !harvest_here->empty();
+}
+
+/*
+ * transform terrain; this works for -any- terrain id
+ */
+bool map::ter_die( const tripoint &p )
+{
+    const ter_id dead_id = get_ter_dies_into( p );
+    if( dead_id == ter_str_id::NULL_ID() ) {
+        return false;
+    }
+    return ter_set( p, dead_id );
 }
 
 /*
@@ -6921,31 +6941,7 @@ void map::rad_scorch( const tripoint &p, const time_duration &time_since_last_ac
         i_clear( p );
         furn_set( p, f_null );
     }
-
-    const ter_id tid = ter( p );
-    // TODO: De-hardcode this
-    static const std::map<ter_id, ter_str_id> dies_into {{
-            {t_grass, ter_str_id( "t_dirt" )},
-            {t_tree_young, ter_str_id( "t_dirt" )},
-            {t_tree_pine, ter_str_id( "t_tree_deadpine" )},
-            {t_tree_birch, ter_str_id( "t_tree_birch_harvested" )},
-            {t_tree_willow, ter_str_id( "t_tree_willow_harvested" )},
-            {t_tree_hickory, ter_str_id( "t_tree_hickory_dead" )},
-            {t_tree_hickory_harvested, ter_str_id( "t_tree_hickory_dead" )},
-        }};
-
-    const auto iter = dies_into.find( tid );
-    if( iter != dies_into.end() ) {
-        ter_set( p, iter->second );
-        return;
-    }
-
-    const ter_t &tr = tid.obj();
-    if( tr.has_flag( "SHRUB" ) ) {
-        ter_set( p, t_dirt );
-    } else if( tr.has_flag( "TREE" ) ) {
-        ter_set( p, ter_str_id( "t_tree_dead" ) );
-    }
+    ter_die( p );
 }
 
 void map::decay_cosmetic_fields( const tripoint &p, const time_duration &time_since_last_actualize )
