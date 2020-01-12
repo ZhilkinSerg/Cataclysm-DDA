@@ -4850,7 +4850,7 @@ bool mattack::evolve_kill_strike( monster *z )
         return true;
     }
     if( target->is_dead_state() && g->is_empty( target_pos ) &&
-        target->made_of_any( Creature::cmat_flesh ) ) {
+        target->made_of_any( materials::get_flesh() ) ) {
         const std::string old_name = z->name();
         const bool could_see_z = g->u.sees( *z );
         z->allow_upgrade();

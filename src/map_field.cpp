@@ -1780,16 +1780,16 @@ void map::monster_in_field( monster &z )
                 return;
             }
             // TODO: Replace the section below with proper json values
-            if( z.made_of_any( Creature::cmat_flesh ) ) {
+            if( z.made_of_any( materials::get_flesh() ) ) {
                 dam += 3;
             }
-            if( z.made_of( material_id( "veggy" ) ) ) {
+            if( z.made_of_any( materials::get_plant() ) ) {
                 dam += 12;
             }
-            if( z.made_of( LIQUID ) || z.made_of_any( Creature::cmat_flammable ) ) {
+            if( z.made_of( LIQUID ) || z.made_of_any( materials::get_flammable() ) ) {
                 dam += 20;
             }
-            if( z.made_of_any( Creature::cmat_flameres ) ) {
+            if( z.made_of_any( materials::get_flame_resistant() ) ) {
                 dam += -20;
             }
             if( z.flies() ) {
@@ -1830,7 +1830,8 @@ void map::monster_in_field( monster &z )
 
         }
         if( cur_field_type == fd_tear_gas ) {
-            if( z.made_of_any( Creature::cmat_fleshnveg ) && !z.has_flag( MF_NO_BREATHE ) ) {
+            if( ( z.made_of_any( materials::get_plant() ) &&  z.made_of_any( materials::get_flesh() ) ) &&
+                !z.has_flag( MF_NO_BREATHE ) ) {
                 if( cur.get_field_intensity() == 3 ) {
                     z.add_effect( effect_stunned, rng( 1_minutes, 2_minutes ) );
                     dam += rng( 4, 10 );
@@ -1851,7 +1852,8 @@ void map::monster_in_field( monster &z )
 
         }
         if( cur_field_type == fd_relax_gas ) {
-            if( z.made_of_any( Creature::cmat_fleshnveg ) && !z.has_flag( MF_NO_BREATHE ) ) {
+            if( ( z.made_of_any( materials::get_plant() ) || z.made_of_any( materials::get_flesh() ) ) &&
+                !z.has_flag( MF_NO_BREATHE ) ) {
                 z.add_effect( effect_stunned, rng( cur.get_field_intensity() * 4_turns,
                                                    cur.get_field_intensity() * 8_turns ) );
             }
@@ -1894,16 +1896,16 @@ void map::monster_in_field( monster &z )
             if( z.has_flag( MF_FIREPROOF ) || z.has_flag( MF_FIREY ) ) {
                 return;
             }
-            if( z.made_of_any( Creature::cmat_flesh ) ) {
+            if( z.made_of_any( materials::get_flesh() ) ) {
                 dam += 3;
             }
-            if( z.made_of( material_id( "veggy" ) ) ) {
+            if( z.made_of_any( materials::get_plant() ) ) {
                 dam += 12;
             }
-            if( z.made_of( LIQUID ) || z.made_of_any( Creature::cmat_flammable ) ) {
+            if( z.made_of( LIQUID ) || z.made_of_any( materials::get_flammable() ) ) {
                 dam += 50;
             }
-            if( z.made_of_any( Creature::cmat_flameres ) ) {
+            if( z.made_of_any( materials::get_flame_resistant() ) ) {
                 dam += -25;
             }
             dam += rng( 0, 8 );
@@ -1925,16 +1927,16 @@ void map::monster_in_field( monster &z )
             if( z.has_flag( MF_FIREPROOF ) || z.has_flag( MF_FIREY ) ) {
                 return;
             }
-            if( z.made_of_any( Creature::cmat_flesh ) ) {
+            if( z.made_of_any( materials::get_flesh() ) ) {
                 dam += 3;
             }
-            if( z.made_of( material_id( "veggy" ) ) ) {
+            if( z.made_of_any( materials::get_plant() ) ) {
                 dam += 12;
             }
-            if( z.made_of( LIQUID ) || z.made_of_any( Creature::cmat_flammable ) ) {
+            if( z.made_of( LIQUID ) || z.made_of_any( materials::get_flammable() ) ) {
                 dam += 20;
             }
-            if( z.made_of_any( Creature::cmat_flameres ) ) {
+            if( z.made_of_any( materials::get_flame_resistant() ) ) {
                 dam += -5;
             }
 
@@ -1943,13 +1945,13 @@ void map::monster_in_field( monster &z )
             } else if( cur.get_field_intensity() == 2 ) {
                 dam += rng( 6, 12 );
                 z.moves -= 20;
-                if( !z.made_of( LIQUID ) && !z.made_of_any( Creature::cmat_flameres ) ) {
+                if( !z.made_of( LIQUID ) && !z.made_of_any( materials::get_flame_resistant() ) ) {
                     z.add_effect( effect_onfire, rng( 8_turns, 12_turns ) );
                 }
             } else if( cur.get_field_intensity() == 3 ) {
                 dam += rng( 10, 20 );
                 z.moves -= 40;
-                if( !z.made_of( LIQUID ) && !z.made_of_any( Creature::cmat_flameres ) ) {
+                if( !z.made_of( LIQUID ) && !z.made_of_any( materials::get_flame_resistant() ) ) {
                     z.add_effect( effect_onfire, rng( 12_turns, 16_turns ) );
                 }
             }

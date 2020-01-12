@@ -50,6 +50,10 @@ class material_type
         bool _rotting = false;
         bool _soft = false;
         bool _reinforces = false;
+        bool _flesh = false;
+        bool _plant = false;
+        bool _flammable = false;
+        bool _flame_resistant = false;
 
         std::string _bash_dmg_verb;
         std::string _cut_dmg_verb;
@@ -100,6 +104,10 @@ class material_type
         bool rotting() const;
         bool soft() const;
         bool reinforces() const;
+        bool is_flesh() const;
+        bool is_plant() const;
+        bool is_flammable() const;
+        bool is_flame_resistant() const;
 
         double vitamin( const vitamin_id &id ) const {
             const auto iter = _vitamins.find( id );
@@ -122,6 +130,10 @@ void reset();
 material_list get_all();
 material_list get_compactable();
 std::set<material_id> get_rotting();
+std::set<material_id> get_flesh();
+std::set<material_id> get_plant();
+std::set<material_id> get_flammable();
+std::set<material_id> get_flame_resistant();
 
 } // namespace materials
 

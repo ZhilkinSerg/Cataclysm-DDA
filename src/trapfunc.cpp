@@ -14,6 +14,7 @@
 #include "mapgen_functions.h"
 #include "map_iterator.h"
 #include "mapdata.h"
+#include "material.h"
 #include "messages.h"
 #include "monster.h"
 #include "mtype.h"
@@ -983,13 +984,13 @@ bool trapfunc::lava( const tripoint &p, Creature *c, item * )
         }
         // TODO: MATERIALS use fire resistance
         int dam = 30;
-        if( z->made_of_any( Creature::cmat_flesh ) ) {
+        if( z->made_of_any( materials::get_flesh() ) ) {
             dam = 50;
         }
-        if( z->made_of( material_id( "veggy" ) ) ) {
+        if( z->made_of_any( materials::get_plant() ) ) {
             dam = 80;
         }
-        if( z->made_of( LIQUID ) || z->made_of_any( Creature::cmat_flammable ) ) {
+        if( z->made_of( LIQUID ) || z->made_of_any( materials::get_flame_resistant() ) ) {
             dam = 200;
         }
         if( z->made_of( material_id( "stone" ) ) ) {

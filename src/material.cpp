@@ -79,6 +79,9 @@ void material_type::load( const JsonObject &jsobj, const std::string & )
     optional( jsobj, was_loaded, "rotting", _rotting, false );
     optional( jsobj, was_loaded, "soft", _soft, false );
     optional( jsobj, was_loaded, "reinforces", _reinforces, false );
+    optional( jsobj, was_loaded, "flesh", _flesh, false );
+    optional( jsobj, was_loaded, "plant", _plant, false );
+    optional( jsobj, was_loaded, "flame_resistant", _flame_resistant, false );
 
     for( JsonArray pair : jsobj.get_array( "vitamins" ) ) {
         _vitamins.emplace( vitamin_id( pair.get_string( 0 ) ), pair.get_float( 1 ) );
@@ -254,6 +257,26 @@ bool material_type::reinforces() const
     return _reinforces;
 }
 
+bool material_type::is_flesh() const
+{
+    return _flesh;
+}
+
+bool material_type::is_plant() const
+{
+    return _plant;
+}
+
+bool material_type::is_flammable() const
+{
+    return _flammable;
+}
+
+bool material_type::is_flame_resistant() const
+{
+    return _flame_resistant;
+}
+
 const mat_burn_data &material_type::burn_data( size_t intensity ) const
 {
     return _burn_data[ std::min<size_t>( intensity, _burn_data.size() ) - 1 ];
@@ -316,3 +339,54 @@ std::set<material_id> materials::get_rotting()
     }
     return rotting;
 }
+
+std::set<material_id> materials::get_flesh()
+{
+    material_list all = get_all();
+    std::set<material_id> flesh;
+    for( const material_type &m : all ) {
+        if( m.is_flesh() ) {
+            flesh.emplace( m.ident() );
+        }
+    }
+    return flesh;
+}
+
+std::set<material_id> materials::get_plant()
+{
+    material_list all = get_all();
+    std::set<material_id> plant;
+    for( const material_type &m : all ) {
+        if( m.is_plant() ) {
+            plant.emplace( m.ident() );
+        }
+    }
+    return plant;
+}
+
+
+std::set<material_id> materials::get_flammable()
+{
+    material_list all = get_all();
+    std::set<material_id> flammable;
+    for( const material_type &m : all ) {
+        if( m.is_flammable() ) {
+            flammable.emplace( m.ident() );
+        }
+    }
+    return flammable;
+}
+
+
+std::set<material_id> materials::get_flame_resistant()
+{
+    material_list all = get_all();
+    std::set<material_id> flame_resistant;
+    for( const material_type &m : all ) {
+        if( m.is_flame_resistant() ) {
+            flame_resistant.emplace( m.ident() );
+        }
+    }
+    return flame_resistant;
+}
+
