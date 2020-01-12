@@ -89,6 +89,7 @@
     "dmg_adj": [ "scratched", "cut", "cracked", "shattered" ],
     "bash_dmg_verb": "cracked",
     "cut_dmg_verb": "chipped",
+    "armor_noun": "exoskeleton",
     "vitamins": [ [ "calcium", 2 ] ],
     "burn_data": [
       { "fuel": 0, "smoke": 0, "burn": 0 },
@@ -334,6 +335,7 @@
     "dmg_adj": [ "bruised", "mutilated", "badly mutilated", "thoroughly mutilated" ],
     "bash_dmg_verb": "bruised",
     "cut_dmg_verb": "sliced",
+    "armor_noun": "thick hide",
     "vitamins": [ [ "calcium", 0.1 ], [ "vitB", 1 ], [ "iron", 1.3 ] ],
     "burn_data": [
       { "fuel": 1, "smoke": 1, "burn": 1, "volume_per_turn": "2500 ml" },
@@ -547,6 +549,7 @@
     "dmg_adj": [ "bruised", "mutilated", "badly mutilated", "thoroughly mutilated" ],
     "bash_dmg_verb": "bruised",
     "cut_dmg_verb": "sliced",
+    "armor_noun": "thick hide",
     "vitamins": [ [ "calcium", 0.1 ], [ "vitB", 1 ], [ "iron", 1.3 ] ],
     "burn_data": [
       { "fuel": 1, "smoke": 1, "burn": 1, "volume_per_turn": "2500 ml" },
@@ -618,6 +621,7 @@
     "dmg_adj": [ "bruised", "mutilated", "badly mutilated", "thoroughly mutilated" ],
     "bash_dmg_verb": "bruised",
     "cut_dmg_verb": "sliced",
+    "armor_noun": "thick hide",
     "vitamins": [ [ "calcium", 1, "iron", 1.3 ] ],
     "burn_data": [
       { "fuel": 1, "smoke": 1, "burn": 1, "volume_per_turn": "2500 ml" },
@@ -643,6 +647,7 @@
     "dmg_adj": [ "marked", "dented", "smashed", "shattered" ],
     "bash_dmg_verb": "dented",
     "cut_dmg_verb": "scratched",
+    "armor_noun": "armor plating",
     "burn_products": [ [ "scrap", 1 ] ]
   },
   {
@@ -1107,6 +1112,7 @@
     "dmg_adj": [ "marked", "dented", "smashed", "shattered" ],
     "bash_dmg_verb": "dented",
     "cut_dmg_verb": "scratched",
+    "armor_noun": "armor plating",
     "burn_products": [ [ "scrap", 1 ] ],
     "compact_accepts": [ "budget_steel", "hardsteel", "iron" ],
     "compacts_into": [ "sheet_metal", "steel_lump", "steel_chunk", "scrap" ]
@@ -1242,6 +1248,7 @@
     "dmg_adj": [ "lightly damaged", "damaged", "very damaged", "thoroughly damaged" ],
     "bash_dmg_verb": "squished",
     "cut_dmg_verb": "cut",
+    "armor_noun": "thick bark",
     "vitamins": [ [ "calcium", 0.1 ], [ "vitA", 1 ], [ "vitC", 0.5 ] ],
     "burn_data": [
       { "fuel": 1, "smoke": 1, "burn": 1, "volume_per_turn": "1250 ml" },

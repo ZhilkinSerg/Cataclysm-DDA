@@ -84,6 +84,7 @@ void material_type::load( const JsonObject &jsobj, const std::string & )
         _vitamins.emplace( vitamin_id( pair.get_string( 0 ) ), pair.get_float( 1 ) );
     }
 
+    mandatory( jsobj, was_loaded, "armor_noun", _armor_noun );
     mandatory( jsobj, was_loaded, "bash_dmg_verb", _bash_dmg_verb );
     mandatory( jsobj, was_loaded, "cut_dmg_verb", _cut_dmg_verb );
 
@@ -166,6 +167,11 @@ int material_type::bash_resist() const
 int material_type::cut_resist() const
 {
     return _cut_resist;
+}
+
+std::string material_type::armor_noun() const
+{
+    return _armor_noun.translated();
 }
 
 std::string material_type::bash_dmg_verb() const

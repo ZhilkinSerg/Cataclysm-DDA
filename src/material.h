@@ -13,6 +13,7 @@
 #include "optional.h"
 #include "string_id.h"
 #include "type_id.h"
+#include "translations.h"
 
 class material_type;
 
@@ -51,6 +52,7 @@ class material_type
         bool _soft = false;
         bool _reinforces = false;
 
+        translation _armor_noun;
         std::string _bash_dmg_verb;
         std::string _cut_dmg_verb;
         std::vector<std::string> _dmg_adj;
@@ -84,6 +86,7 @@ class material_type
         itype_id repaired_with() const;
         int bash_resist() const;
         int cut_resist() const;
+        std::string armor_noun() const;
         std::string bash_dmg_verb() const;
         std::string cut_dmg_verb() const;
         std::string dmg_adj( int damage ) const;

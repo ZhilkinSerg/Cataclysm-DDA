@@ -227,6 +227,7 @@ def extract_construction(item):
 def extract_material(item):
     outfile = get_outfile("material")
     writestr(outfile, item["name"])
+    writestr(outfile, item["armor_noun"])
     writestr(outfile, item["bash_dmg_verb"])
     writestr(outfile, item["cut_dmg_verb"])
     writestr(outfile, item["dmg_adj"][0])
