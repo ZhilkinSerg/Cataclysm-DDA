@@ -67,8 +67,6 @@
 #include "vitamin.h"
 #include "vpart_position.h"
 
-
-
 // *INDENT-OFF*
 Character::Character() :
 

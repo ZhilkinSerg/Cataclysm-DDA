@@ -1,6 +1,7 @@
 #pragma once
 #ifndef STRING_CONSTS_H
 #define STRING_CONSTS_H
+
 static const bionic_id bio_ads( "bio_ads" );
 static const bionic_id bio_armor_arms( "bio_armor_arms" );
 static const bionic_id bio_armor_eyes( "bio_armor_eyes" );
