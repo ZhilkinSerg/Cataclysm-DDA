@@ -136,6 +136,9 @@ void material_type::check() const
             debugmsg( "invalid \"compacts_into\" %s for %s.", ci.c_str(), id.c_str() );
         }
     }
+    if( !_blood_type.is_valid() ) {
+        debugmsg( "invalid \"blood_type\" %s for %s.", _blood_type.id().c_str(), id.c_str() );
+    }
 }
 
 material_id material_type::ident() const
@@ -272,6 +275,11 @@ const material_id_list &material_type::compact_accepts() const
 const mat_compacts_into &material_type::compacts_into() const
 {
     return _compacts_into;
+}
+
+const field_type_id &material_type::blood_type() const
+{
+    return _blood_type;
 }
 
 void materials::load( const JsonObject &jo, const std::string &src )

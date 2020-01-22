@@ -64,6 +64,7 @@ class material_type
 
         material_id_list _compact_accepts;
         mat_compacts_into _compacts_into;
+        field_type_id _blood_type;
 
     public:
         material_type();
@@ -110,6 +111,7 @@ class material_type
         const mat_burn_products &burn_products() const;
         const material_id_list &compact_accepts() const;
         const mat_compacts_into &compacts_into() const;
+        const field_type_id &blood_type() const;
 };
 
 namespace materials

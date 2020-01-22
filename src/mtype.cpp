@@ -7,6 +7,7 @@
 #include "field.h"
 #include "item.h"
 #include "itype.h"
+#include "material.h"
 #include "mondeath.h"
 #include "monstergenerator.h"
 #include "translations.h"
@@ -142,27 +143,23 @@ bool mtype::same_species( const mtype &other ) const
 
 field_type_id mtype::bloodType() const
 {
-    if( has_flag( MF_ACID_BLOOD ) )
-        //A monster that has the death effect "ACID" does not need to have acid blood.
-    {
-        return fd_acid;
+    field_type_id blood_type;
+    if( has_flag( MF_ACID_BLOOD ) ) {
+        blood_type = fd_acid;
     }
     if( has_flag( MF_BILE_BLOOD ) ) {
-        return fd_bile;
+        blood_type =  fd_bile;
     }
     if( has_flag( MF_LARVA ) || has_flag( MF_ARTHROPOD_BLOOD ) ) {
-        return fd_blood_invertebrate;
+        blood_type = fd_blood_invertebrate;
     }
-    if( made_of( material_id( "veggy" ) ) ) {
-        return fd_blood_veggy;
-    }
-    if( made_of( material_id( "iflesh" ) ) ) {
-        return fd_blood_insect;
+    for( const material_id &m : mat ) {
+        blood_type =  m.obj().blood_type();
     }
     if( has_flag( MF_WARM ) && made_of( material_id( "flesh" ) ) ) {
-        return fd_blood;
+        blood_type = fd_blood;
     }
-    return fd_null;
+    return blood_type;
 }
 
 field_type_id mtype::gibType() const
