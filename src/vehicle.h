@@ -619,11 +619,11 @@ class vehicle
 
         // direct damage to part (armor protection and internals are not counted)
         // returns damage bypassed
-        int damage_direct( int p, int dmg, damage_type type = DT_TRUE );
+        int damage_direct( int p, int dmg, damage_type_id type = DT_TRUE );
         // Removes the part, breaks it into pieces and possibly removes parts attached to it
         int break_off( int p, int dmg );
         // Returns if it did actually explode
-        bool explode_fuel( int p, damage_type type );
+        bool explode_fuel( int p, damage_type_id type );
         //damages vehicle controls and security system
         void smash_security_system();
         // get vpart powerinfo for part number, accounting for variable-sized parts and hps.
@@ -719,7 +719,7 @@ class vehicle
          * @param dt type of damage which may be passed to base @ref item::on_damage callback
          * @return whether part was destroyed as a result of the damage
          */
-        bool mod_hp( vehicle_part &pt, int qty, damage_type dt = DT_NULL );
+        bool mod_hp( vehicle_part &pt, int qty, damage_type_id dt = DT_NULL );
 
         // check if given player controls this vehicle
         bool player_in_control( const player &p ) const;
@@ -1395,10 +1395,10 @@ class vehicle
         // must exceed certain threshold to be subtracted from hp
         // (a lot light collisions will not destroy parts)
         // Returns damage bypassed
-        int damage( int p, int dmg, damage_type type = DT_BASH, bool aimed = true );
+        int damage( int p, int dmg, damage_type_id type = DT_BASH, bool aimed = true );
 
         // damage all parts (like shake from strong collision), range from dmg1 to dmg2
-        void damage_all( int dmg1, int dmg2, damage_type type, const point &impact );
+        void damage_all( int dmg1, int dmg2, damage_type_id type, const point &impact );
 
         //Shifts the coordinates of all parts and moves the vehicle in the opposite direction.
         void shift_parts( const point &delta );

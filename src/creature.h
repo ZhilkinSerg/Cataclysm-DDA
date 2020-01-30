@@ -39,7 +39,6 @@ class time_duration;
 class player;
 struct point;
 
-enum damage_type : int;
 enum m_flag : int;
 enum hp_part : int;
 struct damage_instance;
@@ -289,7 +288,7 @@ class Creature
         // Resistances
         virtual bool is_elec_immune() const = 0;
         virtual bool is_immune_effect( const efftype_id &type ) const = 0;
-        virtual bool is_immune_damage( damage_type type ) const = 0;
+        virtual bool is_immune_damage( damage_type_id type ) const = 0;
 
         // Field dangers
         /** Returns true if there is a field in the field set that is dangerous to us. */
@@ -413,7 +412,7 @@ class Creature
         virtual int get_armor_bash_bonus() const;
         virtual int get_armor_cut_bonus() const;
 
-        virtual int get_armor_type( damage_type dt, body_part bp ) const = 0;
+        virtual int get_armor_type( damage_type_id dt, body_part bp ) const = 0;
 
         virtual float get_dodge() const;
         virtual float get_melee() const = 0;
@@ -775,7 +774,7 @@ class Creature
     protected:
         virtual void on_stat_change( const std::string &, int ) {}
         virtual void on_effect_int_change( const efftype_id &, int, body_part ) {}
-        virtual void on_damage_of_type( int, damage_type, body_part ) {}
+        virtual void on_damage_of_type( int, damage_type_id, body_part ) {}
 
     public:
         body_part select_body_part( Creature *source, int hit_roll ) const;

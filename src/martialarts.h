@@ -16,7 +16,6 @@
 #include "ui.h"
 #include "input.h"
 
-enum damage_type : int;
 class JsonObject;
 class effect;
 class Character;
@@ -40,7 +39,7 @@ struct ma_requirements {
     /** Minimum amount of given damage type on the weapon
      *  Note: DT_FIRE currently won't work, not even on flaming weapons!
      */
-    std::vector<std::pair<damage_type, int>> min_damage;
+    std::vector<std::pair<damage_type_id, int>> min_damage;
 
     std::set<mabuff_id> req_buffs; // other buffs required to trigger this bonus
     std::set<std::string> req_flags; // any item flags required for this technique
@@ -122,11 +121,11 @@ class ma_technique
         /** All kinds of bonuses by types to damage, hit etc. */
         bonus_container bonuses;
 
-        float damage_bonus( const Character &u, damage_type type ) const;
-        float damage_multiplier( const Character &u, damage_type type ) const;
+        float damage_bonus( const Character &u, damage_type_id type ) const;
+        float damage_multiplier( const Character &u, damage_type_id type ) const;
         float move_cost_multiplier( const Character &u ) const;
         float move_cost_penalty( const Character &u ) const;
-        float armor_penetration( const Character &u, damage_type type ) const;
+        float armor_penetration( const Character &u, damage_type_id type ) const;
 };
 
 class ma_buff
@@ -151,14 +150,14 @@ class ma_buff
         int block_bonus( const Character &u ) const;
 
         // returns the armor bonus for various armor stats (equivalent to armor)
-        int armor_bonus( const Character &guy, damage_type dt ) const;
+        int armor_bonus( const Character &guy, damage_type_id dt ) const;
 
         // returns the stat bonus for the various damage stats (for rolls)
-        float damage_bonus( const Character &u, damage_type dt ) const;
+        float damage_bonus( const Character &u, damage_type_id dt ) const;
 
         // returns damage multipliers for the various damage stats (applied after
         // bonuses)
-        float damage_mult( const Character &u, damage_type dt ) const;
+        float damage_mult( const Character &u, damage_type_id dt ) const;
 
         // returns various boolean flags
         bool is_throw_immune() const;

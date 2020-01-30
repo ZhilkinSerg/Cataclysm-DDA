@@ -5753,7 +5753,7 @@ void vehicle::unboard_all()
     }
 }
 
-int vehicle::damage( int p, int dmg, damage_type type, bool aimed )
+int vehicle::damage( int p, int dmg, damage_type_id type, bool aimed )
 {
     if( dmg < 1 ) {
         return dmg;
@@ -5811,7 +5811,7 @@ int vehicle::damage( int p, int dmg, damage_type type, bool aimed )
         damage_dealt = damage_direct( target_part, dmg, type );
     } else {
         // Covered by armor -- hit both armor and part, but reduce damage by armor's reduction
-        int protection = part_info( armor_part ).damage_reduction[ type ];
+        int protection = part_info( armor_part ).damage_reduction.at( type );
         // Parts on roof aren't protected
         bool overhead = part_flag( target_part, "ROOF" ) || part_info( target_part ).location == "on_roof";
         // Calling damage_direct may remove the damaged part
@@ -5832,7 +5832,7 @@ int vehicle::damage( int p, int dmg, damage_type type, bool aimed )
     return damage_dealt;
 }
 
-void vehicle::damage_all( int dmg1, int dmg2, damage_type type, const point &impact )
+void vehicle::damage_all( int dmg1, int dmg2, damage_type_id type, const point &impact )
 {
     if( dmg2 < dmg1 ) {
         std::swap( dmg1, dmg2 );
@@ -5985,7 +5985,7 @@ int vehicle::break_off( int p, int dmg )
     return dmg;
 }
 
-bool vehicle::explode_fuel( int p, damage_type type )
+bool vehicle::explode_fuel( int p, damage_type_id type )
 {
     const itype_id &ft = part_info( p ).fuel_type;
     item fuel = item( ft );
@@ -6013,7 +6013,7 @@ bool vehicle::explode_fuel( int p, damage_type type )
     return true;
 }
 
-int vehicle::damage_direct( int p, int dmg, damage_type type )
+int vehicle::damage_direct( int p, int dmg, damage_type_id type )
 {
     // Make sure p is within range and hasn't been removed already
     if( ( static_cast<size_t>( p ) >= parts.size() ) || parts[p].removed ) {
@@ -6037,7 +6037,7 @@ int vehicle::damage_direct( int p, int dmg, damage_type type )
         return dmg;
     }
 
-    dmg -= std::min<int>( dmg, part_info( p ).damage_reduction[ type ] );
+    dmg -= std::min<int>( dmg, part_info( p ).damage_reduction.at( type ) );
     int dres = dmg - parts[p].hp();
     if( mod_hp( parts[ p ], 0 - dmg, type ) ) {
         insides_dirty = true;

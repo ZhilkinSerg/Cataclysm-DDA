@@ -3592,7 +3592,7 @@ bool Character::is_deaf() const
              && in_sleep_state() );
 }
 
-void Character::on_damage_of_type( int adjusted_damage, damage_type type, body_part bp )
+void Character::on_damage_of_type( int adjusted_damage, damage_type_id type, body_part bp )
 {
     // Electrical damage has a chance to temporarily incapacitate bionics in the damaged body_part.
     if( type == DT_ELECTRIC ) {
@@ -5412,45 +5412,52 @@ bool Character::is_immune_effect( const efftype_id &eff ) const
     return false;
 }
 
-bool Character::is_immune_damage( const damage_type dt ) const
+bool Character::is_immune_damage( const damage_type_id dt ) const
 {
-    switch( dt ) {
-        case DT_NULL:
-            return true;
-        case DT_TRUE:
-            return false;
-        case DT_BIOLOGICAL:
-            return has_effect_with_flag( "EFFECT_BIO_IMMUNE" ) ||
-                   worn_with_flag( "BIO_IMMUNE" );
-        case DT_BASH:
-            return has_effect_with_flag( "EFFECT_BASH_IMMUNE" ) ||
-                   worn_with_flag( "BASH_IMMUNE" );
-        case DT_CUT:
-            return has_effect_with_flag( "EFFECT_CUT_IMMUNE" ) ||
-                   worn_with_flag( "CUT_IMMUNE" );
-        case DT_ACID:
-            return has_trait( trait_ACIDPROOF ) ||
-                   has_effect_with_flag( "EFFECT_ACID_IMMUNE" ) ||
-                   worn_with_flag( "ACID_IMMUNE" );
-        case DT_STAB:
-            return has_effect_with_flag( "EFFECT_STAB_IMMUNE" ) ||
-                   worn_with_flag( "STAB_IMMUNE" );
-        case DT_HEAT:
-            return has_trait( trait_M_SKIN2 ) ||
-                   has_trait( trait_M_SKIN3 ) ||
-                   has_effect_with_flag( "EFFECT_HEAT_IMMUNE" ) ||
-                   worn_with_flag( "HEAT_IMMUNE" );
-        case DT_COLD:
-            return has_effect_with_flag( "EFFECT_COLD_IMMUNE" ) ||
-                   worn_with_flag( "COLD_IMMUNE" );
-        case DT_ELECTRIC:
-            return has_active_bionic( bio_faraday ) ||
-                   worn_with_flag( "ELECTRIC_IMMUNE" ) ||
-                   has_artifact_with( AEP_RESIST_ELECTRICITY ) ||
-                   has_effect_with_flag( "EFFECT_ELECTRIC_IMMUNE" );
-        default:
-            return true;
+    if( dt == DT_NULL ) {
+        return true;
     }
+    if( dt == DT_TRUE ) {
+        return false;
+    }
+    if( dt == DT_BIOLOGICAL ) {
+        return has_effect_with_flag( "EFFECT_BIO_IMMUNE" ) ||
+               worn_with_flag( "BIO_IMMUNE" );
+    }
+    if( dt == DT_BASH ) {
+        return has_effect_with_flag( "EFFECT_BASH_IMMUNE" ) ||
+               worn_with_flag( "BASH_IMMUNE" );
+    }
+    if( dt == DT_CUT ) {
+        return has_effect_with_flag( "EFFECT_CUT_IMMUNE" ) ||
+               worn_with_flag( "CUT_IMMUNE" );
+    }
+    if( dt == DT_ACID ) {
+        return has_trait( trait_ACIDPROOF ) ||
+               has_effect_with_flag( "EFFECT_ACID_IMMUNE" ) ||
+               worn_with_flag( "ACID_IMMUNE" );
+    }
+    if( dt == DT_STAB ) {
+        return has_effect_with_flag( "EFFECT_STAB_IMMUNE" ) ||
+               worn_with_flag( "STAB_IMMUNE" );
+    }
+    if( dt == DT_HEAT ) {
+        return has_trait( trait_M_SKIN2 ) ||
+               has_trait( trait_M_SKIN3 ) ||
+               has_effect_with_flag( "EFFECT_HEAT_IMMUNE" ) ||
+               worn_with_flag( "HEAT_IMMUNE" );
+    }
+    if( dt == DT_COLD ) {
+        return has_effect_with_flag( "EFFECT_COLD_IMMUNE" ) ||
+               worn_with_flag( "COLD_IMMUNE" );
+    }
+    if( dt == DT_ELECTRIC ) {
+        return has_active_bionic( bio_faraday ) ||
+               worn_with_flag( "ELECTRIC_IMMUNE" ) ||
+               has_artifact_with( AEP_RESIST_ELECTRICITY ) ||
+               has_effect_with_flag( "EFFECT_ELECTRIC_IMMUNE" );
+    }
+    return true;
 }
 
 bool Character::is_rad_immune() const
@@ -5700,7 +5707,7 @@ resistances Character::mutation_armor( body_part bp ) const
     return res;
 }
 
-float Character::mutation_armor( body_part bp, damage_type dt ) const
+float Character::mutation_armor( body_part bp, damage_type_id dt ) const
 {
     return mutation_armor( bp ).type_resist( dt );
 }
@@ -6257,39 +6264,34 @@ int Character::get_armor_cut( body_part bp ) const
     return get_armor_cut_base( bp ) + armor_cut_bonus;
 }
 
-int Character::get_armor_type( damage_type dt, body_part bp ) const
+int Character::get_armor_type( damage_type_id dt, body_part bp ) const
 {
-    switch( dt ) {
-        case DT_TRUE:
-        case DT_BIOLOGICAL:
-            return 0;
-        case DT_BASH:
-            return get_armor_bash( bp );
-        case DT_CUT:
-            return get_armor_cut( bp );
-        case DT_STAB:
-            return get_armor_cut( bp ) * 0.8f;
-        case DT_ACID:
-        case DT_HEAT:
-        case DT_COLD:
-        case DT_ELECTRIC: {
-            int ret = 0;
-            for( auto &i : worn ) {
-                if( i.covers( bp ) ) {
-                    ret += i.damage_resist( dt );
-                }
-            }
-
-            ret += mutation_armor( bp, dt );
-            return ret;
-        }
-        case DT_NULL:
-        case NUM_DT:
-            // Let it error below
-            break;
+    if( dt == DT_TRUE || dt == DT_BIOLOGICAL ) {
+        return 0;
     }
+    if( dt == DT_BASH ) {
+        return get_armor_bash( bp );
+    }
+    if( dt == DT_CUT ) {
+        return get_armor_cut( bp );
+    }
+    if( dt == DT_STAB ) {
+        return get_armor_cut( bp ) * 0.8f;
+    }
+    if( dt == DT_ACID || dt == DT_HEAT || dt == DT_COLD  || dt == DT_ELECTRIC ) {
+        int ret = 0;
+        for( auto &i : worn ) {
+            if( i.covers( bp ) ) {
+                ret += i.damage_resist( dt );
+            }
+        }
 
-    debugmsg( "Invalid damage type: %d", dt );
+        ret += mutation_armor( bp, dt );
+        return ret;
+    }
+    if( dt == DT_STAB ) {
+        return get_armor_cut( bp ) * 0.8f;
+    }
     return 0;
 }
 
@@ -7223,33 +7225,29 @@ static void destroyed_armor_msg( Character &who, const std::string &pre_damage_n
 
 static void item_armor_enchantment_adjust( Character &guy, damage_unit &du, item &armor )
 {
-    switch( du.type ) {
-        case DT_ACID:
-            du.amount = armor.calculate_by_enchantment( guy, du.amount, enchantment::mod::ITEM_ARMOR_ACID );
-            break;
-        case DT_BASH:
-            du.amount = armor.calculate_by_enchantment( guy, du.amount, enchantment::mod::ITEM_ARMOR_BASH );
-            break;
-        case DT_BIOLOGICAL:
-            du.amount = armor.calculate_by_enchantment( guy, du.amount, enchantment::mod::ITEM_ARMOR_BIO );
-            break;
-        case DT_COLD:
-            du.amount = armor.calculate_by_enchantment( guy, du.amount, enchantment::mod::ITEM_ARMOR_COLD );
-            break;
-        case DT_CUT:
-            du.amount = armor.calculate_by_enchantment( guy, du.amount, enchantment::mod::ITEM_ARMOR_CUT );
-            break;
-        case DT_ELECTRIC:
-            du.amount = armor.calculate_by_enchantment( guy, du.amount, enchantment::mod::ITEM_ARMOR_ELEC );
-            break;
-        case DT_HEAT:
-            du.amount = armor.calculate_by_enchantment( guy, du.amount, enchantment::mod::ITEM_ARMOR_HEAT );
-            break;
-        case DT_STAB:
-            du.amount = armor.calculate_by_enchantment( guy, du.amount, enchantment::mod::ITEM_ARMOR_STAB );
-            break;
-        default:
-            return;
+    if( du.type == DT_ACID ) {
+        du.amount = armor.calculate_by_enchantment( guy, du.amount, enchantment::mod::ITEM_ARMOR_ACID );
+    }
+    if( du.type == DT_BASH ) {
+        du.amount = armor.calculate_by_enchantment( guy, du.amount, enchantment::mod::ITEM_ARMOR_BASH );
+    }
+    if( du.type == DT_BIOLOGICAL ) {
+        du.amount = armor.calculate_by_enchantment( guy, du.amount, enchantment::mod::ITEM_ARMOR_BIO );
+    }
+    if( du.type == DT_COLD ) {
+        du.amount = armor.calculate_by_enchantment( guy, du.amount, enchantment::mod::ITEM_ARMOR_COLD );
+    }
+    if( du.type == DT_CUT ) {
+        du.amount = armor.calculate_by_enchantment( guy, du.amount, enchantment::mod::ITEM_ARMOR_CUT );
+    }
+    if( du.type == DT_ELECTRIC ) {
+        du.amount = armor.calculate_by_enchantment( guy, du.amount, enchantment::mod::ITEM_ARMOR_ELEC );
+    }
+    if( du.type == DT_HEAT ) {
+        du.amount = armor.calculate_by_enchantment( guy, du.amount, enchantment::mod::ITEM_ARMOR_HEAT );
+    }
+    if( du.type == DT_STAB ) {
+        du.amount = armor.calculate_by_enchantment( guy, du.amount, enchantment::mod::ITEM_ARMOR_STAB );
     }
     du.amount = std::max( 0.0f, du.amount );
 }
@@ -7258,33 +7256,29 @@ static void item_armor_enchantment_adjust( Character &guy, damage_unit &du, item
 // the ITEM_ enchantments only affect the damage resistance for that one item, while the others affect all of them
 static void armor_enchantment_adjust( Character &guy, damage_unit &du )
 {
-    switch( du.type ) {
-        case DT_ACID:
-            du.amount = guy.calculate_by_enchantment( du.amount, enchantment::mod::ARMOR_ACID );
-            break;
-        case DT_BASH:
-            du.amount = guy.calculate_by_enchantment( du.amount, enchantment::mod::ARMOR_BASH );
-            break;
-        case DT_BIOLOGICAL:
-            du.amount = guy.calculate_by_enchantment( du.amount, enchantment::mod::ARMOR_BIO );
-            break;
-        case DT_COLD:
-            du.amount = guy.calculate_by_enchantment( du.amount, enchantment::mod::ARMOR_COLD );
-            break;
-        case DT_CUT:
-            du.amount = guy.calculate_by_enchantment( du.amount, enchantment::mod::ARMOR_CUT );
-            break;
-        case DT_ELECTRIC:
-            du.amount = guy.calculate_by_enchantment( du.amount, enchantment::mod::ARMOR_ELEC );
-            break;
-        case DT_HEAT:
-            du.amount = guy.calculate_by_enchantment( du.amount, enchantment::mod::ARMOR_HEAT );
-            break;
-        case DT_STAB:
-            du.amount = guy.calculate_by_enchantment( du.amount, enchantment::mod::ARMOR_STAB );
-            break;
-        default:
-            return;
+    if( du.type == DT_ACID ) {
+        du.amount = guy.calculate_by_enchantment( du.amount, enchantment::mod::ARMOR_ACID );
+    }
+    if( du.type == DT_BASH ) {
+        du.amount = guy.calculate_by_enchantment( du.amount, enchantment::mod::ARMOR_BASH );
+    }
+    if( du.type == DT_BIOLOGICAL ) {
+        du.amount = guy.calculate_by_enchantment( du.amount, enchantment::mod::ARMOR_BIO );
+    }
+    if( du.type == DT_COLD ) {
+        du.amount = guy.calculate_by_enchantment( du.amount, enchantment::mod::ARMOR_COLD );
+    }
+    if( du.type == DT_CUT ) {
+        du.amount = guy.calculate_by_enchantment( du.amount, enchantment::mod::ARMOR_CUT );
+    }
+    if( du.type == DT_ELECTRIC ) {
+        du.amount = guy.calculate_by_enchantment( du.amount, enchantment::mod::ARMOR_ELEC );
+    }
+    if( du.type == DT_HEAT ) {
+        du.amount = guy.calculate_by_enchantment( du.amount, enchantment::mod::ARMOR_HEAT );
+    }
+    if( du.type == DT_STAB ) {
+        du.amount = guy.calculate_by_enchantment( du.amount, enchantment::mod::ARMOR_STAB );
     }
     du.amount = std::max( 0.0f, du.amount );
 }
@@ -7455,7 +7449,7 @@ bool Character::armor_absorb( damage_unit &du, item &armor )
                              rng( 2 * itype::damage_scale, 3 * itype::damage_scale ) : itype::damage_scale, du.type );
 }
 
-float Character::bionic_armor_bonus( body_part bp, damage_type dt ) const
+float Character::bionic_armor_bonus( body_part bp, damage_type_id dt ) const
 {
     float result = 0.0f;
     // We only check the passive bionics

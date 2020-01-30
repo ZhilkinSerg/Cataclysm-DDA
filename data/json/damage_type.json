@@ -1,0 +1,89 @@
+[
+  {
+    "id": "null",
+    "legacy_id": "DT_NULL",
+    "type": "damage_type",
+    "name": "null",
+    "description": "null damage, doesn't exist"
+  },
+  {
+    "id": "true",
+    "legacy_id": "DT_TRUE",
+    "type": "damage_type",
+    "name": "true",
+    "description": "typeless damage, should always go through",
+    "color": "dark_gray",
+    "is_typeless": true
+  },
+  {
+    "id": "biological",
+    "legacy_id": "DT_BIOLOGICAL",
+    "type": "damage_type",
+    "name": "true",
+    "description": "internal damage, like from smoke or poison",
+    "color": "green",
+    "is_internal": true
+  },
+  {
+    "id": "bash",
+    "legacy_id": "DT_BASH",
+    "type": "damage_type",
+    "name": "bash",
+    "description": "bash damage",
+    "color": "magenta",
+    "skill": "bashing",
+    "is_physical": true
+  },
+  {
+    "id": "cut",
+    "legacy_id": "DT_CUT",
+    "type": "damage_type",
+    "name": "cut",
+    "description": "cut damage",
+    "color": "light_gray",
+    "skill": "cuting",
+    "is_physical": true
+  },
+  {
+    "id": "stab",
+    "legacy_id": "DT_STAB",
+    "type": "damage_type",
+    "name": "stab",
+    "description": "stabbing/piercing damage",
+    "color": "light_red",
+    "skill": "stabbing",
+    "is_physical": true
+  },
+  {
+    "id": "acid",
+    "legacy_id": "DT_ACID",
+    "type": "damage_type",
+    "name": "acid",
+    "description": "corrosive damage, e.g. acid",
+    "color": "light_green"
+  },
+  {
+    "id": "heat",
+    "legacy_id": "DT_HEAT",
+    "type": "damage_type",
+    "name": "heat",
+    "description": "fire, plasma",
+    "color": "red"
+  },
+  {
+    "id": "cold",
+    "legacy_id": "DT_COLD",
+    "type": "damage_type",
+    "name": "cold",
+    "description": "heatdrain, cryogrenades",
+    "color": "white"
+  },
+  {
+    "id": "electric",
+    "legacy_id": "DT_ELECTRIC",
+    "type": "damage_type",
+    "name": "electric",
+    "description": "electrical discharge",
+    "color": "light_blue"
+  }
+]

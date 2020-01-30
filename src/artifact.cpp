@@ -1358,8 +1358,8 @@ void it_artifact_tool::serialize( JsonOut &json ) const
     json.member( "volume", volume / units::legacy_volume_factor );
     json.member( "weight", to_gram( weight ) );
 
-    json.member( "melee_dam", melee[DT_BASH] );
-    json.member( "melee_cut", melee[DT_CUT] );
+    json.member( "melee_dam", melee.at( DT_BASH ) );
+    json.member( "melee_cut", melee.at( DT_CUT ) );
 
     json.member( "m_to_hit", m_to_hit );
 
@@ -1414,8 +1414,8 @@ void it_artifact_armor::serialize( JsonOut &json ) const
     json.member( "volume", volume / units::legacy_volume_factor );
     json.member( "weight", to_gram( weight ) );
 
-    json.member( "melee_dam", melee[DT_BASH] );
-    json.member( "melee_cut", melee[DT_CUT] );
+    json.member( "melee_dam", melee.at( DT_BASH ) );
+    json.member( "melee_cut", melee.at( DT_CUT ) );
 
     json.member( "m_to_hit", m_to_hit );
 

@@ -3766,7 +3766,7 @@ void item::on_contents_changed()
     encumbrance_update_ = true;
 }
 
-void item::on_damage( int, damage_type )
+void item::on_damage( int, damage_type_id )
 {
 
 }
@@ -4425,34 +4425,26 @@ int item::attack_time() const
     return ret;
 }
 
-int item::damage_melee( damage_type dt ) const
+int item::damage_melee( damage_type_id dt ) const
 {
-    assert( dt >= DT_NULL && dt < NUM_DT );
     if( is_null() ) {
         return 0;
     }
 
     // effectiveness is reduced by 10% per damage level
-    int res = type->melee[ dt ];
+    int res = type->melee.at( dt );
     res -= res * damage_level( 4 ) * 0.1;
 
     // apply type specific flags
-    switch( dt ) {
-        case DT_BASH:
-            if( has_flag( "REDUCED_BASHING" ) ) {
-                res *= 0.5;
-            }
-            break;
-
-        case DT_CUT:
-        case DT_STAB:
-            if( has_flag( "DIAMOND" ) ) {
-                res *= 1.3;
-            }
-            break;
-
-        default:
-            break;
+    if( dt == DT_BASH ) {
+        if( has_flag( "REDUCED_BASHING" ) ) {
+            res *= 0.5;
+        }
+    }
+    if( dt == DT_CUT || dt == DT_STAB ) {
+        if( has_flag( "DIAMOND" ) ) {
+            res *= 1.3;
+        }
     }
 
     // consider any melee gunmods
@@ -4474,11 +4466,10 @@ damage_instance item::base_damage_melee() const
 {
     // TODO: Caching
     damage_instance ret;
-    for( size_t i = DT_NULL + 1; i < NUM_DT; i++ ) {
-        damage_type dt = static_cast<damage_type>( i );
-        int dam = damage_melee( dt );
+    for( const damage_type dt : damage_types::get_all() ) {
+        int dam = damage_melee( dt.id.get_cid() );
         if( dam > 0 ) {
-            ret.add_damage( dt, dam );
+            ret.add_damage( dt.id.get_cid(), dam );
         }
     }
 
@@ -5385,7 +5376,7 @@ float item::get_relative_health() const
     return ( max_damage() + 1.0f - damage() ) / ( max_damage() + 1.0f );
 }
 
-bool item::mod_damage( int qty, damage_type dt )
+bool item::mod_damage( int qty, damage_type_id dt )
 {
     bool destroy = false;
 
@@ -5412,7 +5403,7 @@ bool item::mod_damage( const int qty )
     return mod_damage( qty, DT_NULL );
 }
 
-bool item::inc_damage( const damage_type dt )
+bool item::inc_damage( const damage_type_id dt )
 {
     return mod_damage( itype::damage_scale, dt );
 }
@@ -5530,34 +5521,29 @@ void item::mitigate_damage( damage_unit &du ) const
     du.amount = std::max( 0.0f, du.amount );
 }
 
-int item::damage_resist( damage_type dt, bool to_self ) const
+int item::damage_resist( damage_type_id dt, bool to_self ) const
 {
-    switch( dt ) {
-        case DT_NULL:
-        case NUM_DT:
-            return 0;
-        case DT_TRUE:
-        case DT_BIOLOGICAL:
-        case DT_ELECTRIC:
-        case DT_COLD:
-            // Currently hardcoded:
-            // Items can never be damaged by those types
-            // But they provide 0 protection from them
-            return to_self ? INT_MAX : 0;
-        case DT_BASH:
-            return bash_resist( to_self );
-        case DT_CUT:
-            return cut_resist( to_self );
-        case DT_ACID:
-            return acid_resist( to_self );
-        case DT_STAB:
-            return stab_resist( to_self );
-        case DT_HEAT:
-            return fire_resist( to_self );
-        default:
-            debugmsg( "Invalid damage type: %d", dt );
+    if( dt == DT_TRUE || dt == DT_BIOLOGICAL || dt == DT_ELECTRIC || dt == DT_COLD ) {
+        // Currently hardcoded:
+        // Items can never be damaged by those types
+        // But they provide 0 protection from them
+        return to_self ? INT_MAX : 0;
     }
-
+    if( dt == DT_BASH ) {
+        return bash_resist( to_self );
+    }
+    if( dt == DT_CUT ) {
+        return cut_resist( to_self );
+    }
+    if( dt == DT_ACID ) {
+        return acid_resist( to_self );
+    }
+    if( dt == DT_STAB ) {
+        return stab_resist( to_self );
+    }
+    if( dt == DT_HEAT ) {
+        return fire_resist( to_self );
+    }
     return 0;
 }
 
@@ -5874,15 +5860,15 @@ bool item::is_ammo_container() const
 
 bool item::is_melee() const
 {
-    for( int idx = DT_NULL + 1; idx != NUM_DT; ++idx ) {
-        if( is_melee( static_cast<damage_type>( idx ) ) ) {
+    for( const damage_type dt : damage_types::get_all() ) {
+        if( is_melee( dt.id.get_cid() ) ) {
             return true;
         }
     }
     return false;
 }
 
-bool item::is_melee( damage_type dt ) const
+bool item::is_melee( damage_type_id dt ) const
 {
     return damage_melee( dt ) > MELEE_STAT;
 }
@@ -6405,9 +6391,9 @@ skill_id item::melee_skill() const
     int hi = 0;
     skill_id res = skill_id::NULL_ID();
 
-    for( int idx = DT_NULL + 1; idx != NUM_DT; ++idx ) {
-        const int val = damage_melee( static_cast<damage_type>( idx ) );
-        const skill_id &sk  = skill_by_dt( static_cast<damage_type>( idx ) );
+    for( const damage_type dt : damage_types::get_all() ) {
+        const int val = damage_melee( dt.id.get_cid() );
+        const skill_id &sk  = dt.skill;
         if( val > hi && sk ) {
             hi = val;
             res = sk;

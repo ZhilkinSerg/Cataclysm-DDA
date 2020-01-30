@@ -1141,36 +1141,26 @@ bool monster::is_immune_effect( const efftype_id &effect ) const
     return false;
 }
 
-bool monster::is_immune_damage( const damage_type dt ) const
+bool monster::is_immune_damage( const damage_type_id dt ) const
 {
-    switch( dt ) {
-        case DT_NULL:
-            return true;
-        case DT_TRUE:
-            return false;
-        case DT_BIOLOGICAL:
-            // NOTE: Unused
-            return false;
-        case DT_BASH:
-            return false;
-        case DT_CUT:
-            return false;
-        case DT_ACID:
-            return has_flag( MF_ACIDPROOF );
-        case DT_STAB:
-            return false;
-        case DT_HEAT:
-            // Ugly hardcode - remove later
-            return made_of( material_id( "steel" ) ) || made_of( material_id( "stone" ) );
-        case DT_COLD:
-            return false;
-        case DT_ELECTRIC:
-            return type->sp_defense == &mdefense::zapback ||
-                   has_flag( MF_ELECTRIC ) ||
-                   has_flag( MF_ELECTRIC_FIELD );
-        default:
-            return true;
+    if( dt == DT_TRUE || dt == DT_BIOLOGICAL ||
+        dt == DT_BASH || dt == DT_CUT || dt == DT_STAB ||
+        dt == DT_COLD ) {
+        return false;
     }
+    if( dt == DT_ACID ) {
+        return has_flag( MF_ACIDPROOF );
+    }
+    if( dt == DT_HEAT ) {
+        // Ugly hardcode - remove later
+        return made_of( material_id( "steel" ) ) || made_of( material_id( "stone" ) );
+    }
+    if( dt == DT_ELECTRIC ) {
+        return type->sp_defense == &mdefense::zapback ||
+               has_flag( MF_ELECTRIC ) ||
+               has_flag( MF_ELECTRIC_FIELD );
+    }
+    return true;
 }
 
 bool monster::is_dead_state() const
@@ -1187,7 +1177,7 @@ void monster::absorb_hit( body_part, damage_instance &dam )
 {
     for( auto &elem : dam.damage_units ) {
         add_msg( m_debug, "Dam Type: %s :: Ar Pen: %.1f :: Armor Mult: %.1f",
-                 name_by_dt( elem.type ), elem.res_pen, elem.res_mult );
+                 elem.type.id().str(), elem.res_pen, elem.res_mult );
         elem.amount -= std::min( resistances( *this ).get_effective_resist( elem ) +
                                  get_worn_armor_val( elem.type ), elem.amount );
     }
@@ -1402,43 +1392,33 @@ void monster::deal_projectile_attack( Creature *source, dealt_projectile_attack 
 void monster::deal_damage_handle_type( const damage_unit &du, body_part bp, int &damage,
                                        int &pain )
 {
-    switch( du.type ) {
-        case DT_ELECTRIC:
-            if( has_flag( MF_ELECTRIC ) ) {
-                return; // immunity
-            }
-            break;
-        case DT_COLD:
-            if( !has_flag( MF_WARM ) ) {
-                return; // immunity
-            }
-            break;
-        case DT_BASH:
-            if( has_flag( MF_PLASTIC ) ) {
-                damage += du.amount / rng( 2, 4 ); // lessened effect
-                pain += du.amount / 4;
-                return;
-            }
-            break;
-        case DT_NULL:
-            debugmsg( "monster::deal_damage_handle_type: illegal damage type DT_NULL" );
-            break;
-        case DT_ACID:
-            if( has_flag( MF_ACIDPROOF ) ) {
-                // immunity
-                return;
-            }
-        case DT_TRUE:
-        // typeless damage, should always go through
-        case DT_BIOLOGICAL:
-        // internal damage, like from smoke or poison
-        case DT_CUT:
-        case DT_STAB:
-        case DT_HEAT:
-        default:
-            break;
+    if( du.type == DT_ELECTRIC ) {
+        if( has_flag( MF_ELECTRIC ) ) {
+            return; // immunity
+        }
     }
-
+    if( du.type == DT_COLD ) {
+        if( !has_flag( MF_WARM ) ) {
+            return; // immunity
+        }
+    }
+    if( du.type == DT_BASH ) {
+        if( has_flag( MF_PLASTIC ) ) {
+            damage += du.amount / rng( 2, 4 ); // lessened effect
+            pain += du.amount / 4;
+            return;
+        }
+    }
+    if( du.type == DT_COLD ) {
+        if( !has_flag( MF_WARM ) ) {
+            return; // immunity
+        }
+    }
+    if( du.type == DT_ACID ) {
+        if( !has_flag( MF_ACIDPROOF ) ) {
+            return; // immunity
+        }
+    }
     Creature::deal_damage_handle_type( du, bp, damage, pain );
 }
 
@@ -1654,7 +1634,7 @@ std::string monster::get_effect_status() const
     return enumerate_as_string( effect_status );
 }
 
-int monster::get_worn_armor_val( damage_type dt ) const
+int monster::get_worn_armor_val( damage_type_id dt ) const
 {
     if( !has_effect( effect_monster_armor ) ) {
         return 0;
@@ -1678,34 +1658,34 @@ int monster::get_armor_bash( body_part bp ) const
     return static_cast<int>( type->armor_bash ) + armor_bash_bonus + get_worn_armor_val( DT_BASH );
 }
 
-int monster::get_armor_type( damage_type dt, body_part bp ) const
+int monster::get_armor_type( damage_type_id dt, body_part bp ) const
 {
     int worn_armor = get_worn_armor_val( dt );
 
-    switch( dt ) {
-        case DT_TRUE:
-        case DT_BIOLOGICAL:
-            return 0;
-        case DT_BASH:
-            return get_armor_bash( bp );
-        case DT_CUT:
-            return get_armor_cut( bp );
-        case DT_ACID:
-            return worn_armor + static_cast<int>( type->armor_acid );
-        case DT_STAB:
-            return worn_armor + static_cast<int>( type->armor_stab ) + armor_cut_bonus * 0.8f;
-        case DT_HEAT:
-            return worn_armor + static_cast<int>( type->armor_fire );
-        case DT_COLD:
-        case DT_ELECTRIC:
-            return worn_armor;
-        case DT_NULL:
-        case NUM_DT:
-            // Let it error below
-            break;
+    if( dt == DT_TRUE || dt == DT_BIOLOGICAL ) {
+        return 0;
     }
-
-    debugmsg( "Invalid damage type: %d", dt );
+    if( dt == DT_BASH ) {
+        return get_armor_bash( bp );
+    }
+    if( dt == DT_CUT ) {
+        return get_armor_cut( bp );
+    }
+    if( dt == DT_ACID ) {
+        return worn_armor + static_cast<int>( type->armor_acid );
+    }
+    if( dt == DT_STAB ) {
+        return worn_armor + static_cast<int>( type->armor_stab ) + armor_cut_bonus * 0.8f;
+    }
+    if( dt == DT_HEAT ) {
+        return worn_armor + static_cast<int>( type->armor_fire );
+    }
+    if( dt == DT_COLD || dt == DT_ELECTRIC ) {
+        return worn_armor + static_cast<int>( type->armor_stab ) + armor_cut_bonus * 0.8f;
+    }
+    if( dt == DT_STAB ) {
+        return worn_armor;
+    }
     return 0;
 }
 

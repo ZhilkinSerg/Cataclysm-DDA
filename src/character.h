@@ -588,9 +588,9 @@ class Character : public Creature, public visitable<Character>
          * Check for passive bionics that provide armor, and returns the armor bonus
          * This is called from player::passive_absorb_hit
          */
-        float bionic_armor_bonus( body_part bp, damage_type dt ) const;
+        float bionic_armor_bonus( body_part bp, damage_type_id dt ) const;
         /** Returns the armor bonus against given type from martial arts buffs */
-        int mabuff_armor_bonus( damage_type type ) const;
+        int mabuff_armor_bonus( damage_type_id type ) const;
         /** Returns overall fire resistance for the body part */
         int get_armor_fire( body_part bp ) const;
         // --------------- Mutation Stuff ---------------
@@ -783,9 +783,9 @@ class Character : public Creature, public visitable<Character>
         /** Returns the speed bonus from martial arts buffs */
         int mabuff_speed_bonus() const;
         /** Returns the damage multiplier to given type from martial arts buffs */
-        float mabuff_damage_mult( damage_type type ) const;
+        float mabuff_damage_mult( damage_type_id type ) const;
         /** Returns the flat damage bonus to given type from martial arts buffs, applied after the multiplier */
-        int mabuff_damage_bonus( damage_type type ) const;
+        int mabuff_damage_bonus( damage_type_id type ) const;
         /** Returns the flat penalty to move cost of attacks. If negative, that's a bonus. Applied after multiplier. */
         int mabuff_attack_cost_penalty() const;
         /** Returns the multiplier on move cost of attacks. */
@@ -841,7 +841,7 @@ class Character : public Creature, public visitable<Character>
          */
         // TODO: Cache this, it's kinda expensive to compute
         resistances mutation_armor( body_part bp ) const;
-        float mutation_armor( body_part bp, damage_type dt ) const;
+        float mutation_armor( body_part bp, damage_type_id dt ) const;
         float mutation_armor( body_part bp, const damage_unit &du ) const;
 
         // --------------- Bionic Stuff ---------------
@@ -1347,7 +1347,7 @@ class Character : public Creature, public visitable<Character>
         /** Returns true if the player is immune to this kind of effect */
         bool is_immune_effect( const efftype_id & ) const override;
         /** Returns true if the player is immune to this kind of damage */
-        bool is_immune_damage( damage_type ) const override;
+        bool is_immune_damage( damage_type_id ) const override;
         /** Returns true if the player is protected from radiation */
         bool is_rad_immune() const;
         /** Returns true if the player is immune to throws */
@@ -1553,7 +1553,7 @@ class Character : public Creature, public visitable<Character>
         /** Returns overall acid resistance for the body part */
         int get_armor_acid( body_part bp ) const;
         /** Returns overall resistance to given type on the bod part */
-        int get_armor_type( damage_type dt, body_part bp ) const override;
+        int get_armor_type( damage_type_id dt, body_part bp ) const override;
 
         int get_stim() const;
         void set_stim( int new_stim );
@@ -1574,7 +1574,7 @@ class Character : public Creature, public visitable<Character>
 
     protected:
         void on_stat_change( const std::string &, int ) override {}
-        void on_damage_of_type( int adjusted_damage, damage_type type, body_part bp ) override;
+        void on_damage_of_type( int adjusted_damage, damage_type_id type, body_part bp ) override;
         virtual void on_mutation_gain( const trait_id & ) {}
         virtual void on_mutation_loss( const trait_id & ) {}
     public:

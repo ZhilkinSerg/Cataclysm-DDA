@@ -32,12 +32,12 @@ damage_instance damage_instance::physical( float bash, float cut, float stab, fl
     d.add_damage( DT_STAB, stab, arpen );
     return d;
 }
-damage_instance::damage_instance( damage_type dt, float a, float rp, float rm, float mul )
+damage_instance::damage_instance( damage_type_id dt, float a, float rp, float rm, float mul )
 {
     add_damage( dt, a, rp, rm, mul );
 }
 
-void damage_instance::add_damage( damage_type dt, float a, float rp, float rm, float mul )
+void damage_instance::add_damage( damage_type_id dt, float a, float rp, float rm, float mul )
 {
     damage_unit du( dt, a, rp, rm, mul );
     add( du );
@@ -59,7 +59,7 @@ void damage_instance::mult_damage( double multiplier, bool pre_armor )
         }
     }
 }
-float damage_instance::type_damage( damage_type dt ) const
+float damage_instance::type_damage( damage_type_id dt ) const
 {
     float ret = 0;
     for( const auto &elem : damage_units ) {
@@ -154,43 +154,43 @@ void damage_instance::deserialize( JsonIn &jsin )
 
 dealt_damage_instance::dealt_damage_instance()
 {
-    dealt_dams.fill( 0 );
+    dealt_dams.clear();
 }
 
-void dealt_damage_instance::set_damage( damage_type dt, int amount )
+void dealt_damage_instance::set_damage( damage_type_id dt, int amount )
 {
-    if( dt < 0 || dt >= NUM_DT ) {
-        debugmsg( "Tried to set invalid damage type %d. NUM_DT is %d", dt, NUM_DT );
-        return;
-    }
-
-    dealt_dams[dt] = amount;
+    dealt_dams.at( dt ) = amount;
 }
-int dealt_damage_instance::type_damage( damage_type dt ) const
+
+int dealt_damage_instance::type_damage( damage_type_id dt ) const
 {
-    if( static_cast<size_t>( dt ) < dealt_dams.size() ) {
-        return dealt_dams[dt];
-    }
-
-    return 0;
+    return dealt_dams.at( dt );
 }
+
 int dealt_damage_instance::total_damage() const
 {
-    return std::accumulate( dealt_dams.begin(), dealt_dams.end(), 0 );
+    return std::accumulate( dealt_dams.begin(),
+                            dealt_dams.end(),
+                            0,
+                            // *INDENT-OFF*
+                            []( int value, const std::map<int, int>::value_type & p ) {
+                                return value + p.second;
+                            }
+                            // *INDENT-ON*
+                          );
 }
 
 resistances::resistances()
 {
-    resist_vals.fill( 0 );
+    resist_vals.clear();
 }
 
 resistances::resistances( const item &armor, bool to_self )
 {
     // Armors protect, but all items can resist
     if( to_self || armor.is_armor() ) {
-        for( int i = 0; i < NUM_DT; i++ ) {
-            damage_type dt = static_cast<damage_type>( i );
-            set_resist( dt, armor.damage_resist( dt, to_self ) );
+        for( const damage_type dt : damage_types::get_all() ) {
+            set_resist( dt.id.get_cid(), armor.damage_resist( dt.id.get_cid(), to_self ) );
         }
     }
 }
@@ -202,13 +202,13 @@ resistances::resistances( monster &monster ) : resistances()
     set_resist( DT_ACID, monster.type->armor_acid );
     set_resist( DT_HEAT, monster.type->armor_fire );
 }
-void resistances::set_resist( damage_type dt, float amount )
+void resistances::set_resist( damage_type_id dt, float amount )
 {
     resist_vals[dt] = amount;
 }
-float resistances::type_resist( damage_type dt ) const
+float resistances::type_resist( damage_type_id dt ) const
 {
-    return resist_vals[dt];
+    return resist_vals.at( dt );
 }
 float resistances::get_effective_resist( const damage_unit &du ) const
 {
@@ -217,80 +217,16 @@ float resistances::get_effective_resist( const damage_unit &du ) const
 
 resistances &resistances::operator+=( const resistances &other )
 {
-    for( size_t i = 0; i < NUM_DT; i++ ) {
-        resist_vals[ i ] += other.resist_vals[ i ];
+    for( const std::pair<const damage_type_id, float> &rv : resist_vals ) {
+        resist_vals.at( rv.first ) += rv.second + other.resist_vals.at( rv.first );
     }
 
     return *this;
 }
 
-static const std::map<std::string, damage_type> dt_map = {
-    { translate_marker_context( "damage type", "true" ), DT_TRUE },
-    { translate_marker_context( "damage type", "biological" ), DT_BIOLOGICAL },
-    { translate_marker_context( "damage type", "bash" ), DT_BASH },
-    { translate_marker_context( "damage type", "cut" ), DT_CUT },
-    { translate_marker_context( "damage type", "acid" ), DT_ACID },
-    { translate_marker_context( "damage type", "stab" ), DT_STAB },
-    { translate_marker_context( "damage type", "heat" ), DT_HEAT },
-    { translate_marker_context( "damage type", "cold" ), DT_COLD },
-    { translate_marker_context( "damage type", "electric" ), DT_ELECTRIC }
-};
-
-const std::map<std::string, damage_type> &get_dt_map()
-{
-    return dt_map;
-}
-
-damage_type dt_by_name( const std::string &name )
-{
-    const auto &iter = dt_map.find( name );
-    if( iter == dt_map.end() ) {
-        return DT_NULL;
-    }
-
-    return iter->second;
-}
-
-std::string name_by_dt( const damage_type &dt )
-{
-    auto iter = dt_map.cbegin();
-    while( iter != dt_map.cend() ) {
-        if( iter->second == dt ) {
-            return pgettext( "damage type", iter->first.c_str() );
-        }
-        iter++;
-    }
-    static const std::string err_msg( "dt_not_found" );
-    return err_msg;
-}
-
-const skill_id &skill_by_dt( damage_type dt )
-{
-    static skill_id skill_bashing( "bashing" );
-    static skill_id skill_cutting( "cutting" );
-    static skill_id skill_stabbing( "stabbing" );
-
-    switch( dt ) {
-        case DT_BASH:
-            return skill_bashing;
-
-        case DT_CUT:
-            return skill_cutting;
-
-        case DT_STAB:
-            return skill_stabbing;
-
-        default:
-            return skill_id::NULL_ID();
-    }
-}
-
 static damage_unit load_damage_unit( const JsonObject &curr )
 {
-    damage_type dt = dt_by_name( curr.get_string( "damage_type" ) );
-    if( dt == DT_NULL ) {
-        curr.throw_error( "Invalid damage type" );
-    }
+    damage_type_id dt = damage_type_id( curr.get_string( "damage_type" ) );
 
     float amount = curr.get_float( "amount" );
     int arpen = curr.get_int( "armor_penetration", 0 );
@@ -323,25 +259,26 @@ damage_instance load_damage_instance( const JsonArray &jarr )
     return di;
 }
 
-std::array<float, NUM_DT> load_damage_array( const JsonObject &jo )
+std::map<damage_type_id, float> load_damage_array( const JsonObject &jo )
 {
-    std::array<float, NUM_DT> ret;
+    std::map<damage_type_id, float> ret;
+
     float init_val = jo.get_float( "all", 0.0f );
 
     float phys = jo.get_float( "physical", init_val );
-    ret[ DT_BASH ] = jo.get_float( "bash", phys );
-    ret[ DT_CUT ] = jo.get_float( "cut", phys );
-    ret[ DT_STAB ] = jo.get_float( "stab", phys );
+    ret.at( DT_BASH ) = jo.get_float( "bash", phys );
+    ret.at( DT_CUT ) = jo.get_float( "cut", phys );
+    ret.at( DT_STAB ) = jo.get_float( "stab", phys );
 
     float non_phys = jo.get_float( "non_physical", init_val );
-    ret[ DT_BIOLOGICAL ] = jo.get_float( "biological", non_phys );
-    ret[ DT_ACID ] = jo.get_float( "acid", non_phys );
-    ret[ DT_HEAT ] = jo.get_float( "heat", non_phys );
-    ret[ DT_COLD ] = jo.get_float( "cold", non_phys );
-    ret[ DT_ELECTRIC ] = jo.get_float( "electric", non_phys );
+    ret.at( DT_BIOLOGICAL ) = jo.get_float( "biological", non_phys );
+    ret.at( DT_ACID ) = jo.get_float( "acid", non_phys );
+    ret.at( DT_HEAT ) = jo.get_float( "heat", non_phys );
+    ret.at( DT_COLD ) = jo.get_float( "cold", non_phys );
+    ret.at( DT_ELECTRIC ) = jo.get_float( "electric", non_phys );
 
     // DT_TRUE should never be resisted
-    ret[ DT_TRUE ] = 0.0f;
+    ret.at( DT_TRUE ) = 0.0f;
     return ret;
 }
 

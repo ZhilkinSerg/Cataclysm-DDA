@@ -848,7 +848,7 @@ struct itype {
 
     public:
         itype() {
-            melee.fill( 0 );
+            melee.clear();
         }
 
         int damage_min() const {
@@ -951,7 +951,7 @@ struct itype {
         bool rigid = true;
 
         /** Damage output in melee for zero or more damage types */
-        std::array<int, NUM_DT> melee;
+        std::map<damage_type_id, int> melee;
         /** Base damage output when thrown */
         damage_instance thrown_damage;
 

@@ -78,7 +78,6 @@ struct damage_instance;
 struct damage_unit;
 class map;
 
-enum damage_type : int;
 enum clothing_mod_type : int;
 
 std::string rad_badge_color( int rad );
@@ -540,7 +539,7 @@ class item : public visitable<item>
         int attack_time() const;
 
         /** Damage of given type caused when this item is used as melee weapon */
-        int damage_melee( damage_type dt ) const;
+        int damage_melee( damage_type_id dt ) const;
 
         /** All damage types this item deals when used in melee (no skill modifiers etc. applied). */
         damage_instance base_damage_melee() const;
@@ -553,7 +552,7 @@ class item : public visitable<item>
         bool is_two_handed( const Character &guy ) const;
 
         /** Is this item an effective melee weapon for the given damage type? */
-        bool is_melee( damage_type dt ) const;
+        bool is_melee( damage_type_id dt ) const;
 
         /**
          *  Is this item an effective melee weapon for any damage type?
@@ -946,7 +945,7 @@ class item : public visitable<item>
         /**
          * Resistance provided by this item against damage type given by an enum.
          */
-        int damage_resist( damage_type dt, bool to_self = false ) const;
+        int damage_resist( damage_type_id dt, bool to_self = false ) const;
 
         /**
          * Returns resistance to being damaged by attack against the item itself.
@@ -995,7 +994,7 @@ class item : public visitable<item>
          * @param dt type of damage which may be passed to @ref on_damage callback
          * @return whether item should be destroyed
          */
-        bool mod_damage( int qty, damage_type dt );
+        bool mod_damage( int qty, damage_type_id dt );
         /// same as other mod_damage, but uses @ref DT_NULL as damage type.
         bool mod_damage( int qty );
 
@@ -1004,7 +1003,7 @@ class item : public visitable<item>
          * @param dt type of damage which may be passed to @ref on_damage callback
          * @return whether item should be destroyed
          */
-        bool inc_damage( damage_type dt );
+        bool inc_damage( damage_type_id dt );
         /// same as other inc_damage, but uses @ref DT_NULL as damage type.
         bool inc_damage();
 
@@ -1275,7 +1274,7 @@ class item : public visitable<item>
          * @param qty maximum damage that will be applied (constrained by @ref max_damage)
          * @param dt type of damage (or DT_NULL)
          */
-        void on_damage( int qty, damage_type dt );
+        void on_damage( int qty, damage_type_id dt );
 
         /**
          * Name of the item type (not the item), with proper plural.

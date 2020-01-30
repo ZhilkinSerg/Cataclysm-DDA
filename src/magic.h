@@ -238,7 +238,7 @@ class spell_type
         // what energy do you use to cast this spell
         energy_type energy_source;
 
-        damage_type dmg_type;
+        damage_type_id dmg_type;
 
         // list of valid targets to be affected by the area of effect.
         enum_bitset<valid_target> effect_targets;
@@ -274,7 +274,7 @@ class spell
         // once you accumulate enough exp you level the spell
         int experience;
         // returns damage type for the spell
-        damage_type dmg_type() const;
+        damage_type_id dmg_type() const;
 
         // alternative cast message
         translation alt_message;

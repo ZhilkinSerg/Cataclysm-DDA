@@ -1291,7 +1291,7 @@ bool character_martial_arts::has_technique( const Character &guy, const matec_id
            style_selected->has_technique( guy, id );
 }
 
-static damage_unit &get_damage_unit( std::vector<damage_unit> &di, const damage_type dt )
+static damage_unit &get_damage_unit( std::vector<damage_unit> &di, const damage_type_id dt )
 {
     static damage_unit nullunit( DT_NULL, 0, 0, 0, 0 );
     for( auto &du : di ) {
@@ -1314,7 +1314,7 @@ static void print_damage_info( const damage_instance &di )
     for( auto &du : di.damage_units ) {
         int amount = di.type_damage( du.type );
         total += amount;
-        ss += name_by_dt( du.type ) + ":" + std::to_string( amount ) + ",";
+        ss += du.type.obj().name.translated() + ":" + std::to_string( amount ) + ",";
     }
 
     add_msg( m_debug, "%stotal: %d", ss, total );
@@ -2030,7 +2030,7 @@ std::string melee_message( const ma_technique &tec, player &p, const dealt_damag
         }
     }
 
-    damage_type dominant_type = DT_BASH;
+    damage_type_id dominant_type = DT_BASH;
     if( cut_dam + stab_dam > bash_dam ) {
         dominant_type = cut_dam >= stab_dam ? DT_CUT : DT_STAB;
     }

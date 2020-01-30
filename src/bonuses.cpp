@@ -122,7 +122,7 @@ void bonus_container::load( JsonArray &jarr, bool mult )
     while( jarr.has_more() ) {
         JsonArray qualifiers = jarr.next_array();
 
-        damage_type dt = DT_NULL;
+        damage_type_id dt = DT_NULL;
 
         const std::string affected_stat_string = qualifiers.next_string();
         const affected_stat as = affected_stat_from_string( affected_stat_string );
@@ -132,10 +132,7 @@ void bonus_container::load( JsonArray &jarr, bool mult )
 
         if( needs_damage_type( as ) ) {
             const std::string damage_string = qualifiers.next_string();
-            dt = dt_by_name( damage_string );
-            if( dt == DT_NULL ) {
-                jarr.throw_error( "Invalid damage type" );
-            }
+            dt = damage_type_id( damage_string );
         }
 
         effect_scaling es;
@@ -152,7 +149,7 @@ affected_type::affected_type( affected_stat s )
     stat = s;
 }
 
-affected_type::affected_type( affected_stat s, damage_type t )
+affected_type::affected_type( affected_stat s, damage_type_id t )
 {
     stat = s;
     if( needs_damage_type( s ) ) {
@@ -172,7 +169,7 @@ bool affected_type::operator==( const affected_type &other ) const
     return stat == other.stat && type == other.type;
 }
 
-float bonus_container::get_flat( const Character &u, affected_stat stat, damage_type dt ) const
+float bonus_container::get_flat( const Character &u, affected_stat stat, damage_type_id dt ) const
 {
     const affected_type type( stat, dt );
     const auto &iter = bonuses_flat.find( type );
@@ -192,7 +189,7 @@ float bonus_container::get_flat( const Character &u, affected_stat stat ) const
     return get_flat( u, stat, DT_NULL );
 }
 
-float bonus_container::get_mult( const Character &u, affected_stat stat, damage_type dt ) const
+float bonus_container::get_mult( const Character &u, affected_stat stat, damage_type_id dt ) const
 {
     const affected_type type( stat, dt );
     const auto &iter = bonuses_mult.find( type );
@@ -222,7 +219,7 @@ std::string bonus_container::get_description() const
         if( needs_damage_type( boni.first.get_stat() ) ) {
             //~ %1$s: damage type, %2$s: damage-related bonus name
             type = string_format( pgettext( "type of damage", "%1$s %2$s" ),
-                                  name_by_dt( boni.first.get_damage_type() ), type );
+                                  boni.first.get_damage_type().obj().name, type );
         }
 
         for( const auto &sf : boni.second ) {
@@ -245,7 +242,7 @@ std::string bonus_container::get_description() const
         if( needs_damage_type( boni.first.get_stat() ) ) {
             //~ %1$s: damage type, %2$s: damage-related bonus name
             type = string_format( pgettext( "type of damage", "%1$s %2$s" ),
-                                  name_by_dt( boni.first.get_damage_type() ), type );
+                                  boni.first.get_damage_type().obj().name, type );
         }
 
         for( const auto &sf : boni.second ) {

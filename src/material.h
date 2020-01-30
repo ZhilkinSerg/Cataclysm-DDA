@@ -16,7 +16,6 @@
 
 class material_type;
 
-enum damage_type : int;
 using itype_id = std::string;
 class JsonObject;
 

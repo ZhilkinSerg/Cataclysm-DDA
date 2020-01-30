@@ -2760,8 +2760,9 @@ item_category_id calc_category( const itype &obj )
         return item_category_id( "bionics" );
     }
 
-    bool weap = std::any_of( obj.melee.begin(), obj.melee.end(), []( int qty ) {
-        return qty > MELEE_STAT;
+    bool weap = std::any_of( obj.melee.begin(),
+    obj.melee.end(), []( std::pair<damage_type_id, int> dam ) {
+        return dam.second > MELEE_STAT;
     } );
 
     return weap ? item_category_id( "weapons" ) : item_category_id( "other" );

@@ -161,7 +161,7 @@ static energy_type energy_source_from_string( const std::string &str )
     }
 }
 
-static damage_type damage_type_from_string( const std::string &str )
+static damage_type_id damage_type_from_string( const std::string &str )
 {
     if( str == "fire" ) {
         return DT_HEAT;
@@ -944,33 +944,12 @@ std::string spell::description() const
 
 nc_color spell::damage_type_color() const
 {
-    switch( dmg_type() ) {
-        case DT_HEAT:
-            return c_red;
-        case DT_ACID:
-            return c_light_green;
-        case DT_BASH:
-            return c_magenta;
-        case DT_BIOLOGICAL:
-            return c_green;
-        case DT_COLD:
-            return c_white;
-        case DT_CUT:
-            return c_light_gray;
-        case DT_ELECTRIC:
-            return c_light_blue;
-        case DT_STAB:
-            return c_light_red;
-        case DT_TRUE:
-            return c_dark_gray;
-        default:
-            return c_black;
-    }
+    return dmg_type().obj().color;
 }
 
 std::string spell::damage_type_string() const
 {
-    return name_by_dt( dmg_type() );
+    return dmg_type().obj().name.translated();
 }
 
 // constants defined below are just for the formula to be used,
@@ -1078,7 +1057,7 @@ std::string spell::list_targeted_monster_names() const
     return ret;
 }
 
-damage_type spell::dmg_type() const
+damage_type_id spell::dmg_type() const
 {
     return type->dmg_type;
 }

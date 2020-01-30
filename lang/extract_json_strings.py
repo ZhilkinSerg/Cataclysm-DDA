@@ -743,12 +743,17 @@ def extract_field_type(item):
     for fd in item.get("intensity_levels"):
        if "name" in fd:
            writestr(outfile,fd.get("name"))
-            
+
+def extract_damage_type(item):
+    outfile = get_outfile("damage_type")
+    writestr(outfile, item["name"])
+    writestr(outfile, item["description"], comment="description for damage_type '{}'".format(item["name"]))
+
 def extract_ter_furn_transform_messages(item):
-	outfile = get_outfile("ter_furn_transform_messages")
-	writestr(outfile,item.get("fail_message"))
-	for terrain in item.get("terrain"):
-		writestr(outfile,terrain.get("message"))
+    outfile = get_outfile("ter_furn_transform_messages")
+    writestr(outfile,item.get("fail_message"))
+    for terrain in item.get("terrain"):
+        writestr(outfile,terrain.get("message"))
 
 def extract_skill_display_type(item):
     outfile = get_outfile("skill_display_type")
@@ -804,6 +809,7 @@ extract_specials = {
     "trap": extract_trap,
     "gate": extract_gate,
     "vehicle_spawn": extract_vehspawn,
+    "damage_type": extract_damage_type,
     "field_type": extract_field_type,
     "ter_furn_transform": extract_ter_furn_transform_messages,
     "skill_display_type": extract_skill_display_type,

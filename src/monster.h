@@ -297,7 +297,7 @@ class monster : public Creature
         bool is_dead_state() const override; // check if we should be dead or not
         bool is_elec_immune() const override;
         bool is_immune_effect( const efftype_id & ) const override;
-        bool is_immune_damage( damage_type ) const override;
+        bool is_immune_damage( damage_type_id ) const override;
 
         void absorb_hit( body_part bp, damage_instance &dam ) override;
         bool block_hit( Creature *source, body_part &bp_hit, damage_instance &d ) override;
@@ -343,10 +343,10 @@ class monster : public Creature
         float power_rating() const override;
         float speed_rating() const override;
 
-        int get_worn_armor_val( damage_type dt ) const;
+        int get_worn_armor_val( damage_type_id dt ) const;
         int  get_armor_cut( body_part bp ) const override; // Natural armor, plus any worn armor
         int  get_armor_bash( body_part bp ) const override; // Natural armor, plus any worn armor
-        int  get_armor_type( damage_type dt, body_part bp ) const override;
+        int  get_armor_type( damage_type_id dt, body_part bp ) const override;
 
         float get_hit_base() const override;
         float get_dodge_base() const override;

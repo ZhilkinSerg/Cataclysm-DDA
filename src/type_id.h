@@ -21,6 +21,10 @@ using construction_category_id = string_id<construction_category>;
 struct clothing_mod;
 using clothing_mod_id = string_id<clothing_mod>;
 
+struct damage_type;
+using damage_type_id = int_id<damage_type>;
+using damage_type_str_id = string_id<damage_type>;
+
 class effect_type;
 using efftype_id = string_id<effect_type>;
 
