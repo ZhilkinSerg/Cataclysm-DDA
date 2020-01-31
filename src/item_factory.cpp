@@ -12,6 +12,7 @@
 
 #include "addiction.h"
 #include "ammo.h"
+#include "ammo_effect.h"
 #include "artifact.h"
 #include "assign.h"
 #include "catacharset.h"
@@ -225,20 +226,17 @@ void Item_factory::finalize_pre( itype &obj )
         const auto &mats = obj.materials;
         if( std::find( mats.begin(), mats.end(), material_id( "hydrocarbons" ) ) == mats.end() &&
             std::find( mats.begin(), mats.end(), material_id( "oil" ) ) == mats.end() ) {
-            const auto &ammo_effects = obj.ammo->ammo_effects;
-            obj.ammo->cookoff = ammo_effects.count( "INCENDIARY" ) > 0 ||
-                                ammo_effects.count( "COOKOFF" ) > 0;
-            static const std::set<std::string> special_cookoff_tags = {{
-                    "NAPALM", "NAPALM_BIG",
-                    "EXPLOSIVE_SMALL", "EXPLOSIVE", "EXPLOSIVE_BIG", "EXPLOSIVE_HUGE",
-                    "TOXICGAS", "TEARGAS", "SMOKE", "SMOKE_BIG",
-                    "FRAG", "FLASHBANG"
+            const std::set<std::string> &ammo_effects = obj.ammo->ammo_effects;
+            for( const ammo_effect &ae : ammo_effects::get_all() ) {
+                if( ammo_effects.count( ae.id.str() ) > 0 ) {
+                    if( ae.cookoff ) {
+                        obj.ammo->cookoff = true;
+                    }
+                    if( ae.special_cookoff ) {
+                        obj.ammo->special_cookoff = true;
+                    }
                 }
-            };
-            obj.ammo->special_cookoff = std::any_of( ammo_effects.begin(), ammo_effects.end(),
-            []( const std::string & s ) {
-                return special_cookoff_tags.count( s ) > 0;
-            } );
+            }
         } else {
             obj.ammo->cookoff = false;
             obj.ammo->special_cookoff = false;

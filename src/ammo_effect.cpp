@@ -86,6 +86,8 @@ void ammo_effect::load( const JsonObject &jo, const std::string & )
     }
     optional( jo, was_loaded, "do_flashbang", do_flashbang, false );
     optional( jo, was_loaded, "do_emp_blast", do_emp_blast, false );
+    optional( jo, was_loaded, "cookoff", cookoff, false );
+    optional( jo, was_loaded, "special_cookoff", special_cookoff, false );
 }
 
 void ammo_effect::finalize()
