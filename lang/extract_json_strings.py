@@ -62,7 +62,6 @@ ignore_files = {os.path.normpath(i) for i in {
 
 # these objects have no translatable strings
 ignorable = {
-    "ammo_effect",
     "behavior",
     "city_building",
     "colordef",
@@ -743,7 +742,12 @@ def extract_field_type(item):
     for fd in item.get("intensity_levels"):
        if "name" in fd:
            writestr(outfile,fd.get("name"))
-            
+
+def extract_ammo_effect(item):
+    outfile = get_outfile("ammo_effect")
+    if "damage_message" in item:
+        writestr(outfile, item.get("damage_message"))
+
 def extract_ter_furn_transform_messages(item):
 	outfile = get_outfile("ter_furn_transform_messages")
 	writestr(outfile,item.get("fail_message"))
@@ -805,6 +809,7 @@ extract_specials = {
     "gate": extract_gate,
     "vehicle_spawn": extract_vehspawn,
     "field_type": extract_field_type,
+    "ammo_effect": extract_ammo_effect,
     "ter_furn_transform": extract_ter_furn_transform_messages,
     "skill_display_type": extract_skill_display_type,
 }

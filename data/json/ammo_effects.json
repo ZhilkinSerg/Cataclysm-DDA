@@ -22,7 +22,8 @@
     },
     "do_flashbang": false,
     "do_emp_blast": false,
-    "special_cookoff": false
+    "special_cookoff": false,
+    "damage_message": "flying projectile"
   },
   {
     "id": "FLAME",
@@ -91,13 +92,15 @@
     "id": "LIGHTNING",
     "type": "ammo_effect",
     "aoe": { "field_type": "fd_electricity", "intensity_min": 3, "intensity_max": 3 },
-    "trail": { "field_type": "fd_electricity", "intensity_min": 2, "intensity_max": 3 }
+    "trail": { "field_type": "fd_electricity", "intensity_min": 2, "intensity_max": 3 },
+    "damage_message": "bolt of electricity"
   },
   {
     "id": "PLASMA",
     "type": "ammo_effect",
     "aoe": { "field_type": "fd_plasma", "intensity_min": 2, "intensity_max": 3, "chance": 50 },
-    "trail": { "field_type": "fd_plasma", "intensity_min": 1, "intensity_max": 2, "chance": 50 }
+    "trail": { "field_type": "fd_plasma", "intensity_min": 1, "intensity_max": 2, "chance": 50 },
+    "damage_message": "bolt of plasma"
   },
   {
     "id": "EXPLOSIVE_HUGE",
@@ -194,7 +197,8 @@
   {
     "id": "LASER",
     "type": "ammo_effect",
-    "trail": { "field_type": "fd_laser", "intensity_min": 2, "intensity_max": 2 }
+    "trail": { "field_type": "fd_laser", "intensity_min": 2, "intensity_max": 2 },
+    "damage_message": "laser beam"
   },
   {
     "id": "DRAW_LASER_BEAM",

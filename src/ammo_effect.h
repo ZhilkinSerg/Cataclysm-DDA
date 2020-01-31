@@ -7,6 +7,7 @@
 
 #include "explosion.h"
 #include "field_type.h"
+#include "translation.h"
 #include "type_id.h"
 
 class JsonObject;
@@ -36,6 +37,8 @@ struct ammo_effect {
         bool do_emp_blast = false;
         bool cookoff = false;
         bool special_cookoff = false;
+
+        translation damage_message;
 
         field_type_id trail_field_type = fd_null;
         /** used during JSON loading only */
