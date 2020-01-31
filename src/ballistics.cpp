@@ -8,6 +8,7 @@
 #include <set>
 #include <vector>
 
+#include "ammo_effect.h"
 #include "avatar.h"
 #include "creature.h"
 #include "dispersion.h"
@@ -204,11 +205,14 @@ dealt_projectile_attack projectile_attack( const projectile &proj_arg, const tri
     }
 
     projectile &proj = attack.proj;
-    const auto &proj_effects = proj.proj_effects;
+    const std::set<std::string> &proj_effects = proj.proj_effects;
 
-    const bool stream = proj_effects.count( "STREAM" ) > 0 ||
-                        proj_effects.count( "STREAM_BIG" ) > 0 ||
-                        proj_effects.count( "JET" ) > 0;
+    bool stream = false;
+    for( const ammo_effect &ae : ammo_effects::get_all() ) {
+        if( proj_effects.count( ae.id.str() ) > 0 ) {
+            stream = stream || ae.is_stream;
+        }
+    }
     const char bullet = stream ? '#' : '*';
     const bool no_item_damage = proj_effects.count( "NO_ITEM_DAMAGE" ) > 0;
     const bool do_draw_line = proj_effects.count( "DRAW_AS_LINE" ) > 0;

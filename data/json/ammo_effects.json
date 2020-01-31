@@ -23,6 +23,7 @@
     "do_flashbang": false,
     "do_emp_blast": false,
     "special_cookoff": false,
+    "is_stream": false,
     "damage_message": "flying projectile"
   },
   {
@@ -175,24 +176,33 @@
     "trail": { "field_type": "fd_smoke", "intensity_min": 1, "intensity_max": 2, "chance": 75 }
   },
   {
+    "id": "JET",
+    "type": "ammo_effect",
+    "is_stream": true
+  },
+  {
     "id": "STREAM",
     "type": "ammo_effect",
-    "trail": { "field_type": "fd_fire", "intensity_min": 1, "intensity_max": 2, "chance": 66 }
+    "trail": { "field_type": "fd_fire", "intensity_min": 1, "intensity_max": 2, "chance": 66 },
+    "is_stream": true
   },
   {
     "id": "STREAM_BIG",
     "type": "ammo_effect",
-    "trail": { "field_type": "fd_fire", "intensity_min": 2, "intensity_max": 2, "chance": 75 }
+    "trail": { "field_type": "fd_fire", "intensity_min": 2, "intensity_max": 2, "chance": 75 },
+    "is_stream": true
   },
   {
     "id": "STREAM_GAS_FUNGICIDAL",
     "type": "ammo_effect",
-    "trail": { "field_type": "fd_fungicidal_gas", "intensity_min": 1, "intensity_max": 2, "chance": 66 }
+    "trail": { "field_type": "fd_fungicidal_gas", "intensity_min": 1, "intensity_max": 2, "chance": 66 },
+    "is_stream": true
   },
   {
     "id": "STREAM_GAS_INSCENTICIDAL",
     "type": "ammo_effect",
-    "trail": { "field_type": "fd_insecticidal_gas", "intensity_min": 1, "intensity_max": 2, "chance": 66 }
+    "trail": { "field_type": "fd_insecticidal_gas", "intensity_min": 1, "intensity_max": 2, "chance": 66 },
+    "is_stream": true
   },
   {
     "id": "LASER",

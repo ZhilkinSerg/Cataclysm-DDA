@@ -37,6 +37,7 @@ struct ammo_effect {
         bool do_emp_blast = false;
         bool cookoff = false;
         bool special_cookoff = false;
+        bool is_stream = false;
 
         translation damage_message;
 
