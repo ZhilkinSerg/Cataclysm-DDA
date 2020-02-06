@@ -904,6 +904,7 @@ void refresh_display()
     draw_terminal_size_preview();
     draw_quick_shortcuts();
     draw_virtual_joystick();
+    handle_special_shortcut();
 #endif
     SDL_RenderPresent( renderer.get() );
     SetRenderTarget( renderer, display_buffer );
@@ -2962,15 +2963,8 @@ static void CheckMessages()
             break;
             case SDL_KEYUP: {
 #if defined(__ANDROID__)
-                bool handle_virtual_keyboard = false;
-                if( handle_special_shortcut() ) {
-                    // Toggle virtual keyboard with tap on special shortcut
-                    handle_virtual_keyboard = true;
-                } else if( ev.key.keysym.sym == SDLK_AC_BACK ) {
-                    // Toggle virtual keyboard with Android back button
-                    handle_virtual_keyboard = true;
-                }
-                if( handle_virtual_keyboard ) {
+                // Toggle virtual keyboard with tap on special shortcut or Android back button
+                if( handle_special_shortcut() || ev.key.keysym.sym == SDLK_AC_BACK ) {
                     if( ticks - ac_back_down_time <= static_cast<uint32_t>
                         ( get_option<int>( "ANDROID_INITIAL_DELAY" ) ) ) {
                         if( SDL_IsTextInputActive() ) {
