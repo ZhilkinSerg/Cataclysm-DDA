@@ -809,6 +809,7 @@ void BitmapFont::OutputChar( const int t, const int x, const int y,
 void draw_terminal_size_preview();
 void draw_quick_shortcuts();
 void draw_virtual_joystick();
+void draw_keyboard_shortcut();
 
 static bool quick_shortcuts_enabled = true;
 
@@ -903,6 +904,7 @@ void refresh_display()
     draw_terminal_size_preview();
     draw_quick_shortcuts();
     draw_virtual_joystick();
+    draw_keyboard_shortcut();
 #endif
     SDL_RenderPresent( renderer.get() );
     SetRenderTarget( renderer, display_buffer );
@@ -2378,6 +2380,33 @@ void draw_virtual_joystick()
     dstrect.x = finger_down_x + ( finger_curr_x - finger_down_x ) / 2 - dstrect.w / 2;
     dstrect.y = finger_down_y + ( finger_curr_y - finger_down_y ) / 2 - dstrect.h / 2;
     RenderCopy( renderer, touch_joystick, NULL, &dstrect );
+
+}
+
+void draw_keyboard_shortcut()
+{
+
+    const int ks_w = get_option<int>( "ANDROID_SPECIAL_SHORTCUT_WIDTH" );
+    const int ks_h = get_option<int>( "ANDROID_SPECIAL_SHORTCUT_HEIGHT" );
+    const point ks_min( get_option<int>( "ANDROID_SPECIAL_SHORTCUT_POS_X" ),
+                        get_option<int>( "ANDROID_SPECIAL_SHORTCUT_POS_Y" ) );
+    const point ks_max( ks_min + point( ks_w, ks_h ) );
+
+    if( finger_curr_x < ks_min.x || finger_curr_x > ks_max.x ||
+        finger_curr_y < ks_min.y || finger_curr_y > ks_max.y ) {
+        return;
+    }
+
+    SDL_Rect rect = { ks_min.x, ks_min.y, ks_w, ks_h };
+    SetRenderDrawColor( renderer, 0, 0, 0,
+                        get_option<int>( "ANDROID_SHORTCUT_OPACITY_BG" ) * 0.01f * 255.0f );
+    SetRenderDrawBlendMode( renderer, SDL_BLENDMODE_BLEND );
+    RenderFillRect( renderer, &rect );
+
+    if( !SDL_IsTextInputActive() ) {
+        SDL_StopTextInput();
+        SDL_StartTextInput();
+    }
 
 }
 

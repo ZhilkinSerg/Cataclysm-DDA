@@ -2373,6 +2373,38 @@ void options_manager::add_options_android()
          50, 1000, 130
        );
 
+    add_empty_line();
+
+    add( "ANDROID_SPECIAL_SHORTCUT_POS_X", "android",
+         translate_marker( "Position of special shortcut (X)" ),
+         translate_marker( "The position of special shortcut on X axis in pixels." ),
+         0, 2048, 16
+       );
+
+    add( "ANDROID_SPECIAL_SHORTCUT_POS_Y", "android",
+         translate_marker( "Position of special shortcut (Y)" ),
+         translate_marker( "The position of special shortcut on Y axis in pixels." ),
+         0, 2048, 16
+       );
+
+    add( "ANDROID_SPECIAL_SHORTCUT_WIDTH", "android",
+         translate_marker( "Size of special shortcut (width)" ),
+         translate_marker( "The width of special shortcut in pixels." ),
+         0, 1024, 64
+       );
+
+    add( "ANDROID_SPECIAL_SHORTCUT_HEIGHT", "android",
+         translate_marker( "Size of special shortcut (height)" ),
+         translate_marker( "The height of special shortcut in pixels." ),
+         0, 1024, 64
+       );
+
+    add( "ANDROID_SPECIAL_SHORTCUT_OPACITY_BG", "android",
+         translate_marker( "Special shortcut opacity (background)" ),
+         translate_marker( "The background opacity of on-screen special shortcut, as a percentage." ),
+         0, 100, 75
+       );
+
 #endif
 }
 
