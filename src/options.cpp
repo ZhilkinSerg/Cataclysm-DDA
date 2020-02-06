@@ -2399,6 +2399,24 @@ void options_manager::add_options_android()
          0, 1024, 64
        );
 
+    add( "ANDROID_SPECIAL_SHORTCUT_COLOR_R_BG", "android",
+         translate_marker( "Special shortcut color R component  (background)" ),
+         translate_marker( "The Red background color component of on-screen special shortcut." ),
+         0, 255, 255
+       );
+
+    add( "ANDROID_SPECIAL_SHORTCUT_COLOR_G_BG", "android",
+         translate_marker( "Special shortcut color G component  (background)" ),
+         translate_marker( "The Green background color component of on-screen special shortcut." ),
+         0, 255, 0
+       );
+
+    add( "ANDROID_SPECIAL_SHORTCUT_COLOR_B_BG", "android",
+         translate_marker( "Special shortcut color B component (background)" ),
+         translate_marker( "The Blue background color component of on-screen special shortcut." ),
+         0, 255, 0
+       );
+
     add( "ANDROID_SPECIAL_SHORTCUT_OPACITY_BG", "android",
          translate_marker( "Special shortcut opacity (background)" ),
          translate_marker( "The background opacity of on-screen special shortcut, as a percentage." ),

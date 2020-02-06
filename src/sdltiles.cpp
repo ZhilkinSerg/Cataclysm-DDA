@@ -2398,14 +2398,22 @@ void draw_keyboard_shortcut()
     }
 
     SDL_Rect rect = { ks_min.x, ks_min.y, ks_w, ks_h };
-    SetRenderDrawColor( renderer, 0, 0, 0,
-                        get_option<int>( "ANDROID_SHORTCUT_OPACITY_BG" ) * 0.01f * 255.0f );
+    SetRenderDrawColor( renderer,
+                        get_option<int>( "ANDROID_SPECIAL_SHORTCUT_COLOR_R_BG" ),
+                        get_option<int>( "ANDROID_SPECIAL_SHORTCUT_COLOR_G_BG" ),
+                        get_option<int>( "ANDROID_SPECIAL_SHORTCUT_COLOR_B_BG" ),
+                        get_option<int>( "ANDROID_SPECIAL_SHORTCUT_OPACITY_BG" ) * 0.01f * 255.0f );
     SetRenderDrawBlendMode( renderer, SDL_BLENDMODE_BLEND );
     RenderFillRect( renderer, &rect );
+    SetRenderDrawColor( renderer, 255, 255, 255,
+                        get_option<int>( "ANDROID_SPECIAL_SHORTCUT_OPACITY_BG" ) * 0.01f * 255.0f );
+    SDL_RenderDrawRect( renderer.get(), &rect );
 
     if( !SDL_IsTextInputActive() ) {
         SDL_StopTextInput();
         SDL_StartTextInput();
+    } else {
+        SDL_StopTextInput();
     }
 
 }
