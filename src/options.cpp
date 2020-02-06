@@ -2378,49 +2378,25 @@ void options_manager::add_options_android()
     add( "ANDROID_SPECIAL_SHORTCUT_POS_X", "android",
          translate_marker( "Position of special shortcut (X)" ),
          translate_marker( "The position of special shortcut on X axis in pixels." ),
-         0, 2048, 16
+         0, 4096, 16
        );
 
     add( "ANDROID_SPECIAL_SHORTCUT_POS_Y", "android",
          translate_marker( "Position of special shortcut (Y)" ),
          translate_marker( "The position of special shortcut on Y axis in pixels." ),
-         0, 2048, 16
+         0, 4096, 16
        );
 
     add( "ANDROID_SPECIAL_SHORTCUT_WIDTH", "android",
          translate_marker( "Size of special shortcut (width)" ),
          translate_marker( "The width of special shortcut in pixels." ),
-         0, 1024, 64
+         0, 4096, 64
        );
 
     add( "ANDROID_SPECIAL_SHORTCUT_HEIGHT", "android",
          translate_marker( "Size of special shortcut (height)" ),
          translate_marker( "The height of special shortcut in pixels." ),
-         0, 1024, 64
-       );
-
-    add( "ANDROID_SPECIAL_SHORTCUT_COLOR_R_BG", "android",
-         translate_marker( "Special shortcut color R component  (background)" ),
-         translate_marker( "The Red background color component of on-screen special shortcut." ),
-         0, 255, 255
-       );
-
-    add( "ANDROID_SPECIAL_SHORTCUT_COLOR_G_BG", "android",
-         translate_marker( "Special shortcut color G component  (background)" ),
-         translate_marker( "The Green background color component of on-screen special shortcut." ),
-         0, 255, 0
-       );
-
-    add( "ANDROID_SPECIAL_SHORTCUT_COLOR_B_BG", "android",
-         translate_marker( "Special shortcut color B component (background)" ),
-         translate_marker( "The Blue background color component of on-screen special shortcut." ),
-         0, 255, 0
-       );
-
-    add( "ANDROID_SPECIAL_SHORTCUT_OPACITY_BG", "android",
-         translate_marker( "Special shortcut opacity (background)" ),
-         translate_marker( "The background opacity of on-screen special shortcut, as a percentage." ),
-         0, 100, 75
+         0, 4096, 64
        );
 
 #endif
