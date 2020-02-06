@@ -2413,8 +2413,10 @@ void draw_keyboard_shortcut()
         } else {
             SDL_StartTextInput();
         }
+        special_shortcut_time = 0;
+    } else {
+        special_shortcut_time = ticks;
     }
-    special_shortcut_time = 0;
 }
 
 float clmp( float value, float low, float high )
