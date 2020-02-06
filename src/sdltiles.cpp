@@ -2406,8 +2406,6 @@ void draw_keyboard_shortcut()
     if( !SDL_IsTextInputActive() ) {
         SDL_StopTextInput();
         SDL_StartTextInput();
-    } else {
-        SDL_StopTextInput();
     }
 }
 
