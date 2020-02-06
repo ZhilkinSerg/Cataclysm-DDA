@@ -2409,6 +2409,7 @@ void draw_keyboard_shortcut()
                         get_option<int>( "ANDROID_SPECIAL_SHORTCUT_OPACITY_BG" ) * 0.01f * 255.0f );
     SDL_RenderDrawRect( renderer.get(), &rect );
 
+    uint32_t ticks = SDL_GetTicks();
     if( ticks - ac_back_down_time <= static_cast<uint32_t>
         ( get_option<int>( "ANDROID_INITIAL_DELAY" ) ) ) {
         if( SDL_IsTextInputActive() ) {
