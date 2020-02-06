@@ -809,7 +809,7 @@ void BitmapFont::OutputChar( const int t, const int x, const int y,
 void draw_terminal_size_preview();
 void draw_quick_shortcuts();
 void draw_virtual_joystick();
-void draw_keyboard_shortcut();
+void handle_special_shortcut();
 
 static bool quick_shortcuts_enabled = true;
 
@@ -904,7 +904,6 @@ void refresh_display()
     draw_terminal_size_preview();
     draw_quick_shortcuts();
     draw_virtual_joystick();
-    draw_keyboard_shortcut();
 #endif
     SDL_RenderPresent( renderer.get() );
     SetRenderTarget( renderer, display_buffer );
@@ -2385,10 +2384,8 @@ void draw_virtual_joystick()
 
 }
 
-void draw_keyboard_shortcut()
+bool handle_special_shortcut()
 {
-    uint32_t ticks = SDL_GetTicks();
-
     const int ks_w = get_option<int>( "ANDROID_SPECIAL_SHORTCUT_WIDTH" );
     const int ks_h = get_option<int>( "ANDROID_SPECIAL_SHORTCUT_HEIGHT" );
     const point ks_min( get_option<int>( "ANDROID_SPECIAL_SHORTCUT_POS_X" ),
@@ -2397,7 +2394,7 @@ void draw_keyboard_shortcut()
 
     if( finger_curr_x < ks_min.x || finger_curr_x > ks_max.x ||
         finger_curr_y < ks_min.y || finger_curr_y > ks_max.y ) {
-        return;
+        return false;
     }
 
     SDL_Rect rect = { ks_min.x, ks_min.y, ks_w, ks_h };
@@ -2405,18 +2402,7 @@ void draw_keyboard_shortcut()
                         get_option<int>( "ANDROID_SHORTCUT_OPACITY_BG" ) * 0.01f * 255.0f );
     SetRenderDrawBlendMode( renderer, SDL_BLENDMODE_BLEND );
     RenderFillRect( renderer, &rect );
-
-    if( ticks - special_shortcut_time <= static_cast<uint32_t>
-        ( get_option<int>( "ANDROID_SPECIAL_SHORTCUT_INITIAL_DELAY" ) ) ) {
-        if( SDL_IsTextInputActive() ) {
-            SDL_StopTextInput();
-        } else {
-            SDL_StartTextInput();
-        }
-        special_shortcut_time = 0;
-    } else {
-        special_shortcut_time = ticks;
-    }
+    return true;
 }
 
 float clmp( float value, float low, float high )
@@ -2931,8 +2917,9 @@ static void CheckMessages()
                 break;
             case SDL_KEYDOWN: {
 #if defined(__ANDROID__)
-                // Toggle virtual keyboard with Android back button. For some reason I get double inputs, so ignore everything once it's already down.
-                if( ev.key.keysym.sym == SDLK_AC_BACK && ac_back_down_time == 0 ) {
+                // Toggle virtual keyboard with tap on special shortcut or Android back button.
+                // For some reason I get double inputs, so ignore everything once it's already down.
+                if( ( handle_special_shortcut() || ev.key.keysym.sym == SDLK_AC_BACK ) && ac_back_down_time == 0 ) {
                     ac_back_down_time = ticks;
                     quick_shortcuts_toggle_handled = false;
                 }
@@ -2975,8 +2962,15 @@ static void CheckMessages()
             break;
             case SDL_KEYUP: {
 #if defined(__ANDROID__)
-                // Toggle virtual keyboard with Android back button
-                if( ev.key.keysym.sym == SDLK_AC_BACK ) {
+                bool handle_virtual_keyboard = false;
+                if( handle_special_shortcut() ) {
+                    // Toggle virtual keyboard with tap on special shortcut
+                    handle_virtual_keyboard = true;
+                } else if( ev.key.keysym.sym == SDLK_AC_BACK ) {
+                    // Toggle virtual keyboard with Android back button
+                    handle_virtual_keyboard = true;
+                }
+                if( handle_virtual_keyboard ) {
                     if( ticks - ac_back_down_time <= static_cast<uint32_t>
                         ( get_option<int>( "ANDROID_INITIAL_DELAY" ) ) ) {
                         if( SDL_IsTextInputActive() ) {
