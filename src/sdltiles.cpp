@@ -809,7 +809,7 @@ void BitmapFont::OutputChar( const int t, const int x, const int y,
 void draw_terminal_size_preview();
 void draw_quick_shortcuts();
 void draw_virtual_joystick();
-void handle_special_shortcut();
+bool handle_special_shortcut();
 
 static bool quick_shortcuts_enabled = true;
 
