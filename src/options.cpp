@@ -2399,6 +2399,12 @@ void options_manager::add_options_android()
          0, 4096, 64
        );
 
+    add( "ANDROID_SPECIAL_SHORTCUT_INITIAL_DELAY", "android",
+         translate_marker( "Input repeat delay (special shortcut)" ),
+         translate_marker( "While touching the special shortcut, wait this long before repeating input, in milliseconds." ),
+         150, 1000, 600
+       );
+
 #endif
 }
 

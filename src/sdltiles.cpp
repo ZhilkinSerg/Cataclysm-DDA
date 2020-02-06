@@ -1827,6 +1827,8 @@ static uint32_t finger_repeat_time = 0;
 static uint32_t last_tap_time = 0;
 // when did the hardware back button start being pressed? 0 if not touching, otherwise the time in milliseconds.
 static uint32_t ac_back_down_time = 0;
+// when did the special shortcut was touched last time? 0 if not touching, otherwise the time in milliseconds.
+static uint32_t special_shortcut_time = 0;
 // has a second finger touched the screen while the first was touching?
 static bool is_two_finger_touch = false;
 // did this touch start on a quick shortcut?
@@ -2385,6 +2387,7 @@ void draw_virtual_joystick()
 
 void draw_keyboard_shortcut()
 {
+    uint32_t ticks = SDL_GetTicks();
 
     const int ks_w = get_option<int>( "ANDROID_SPECIAL_SHORTCUT_WIDTH" );
     const int ks_h = get_option<int>( "ANDROID_SPECIAL_SHORTCUT_HEIGHT" );
@@ -2403,10 +2406,15 @@ void draw_keyboard_shortcut()
     SetRenderDrawBlendMode( renderer, SDL_BLENDMODE_BLEND );
     RenderFillRect( renderer, &rect );
 
-    if( !SDL_IsTextInputActive() ) {
-        SDL_StopTextInput();
-        SDL_StartTextInput();
+    if( ticks - special_shortcut_time <= static_cast<uint32_t>
+        ( get_option<int>( "ANDROID_SPECIAL_SHORTCUT_INITIAL_DELAY" ) ) ) {
+        if( SDL_IsTextInputActive() ) {
+            SDL_StopTextInput();
+        } else {
+            SDL_StartTextInput();
+        }
     }
+    special_shortcut_time = 0;
 }
 
 float clmp( float value, float low, float high )
