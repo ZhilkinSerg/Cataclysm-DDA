@@ -3101,7 +3101,11 @@ static void CheckMessages()
                 }
                 break;
             case SDL_FINGERDOWN:
-                if( ev.tfinger.fingerId == 0 ) {
+                // Toggle virtual keyboard with tap on special shortcut.
+                if( handle_special_shortcut() && ac_back_down_time == 0 ) {
+                    ac_back_down_time = ticks;
+                    quick_shortcuts_toggle_handled = false;
+                } else if( ev.tfinger.fingerId == 0 ) {
                     finger_down_x = finger_curr_x = ev.tfinger.x * WindowWidth;
                     finger_down_y = finger_curr_y = ev.tfinger.y * WindowHeight;
                     finger_down_time = ticks;
@@ -3120,7 +3124,18 @@ static void CheckMessages()
                 }
                 break;
             case SDL_FINGERUP:
-                if( ev.tfinger.fingerId == 0 ) {
+                // Toggle virtual keyboard with tap on special shortcut
+                if( handle_special_shortcut() ) {
+                    if( ticks - ac_back_down_time <= static_cast<uint32_t>
+                        ( get_option<int>( "ANDROID_INITIAL_DELAY" ) ) ) {
+                        if( SDL_IsTextInputActive() ) {
+                            SDL_StopTextInput();
+                        } else {
+                            SDL_StartTextInput();
+                        }
+                    }
+                    ac_back_down_time = 0;
+                } else if( ev.tfinger.fingerId == 0 ) {
                     finger_curr_x = ev.tfinger.x * WindowWidth;
                     finger_curr_y = ev.tfinger.y * WindowHeight;
                     if( is_quick_shortcut_touch ) {
