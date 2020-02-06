@@ -8,6 +8,8 @@
 #include "activity_handlers.h"
 #include "assign.h"
 #include "debug.h"
+#include "enums.h"
+#include "generic_factory.h"
 #include "json.h"
 #include "sounds.h"
 #include "translations.h"
@@ -31,11 +33,26 @@ const activity_type &string_id<activity_type>::obj() const
     return found->second;
 }
 
-static const std::unordered_map< std::string, based_on_type > based_on_type_values = {
-    { "time", based_on_type::TIME },
-    { "speed", based_on_type::SPEED },
-    { "neither", based_on_type::NEITHER }
-};
+namespace io
+{
+
+template<>
+std::string enum_to_string<based_on_type>( based_on_type data )
+{
+    switch( data ) {
+            // *INDENT-OFF*
+        case based_on_type::TIME: return "time";
+        case based_on_type::SPEED: return "speed";
+        case based_on_type::NEITHER: return "neither";
+            // *INDENT-ON*
+        case based_on_type::NUM_BASED_ON_TYPE:
+            break;
+    }
+    debugmsg( "Invalid based_on_type" );
+    abort();
+}
+
+} // namespace io
 
 static const std::map<std::string, float> activity_levels = {
     { "NO_EXERCISE", NO_EXERCISE },
@@ -65,7 +82,8 @@ void activity_type::load( const JsonObject &jo )
     }
     result.activity_level = activity_levels.find( activity_level )->second;
 
-    result.based_on_ = io::string_to_enum_look_up( based_on_type_values, jo.get_string( "based_on" ) );
+    const auto based_on_type_reader = enum_flags_reader<based_on_type> { "based on types" };
+    optional( jo, false, "based_on", result.based_on_, based_on_type_reader );
 
     if( activity_type_all.find( result.id_ ) != activity_type_all.end() ) {
         debugmsg( "Redefinition of %s", result.id_.c_str() );
