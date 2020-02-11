@@ -1,0 +1,34 @@
+[
+  {
+    "id": "MM_NULL",
+    "type": "move_mode",
+    "name": "MM_NULL",
+    "description": "MM_NULL description",
+    "speed_modifier": 1.0,
+    "stamina_spent_per_second": 0
+  },
+  {
+    "id": "MM_WALK",
+    "type": "move_mode",
+    "name": "Walk",
+    "description": "MM_WALK description",
+    "speed_modifier": 1.0,
+    "stamina_spent_per_second": 0
+  },
+  {
+    "id": "MM_RUN",
+    "type": "move_mode",
+    "name": "Run",
+    "description": "MM_RUN description",
+    "speed_modifier": 1.0,
+    "stamina_spent_per_second": 0
+  },
+  {
+    "id": "MM_CROUCH",
+    "type": "move_mode",
+    "name": "Crouch",
+    "description": "MM_CROUCH description",
+    "speed_modifier": 1.0,
+    "stamina_spent_per_second": 0
+  }
+]
