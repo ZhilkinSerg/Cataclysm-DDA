@@ -80,6 +80,7 @@ struct sound_event {
     bool footstep;
     std::string id;
     std::string variant;
+    std::string fallback;
 };
 
 struct centroid {
@@ -133,7 +134,8 @@ void sounds::ambient_sound( const tripoint &p, int vol, sound_t category,
 }
 
 void sounds::sound( const tripoint &p, int vol, sound_t category, const std::string &description,
-                    bool ambient, const std::string &id, const std::string &variant )
+                    bool ambient, const std::string &id, const std::string &variant,
+                    const std::string &fallback )
 {
     if( vol < 0 ) {
         // Bail out if no volume.
@@ -147,20 +149,21 @@ void sounds::sound( const tripoint &p, int vol, sound_t category, const std::str
     recent_sounds.emplace_back( std::make_pair( p, vol ) );
     sounds_since_last_turn.emplace_back( std::make_pair( p,
                                          sound_event {vol, category, description, ambient,
-                                                 false, id, variant} ) );
+                                                 false, id, variant, fallback} ) );
 }
 
 void sounds::sound( const tripoint &p, int vol, sound_t category, const translation &description,
-                    bool ambient, const std::string &id, const std::string &variant )
+                    bool ambient, const std::string &id, const std::string &variant,
+                    const std::string &fallback )
 {
-    sounds::sound( p, vol, category, description.translated(), ambient, id, variant );
+    sounds::sound( p, vol, category, description.translated(), ambient, id, variant, fallback );
 }
 
 void sounds::add_footstep( const tripoint &p, int volume, int, monster *,
                            const std::string &footstep )
 {
     sounds_since_last_turn.emplace_back( std::make_pair( p, sound_event { volume,
-                                         sound_t::movement, footstep, false, true, "", ""} ) );
+                                         sound_t::movement, footstep, false, true, "", "", ""} ) );
 }
 
 template <typename C>
@@ -467,8 +470,9 @@ void sounds::process_sound_markers( player *p )
 
         const std::string &sfx_id = sound.id;
         const std::string &sfx_variant = sound.variant;
-        if( !sfx_id.empty() ) {
-            sfx::play_variant_sound( sfx_id, sfx_variant, sfx::get_heard_volume( pos ) );
+        const std::string &sfx_fallback = sound.fallback;
+        if( !sfx_id.empty() || !sfx_fallback.empty() ) {
+            sfx::play_variant_sound( sfx_id, sfx_variant, sfx::get_heard_volume( pos ), sfx_fallback );
         }
 
         // Place footstep markers.
@@ -633,7 +637,8 @@ void sfx::do_vehicle_engine_sfx()
     for( size_t e = 0; e < veh->engines.size(); ++e ) {
         if( veh->is_engine_on( e ) ) {
             if( sfx::has_variant_sound( "engine_working_internal",
-                                        veh->part_info( veh->engines[ e ] ).get_id().str() ) ) {
+                                        veh->part_info( veh->engines[ e ] ).get_id().str(),
+                                        veh->part_info( veh->engines[ e ] ).sounds_like ) ) {
                 id_and_variant = std::make_pair( "engine_working_internal",
                                                  veh->part_info( veh->engines[ e ] ).get_id().str() );
             } else if( veh->is_engine_type( e, fuel_type_muscle ) ) {
@@ -760,7 +765,8 @@ void sfx::do_vehicle_exterior_engine_sfx()
     for( size_t e = 0; e < veh->engines.size(); ++e ) {
         if( veh->is_engine_on( e ) ) {
             if( sfx::has_variant_sound( "engine_working_external",
-                                        veh->part_info( veh->engines[ e ] ).get_id().str() ) ) {
+                                        veh->part_info( veh->engines[ e ] ).get_id().str(),
+                                        veh->part_info( veh->engines[ e ] ).sounds_like ) ) {
                 id_and_variant = std::make_pair( "engine_working_external",
                                                  veh->part_info( veh->engines[ e ] ).get_id().str() );
             } else if( veh->is_engine_type( e, fuel_type_muscle ) ) {
@@ -930,6 +936,7 @@ void sfx::generate_gun_sound( const player &source_arg, const item &firing )
     }
 
     itype_id weapon_id = firing.typeId();
+    itype_id weapon_fallback = firing.type->sounds_like;
     int angle = 0;
     int distance = 0;
     std::string selected_sound;
@@ -955,7 +962,7 @@ void sfx::generate_gun_sound( const player &source_arg, const item &firing )
         }
     }
 
-    play_variant_sound( selected_sound, weapon_id, heard_volume, angle, 0.8, 1.2 );
+    play_variant_sound( selected_sound, weapon_id, heard_volume, angle, 0.8, 1.2, weapon_fallback );
     start_sfx_timestamp = std::chrono::high_resolution_clock::now();
 }
 
@@ -1352,8 +1359,8 @@ void sfx::do_footstep()
             play_variant_sound( "plmove", "walk_barefoot", heard_volume, 0, 0.8, 1.2 );
             start_sfx_timestamp = std::chrono::high_resolution_clock::now();
             return;
-        } else if( sfx::has_variant_sound( "plmove", terrain.str() ) ) {
-            play_variant_sound( "plmove", terrain.str(), heard_volume, 0, 0.8, 1.2 );
+        } else if( sfx::has_variant_sound( "plmove", terrain.str(), terrain.obj().sounds_like ) ) {
+            play_variant_sound( "plmove", terrain.str(), heard_volume, 0, 0.8, 1.2, terrain.obj().sounds_like );
             start_sfx_timestamp = std::chrono::high_resolution_clock::now();
             return;
         } else if( grass.count( terrain ) > 0 ) {
@@ -1384,7 +1391,7 @@ void sfx::do_footstep()
     }
 }
 
-void sfx::do_obstacle( const std::string &obst )
+void sfx::do_obstacle( const std::string &obst, const std::string &obst_fallback )
 {
     int heard_volume = sfx::get_heard_volume( g->u.pos() );
     //const auto terrain = g->m.ter( g->u.pos() ).id();
@@ -1398,8 +1405,8 @@ void sfx::do_obstacle( const std::string &obst )
         "t_water_pool",
         "t_sewage",
     };
-    if( sfx::has_variant_sound( "plmove", obst ) ) {
-        play_variant_sound( "plmove", obst, heard_volume, 0, 0.8, 1.2 );
+    if( sfx::has_variant_sound( "plmove", obst, obst_fallback ) ) {
+        play_variant_sound( "plmove", obst, heard_volume, 0, 0.8, 1.2, obst_fallback );
     } else if( water.count( obst ) > 0 ) {
         play_variant_sound( "plmove", "walk_water", heard_volume, 0, 0.8, 1.2 );
     } else {
@@ -1407,11 +1414,13 @@ void sfx::do_obstacle( const std::string &obst )
     }
 }
 
-void sfx::play_activity_sound( const std::string &id, const std::string &variant, int volume )
+void sfx::play_activity_sound( const std::string &id, const std::string &variant, int volume,
+                               const std::string &fallback )
 {
     if( act != g->u.activity.id() ) {
         act = g->u.activity.id();
-        play_ambient_variant_sound( id, variant, volume, channel::player_activities, 0 );
+        play_ambient_variant_sound( id, variant, volume, channel::player_activities, 0, -1, -1,
+                                    fallback );
     }
 }
 
@@ -1428,11 +1437,13 @@ void sfx::end_activity_sounds()
 void sfx::load_sound_effects( const JsonObject & ) { }
 void sfx::load_sound_effect_preload( const JsonObject & ) { }
 void sfx::load_playlist( const JsonObject & ) { }
-void sfx::play_variant_sound( const std::string &, const std::string &, int, int, double, double ) { }
-void sfx::play_variant_sound( const std::string &, const std::string &, int ) { }
+void sfx::play_variant_sound( const std::string &, const std::string &, int, int, double, double,
+                              const std::string & ) { }
+void sfx::play_variant_sound( const std::string &, const std::string &, int, const std::string & ) { }
 void sfx::play_ambient_variant_sound( const std::string &, const std::string &, int, channel, int,
-                                      double, int ) { }
-void sfx::play_activity_sound( const std::string &, const std::string &, int ) { }
+                                      double, int, const std::string & ) { }
+void sfx::play_activity_sound( const std::string &, const std::string &, int,
+                               const std::string & ) { }
 void sfx::end_activity_sounds() { }
 void sfx::generate_gun_sound( const player &, const item & ) { }
 void sfx::generate_melee_sound( const tripoint &, const tripoint &, bool, bool,
@@ -1455,7 +1466,7 @@ int sfx::set_channel_volume( channel, int )
 {
     return 0;
 }
-bool sfx::has_variant_sound( const std::string &, const std::string & )
+bool sfx::has_variant_sound( const std::string &, const std::string &, const std::string & )
 {
     return false;
 }
@@ -1463,7 +1474,7 @@ void sfx::stop_sound_effect_fade( channel, int ) { }
 void sfx::stop_sound_effect_timed( channel, int ) {}
 void sfx::do_player_death_hurt( const player &, bool ) { }
 void sfx::do_fatigue() { }
-void sfx::do_obstacle( const std::string & ) { }
+void sfx::do_obstacle( const std::string &, const std::string & ) { }
 /*@}*/
 
 #endif // if defined(SDL_SOUND)

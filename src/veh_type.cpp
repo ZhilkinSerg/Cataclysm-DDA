@@ -299,10 +299,14 @@ void vpart_info::load( const JsonObject &jo, const std::string &src )
         if( base != vpart_info_all.end() ) {
             def = base->second;
             def.looks_like = base->second.id.str();
+            def.sounds_like = base->second.id.str();
         } else if( ab != abstract_parts.end() ) {
             def = ab->second;
             if( def.looks_like.empty() ) {
                 def.looks_like = ab->second.id.str();
+            }
+            if( def.sounds_like.empty() ) {
+                def.sounds_like = ab->second.id.str();
             }
         } else {
             deferred.emplace_back( jo.str(), src );
@@ -377,6 +381,7 @@ void vpart_info::load( const JsonObject &jo, const std::string &src )
         def.sym_broken = jo.get_string( "broken_symbol" )[ 0 ];
     }
     jo.read( "looks_like", def.looks_like );
+    jo.read( "sounds_like", def.sounds_like );
 
     if( jo.has_member( "color" ) ) {
         def.color = color_from_string( jo.get_string( "color" ) );

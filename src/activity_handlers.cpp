@@ -1911,7 +1911,8 @@ void activity_handlers::reload_finish( player_activity *act, player *p )
             }
         }
         if( reloadable.type->gun->reload_noise_volume > 0 ) {
-            sfx::play_variant_sound( "reload", reloadable.typeId(), sfx::get_heard_volume( p->pos() ) );
+            sfx::play_variant_sound( "reload", reloadable.typeId(), sfx::get_heard_volume( p->pos() ),
+                                     reloadable.type->sounds_like );
             sounds::ambient_sound( p->pos(), reloadable.type->gun->reload_noise_volume,
                                    sounds::sound_t::activity, reloadable.type->gun->reload_noise );
         }

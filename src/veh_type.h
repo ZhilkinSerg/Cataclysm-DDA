@@ -172,6 +172,9 @@ class vpart_info
         /** hint to tilesets for what tile to use if this part doesn't have one */
         std::string looks_like;
 
+        /** hint to soundpacks for what sound to use if this part doesn't have one */
+        std::string sounds_like;
+
         /** Maximum damage part can sustain before being destroyed */
         int durability = 0;
 

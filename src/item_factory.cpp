@@ -1445,6 +1445,7 @@ bool Item_factory::load_definition( const JsonObject &jo, const std::string &src
     if( base != m_templates.end() ) {
         def = base->second;
         def.looks_like = jo.get_string( "copy-from" );
+        def.sounds_like = jo.get_string( "copy-from" );
         return true;
     }
 
@@ -1453,6 +1454,9 @@ bool Item_factory::load_definition( const JsonObject &jo, const std::string &src
         def = abstract->second;
         if( def.looks_like.empty() ) {
             def.looks_like = jo.get_string( "copy-from" );
+        }
+        if( def.sounds_like.empty() ) {
+            def.sounds_like = jo.get_string( "copy-from" );
         }
         return true;
     }
@@ -2354,6 +2358,7 @@ void Item_factory::load_basic_info( const JsonObject &jo, itype &def, const std:
     }
 
     jo.read( "looks_like", def.looks_like );
+    jo.read( "sounds_like", def.sounds_like );
 
     if( jo.has_member( "conditional_names" ) ) {
         def.conditional_names.clear();

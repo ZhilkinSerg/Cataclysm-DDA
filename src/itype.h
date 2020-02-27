@@ -865,6 +865,9 @@ struct itype {
         // a hint for tilesets: if it doesn't have a tile, what does it look like?
         std::string looks_like;
 
+        // a hint for soundpacks: if it doesn't have a sound, what does it sound like?
+        std::string sounds_like;
+
         // What item this item repairs like if it doesn't have a recipe
         itype_id repairs_like;
 

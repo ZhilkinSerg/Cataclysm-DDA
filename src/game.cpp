@@ -8938,19 +8938,21 @@ bool game::walk_move( const tripoint &dest_loc )
             if( auto displayed_part = vp_there.part_displayed() ) {
                 add_msg( m_warning, _( "Moving onto this %s is slow!" ),
                          displayed_part->part().name() );
-                sfx::do_obstacle( displayed_part->part().info().get_id().str() );
+                sfx::do_obstacle( displayed_part->part().info().get_id().str(),
+                                  displayed_part->part().info().sounds_like );
             } else {
                 add_msg( m_warning, _( "Moving onto this %s is slow!" ), m.name( dest_loc ) );
-                sfx::do_obstacle( m.ter( dest_loc ).id().str() );
+                sfx::do_obstacle( m.ter( dest_loc ).id().str(), m.ter( dest_loc ).obj().sounds_like );
             }
         } else {
             if( auto displayed_part = vp_here.part_displayed() ) {
                 add_msg( m_warning, _( "Moving off of this %s is slow!" ),
                          displayed_part->part().name() );
-                sfx::do_obstacle( displayed_part->part().info().get_id().str() );
+                sfx::do_obstacle( displayed_part->part().info().get_id().str(),
+                                  displayed_part->part().info().sounds_like );
             } else {
                 add_msg( m_warning, _( "Moving off of this %s is slow!" ), m.name( u.pos() ) );
-                sfx::do_obstacle( m.ter( u.pos() ).id().str() );
+                sfx::do_obstacle( m.ter( u.pos() ).id().str(), m.ter( u.pos() ).obj().sounds_like );
             }
         }
     }

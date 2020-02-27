@@ -606,7 +606,7 @@ void vehicle::use_controls( const tripoint &pos )
                     if( is_engine_on( e ) ) {
                         if( sfx::has_variant_sound( "engine_stop", parts[ engines[ e ] ].info().get_id().str() ) ) {
                             sfx::play_variant_sound( "engine_stop", parts[ engines[ e ] ].info().get_id().str(),
-                                                     parts[ engines[ e ] ].info().engine_noise_factor() );
+                                                     parts[ engines[ e ] ].info().engine_noise_factor(), parts[ engines[ e ] ].info().sounds_like );
                         } else if( is_engine_type( e, fuel_type_muscle ) ) {
                             sfx::play_variant_sound( "engine_stop", "muscle",
                                                      parts[ engines[ e ] ].info().engine_noise_factor() );
@@ -957,9 +957,9 @@ bool vehicle::start_engine( const int e )
     sounds::sound( pos, eng.info().engine_noise_factor(), sounds::sound_t::movement,
                    string_format( _( "the %s starting" ), eng.name() ) );
 
-    if( sfx::has_variant_sound( "engine_start", eng.info().get_id().str() ) ) {
+    if( sfx::has_variant_sound( "engine_start", eng.info().get_id().str(), eng.info().sounds_like ) ) {
         sfx::play_variant_sound( "engine_start", eng.info().get_id().str(),
-                                 eng.info().engine_noise_factor() );
+                                 eng.info().engine_noise_factor(), eng.info().sounds_like );
     } else if( is_engine_type( e, fuel_type_muscle ) ) {
         sfx::play_variant_sound( "engine_start", "muscle", eng.info().engine_noise_factor() );
     } else if( is_engine_type( e, fuel_type_wind ) ) {
@@ -979,9 +979,13 @@ void vehicle::stop_engines()
     add_msg( _( "You turn the engine off." ) );
     for( size_t e = 0; e < engines.size(); ++e ) {
         if( is_engine_on( e ) ) {
-            if( sfx::has_variant_sound( "engine_stop", parts[ engines[ e ] ].info().get_id().str() ) ) {
-                sfx::play_variant_sound( "engine_stop", parts[ engines[ e ] ].info().get_id().str(),
-                                         parts[ engines[ e ] ].info().engine_noise_factor() );
+            if( sfx::has_variant_sound( "engine_stop",
+                                        parts[ engines[ e ] ].info().get_id().str(),
+                                        parts[ engines[ e ] ].info().sounds_like ) ) {
+                sfx::play_variant_sound( "engine_stop",
+                                         parts[ engines[ e ] ].info().get_id().str(),
+                                         parts[ engines[ e ] ].info().engine_noise_factor(),
+                                         parts[ engines[ e ] ].info().sounds_like );
             } else if( is_engine_type( e, fuel_type_battery ) ) {
                 sfx::play_variant_sound( "engine_stop", "electric",
                                          parts[ engines[ e ] ].info().engine_noise_factor() );

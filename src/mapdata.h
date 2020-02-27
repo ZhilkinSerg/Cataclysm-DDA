@@ -254,6 +254,7 @@ struct map_data_common_t {
         void load_symbol( const JsonObject &jo );
 
         std::string looks_like;
+        std::string sounds_like;
 
         iexamine_function examine; //What happens when the terrain/furniture is examined
 

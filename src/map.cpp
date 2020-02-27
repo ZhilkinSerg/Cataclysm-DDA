@@ -2946,6 +2946,7 @@ void map::bash_ter_furn( const tripoint &p, bash_params &params )
     int sound_volume = 0;
     std::string soundfxid;
     std::string soundfxvariant;
+    std::string soundfxvariant_fallback;
     const auto &terid = ter( p ).obj();
     const auto &furnid = furn( p ).obj();
     bool smash_furn = false;
@@ -3049,8 +3050,10 @@ void map::bash_ter_furn( const tripoint &p, bash_params &params )
 
     if( smash_furn ) {
         soundfxvariant = furnid.id.str();
+        soundfxvariant_fallback = furnid.sounds_like;
     } else {
         soundfxvariant = terid.id.str();
+        soundfxvariant_fallback = terid.sounds_like;
     }
 
     if( !params.destroy && !success ) {
@@ -3064,7 +3067,7 @@ void map::bash_ter_furn( const tripoint &p, bash_params &params )
         if( !params.silent ) {
             sound = bash->sound_fail;
             sounds::sound( p, sound_volume, sounds::sound_t::combat, sound, false,
-                           "smash_fail", soundfxvariant );
+                           "smash_fail", soundfxvariant, soundfxvariant_fallback );
         }
 
         return;
@@ -3211,7 +3214,7 @@ void map::bash_ter_furn( const tripoint &p, bash_params &params )
     params.bashed_solid = true;
     if( !sound.empty() && !params.silent ) {
         sounds::sound( p, sound_volume, sounds::sound_t::combat, sound, false,
-                       soundfxid, soundfxvariant );
+                       soundfxid, soundfxvariant, soundfxvariant_fallback );
     }
 }
 
@@ -3703,7 +3706,7 @@ bool map::open_door( const tripoint &p, const bool inside, const bool check_only
 
         if( !check_only ) {
             sounds::sound( p, 6, sounds::sound_t::movement, _( "swish" ), true,
-                           "open_door", ter.id.str() );
+                           "open_door", ter.id.str(), ter.sounds_like  );
             ter_set( p, ter.open );
 
             if( ( g->u.has_trait( trait_id( "SCHIZOPHRENIC" ) ) || g->u.has_artifact_with( AEP_SCHIZO ) )
@@ -3721,7 +3724,7 @@ bool map::open_door( const tripoint &p, const bool inside, const bool check_only
 
         if( !check_only ) {
             sounds::sound( p, 6, sounds::sound_t::movement, _( "swish" ), true,
-                           "open_door", furn.id.str() );
+                           "open_door", furn.id.str(), furn.sounds_like  );
             furn_set( p, furn.open );
         }
 
@@ -3797,14 +3800,14 @@ bool map::close_door( const tripoint &p, const bool inside, const bool check_onl
     if( ter.close && !furn.id ) {
         if( !check_only ) {
             sounds::sound( p, 10, sounds::sound_t::movement, _( "swish" ), true,
-                           "close_door", ter.id.str() );
+                           "close_door", ter.id.str(), ter.sounds_like );
             ter_set( p, ter.close );
         }
         return true;
     } else if( furn.close ) {
         if( !check_only ) {
             sounds::sound( p, 10, sounds::sound_t::movement, _( "swish" ), true,
-                           "close_door", furn.id.str() );
+                           "close_door", furn.id.str(), furn.sounds_like  );
             furn_set( p, furn.close );
         }
         return true;

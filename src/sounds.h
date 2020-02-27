@@ -52,10 +52,10 @@ enum class sound_t : int {
  */
 void sound( const tripoint &p, int vol, sound_t category, const std::string &description,
             bool ambient = false, const std::string &id = "",
-            const std::string &variant = "default" );
+            const std::string &variant = "default", const std::string &fallback = "" );
 void sound( const tripoint &p, int vol, sound_t category, const translation &description,
             bool ambient = false, const std::string &id = "",
-            const std::string &variant = "default" );
+            const std::string &variant = "default", const std::string &fallback = "" );
 /** Functions identical to sound(..., true). */
 void ambient_sound( const tripoint &p, int vol, sound_t category, const std::string &description );
 /** Creates a list of coordinates at which to draw footsteps. */
@@ -132,11 +132,14 @@ void load_sound_effects( const JsonObject &jsobj );
 void load_sound_effect_preload( const JsonObject &jsobj );
 void load_playlist( const JsonObject &jsobj );
 void play_variant_sound( const std::string &id, const std::string &variant, int volume, int angle,
-                         double pitch_min = -1.0, double pitch_max = -1.0 );
-void play_variant_sound( const std::string &id, const std::string &variant, int volume );
+                         double pitch_min = -1.0, double pitch_max = -1.0, const std::string &fallback = "" );
+void play_variant_sound( const std::string &id, const std::string &variant, int volume,
+                         const std::string &fallback = "" );
 void play_ambient_variant_sound( const std::string &id, const std::string &variant, int volume,
-                                 channel channel, int fade_in_duration, double pitch = -1.0, int loops = -1 );
-void play_activity_sound( const std::string &id, const std::string &variant, int volume );
+                                 channel channel, int fade_in_duration, double pitch = -1.0, int loops = -1,
+                                 const std::string &fallback = "" );
+void play_activity_sound( const std::string &id, const std::string &variant, int volume,
+                          const std::string &fallback = "" );
 void end_activity_sounds();
 void generate_gun_sound( const player &source_arg, const item &firing );
 void generate_melee_sound( const tripoint &source, const tripoint &target, bool hit,
@@ -154,14 +157,15 @@ void do_vehicle_exterior_engine_sfx();
 void fade_audio_group( group group, int duration );
 void fade_audio_channel( channel channel, int duration );
 bool is_channel_playing( channel channel );
-bool has_variant_sound( const std::string &id, const std::string &variant );
+bool has_variant_sound( const std::string &id, const std::string &variant,
+                        const std::string &fallback = "" );
 void stop_sound_effect_fade( channel channel, int duration );
 void stop_sound_effect_timed( channel channel, int time );
 int set_channel_volume( channel channel, int volume );
 void do_player_death_hurt( const player &target, bool death );
 void do_fatigue();
 // @param obst should be string id of obstacle terrain or vehicle part
-void do_obstacle( const std::string &obst = "" );
+void do_obstacle( const std::string &obst = "", const std::string &obst_fallback = "" );
 } // namespace sfx
 
 #endif

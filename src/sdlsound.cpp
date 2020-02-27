@@ -366,18 +366,29 @@ static const sound_effect *find_random_effect( const id_and_variant &id_variants
 }
 
 // Same as above, but with fallback to "default" variant. May still return `nullptr`
-static const sound_effect *find_random_effect( const std::string &id, const std::string &variant )
+static const sound_effect *find_random_effect( const std::string &id, const std::string &variant,
+        const std::string &fallback )
 {
     const sound_effect *eff = find_random_effect( id_and_variant( id, variant ) );
-    if( eff != nullptr ) {
-        return eff;
+    if( !eff ) {
+        eff = find_random_effect( id_and_variant( fallback, variant ) );
+        if( !eff ) {
+            eff = find_random_effect( id_and_variant( id, fallback ) );
+            if( !eff ) {
+                eff = find_random_effect( id_and_variant( id, "default" ) );
+                if( !eff ) {
+                    eff = find_random_effect( id_and_variant( fallback, "default" ) );
+                }
+            }
+        }
     }
-    return find_random_effect( id_and_variant( id, "default" ) );
+    return eff;
 }
 
-bool sfx::has_variant_sound( const std::string &id, const std::string &variant )
+bool sfx::has_variant_sound( const std::string &id, const std::string &variant,
+                             const std::string &fallback )
 {
-    return find_random_effect( id, variant ) != nullptr;
+    return find_random_effect( id, variant, fallback ) != nullptr;
 }
 
 // Deletes the dynamically created chunk (if such a chunk had been played).
@@ -437,17 +448,15 @@ static Mix_Chunk *do_pitch_shift( Mix_Chunk *s, float pitch )
     return result;
 }
 
-void sfx::play_variant_sound( const std::string &id, const std::string &variant, int volume )
+void sfx::play_variant_sound( const std::string &id, const std::string &variant, int volume,
+                              const std::string &fallback )
 {
     if( !check_sound( volume ) ) {
         return;
     }
-    const sound_effect *eff = find_random_effect( id, variant );
+    const sound_effect *eff = find_random_effect( id, variant, fallback );
     if( eff == nullptr ) {
-        eff = find_random_effect( id, "default" );
-        if( eff == nullptr ) {
-            return;
-        }
+        return;
     }
     const sound_effect &selected_sound_effect = *eff;
 
@@ -461,12 +470,12 @@ void sfx::play_variant_sound( const std::string &id, const std::string &variant,
 }
 
 void sfx::play_variant_sound( const std::string &id, const std::string &variant, int volume,
-                              int angle, double pitch_min, double pitch_max )
+                              int angle, double pitch_min, double pitch_max, const std::string &fallback )
 {
     if( !check_sound( volume ) ) {
         return;
     }
-    const sound_effect *eff = find_random_effect( id, variant );
+    const sound_effect *eff = find_random_effect( id, variant, fallback );
     if( eff == nullptr ) {
         return;
     }
@@ -498,7 +507,8 @@ void sfx::play_variant_sound( const std::string &id, const std::string &variant,
 }
 
 void sfx::play_ambient_variant_sound( const std::string &id, const std::string &variant, int volume,
-                                      channel channel, int fade_in_duration, double pitch, int loops )
+                                      channel channel, int fade_in_duration, double pitch, int loops,
+                                      const std::string &fallback )
 {
     if( !check_sound( volume ) ) {
         return;
@@ -506,7 +516,7 @@ void sfx::play_ambient_variant_sound( const std::string &id, const std::string &
     if( is_channel_playing( channel ) ) {
         return;
     }
-    const sound_effect *eff = find_random_effect( id, variant );
+    const sound_effect *eff = find_random_effect( id, variant, fallback );
     if( eff == nullptr ) {
         return;
     }
