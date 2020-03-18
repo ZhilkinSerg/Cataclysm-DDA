@@ -71,7 +71,7 @@
       <AdditionalOptions>/LTCG:OFF %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <PreBuildEvent>
-      <Command>prebuild.cmd dev</Command>
+      <Command>prebuild.cmd $(SolutionFileName)-$(ProjectFileName)-$(Platform)-$(Configuration)</Command>
       <Message>Get version string</Message>
     </PreBuildEvent>
     <ProjectReference>
