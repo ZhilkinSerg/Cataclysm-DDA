@@ -331,7 +331,17 @@ void overmap::convert_terrain( const std::unordered_map<tripoint, std::string> &
     for( const auto &convert : needs_conversion ) {
         const tripoint pos = convert.first;
         const std::string old = convert.second;
-
+        om_direction::type old_direction = om_direction::type::none;
+        if( string_ends_with( old, "_north" ) ) {
+            old_direction = om_direction::type::north;
+        } else if( string_ends_with( old, "_south" ) ) {
+            old_direction = om_direction::type::south;
+        } else if( string_ends_with( old, "_east" ) ) {
+            old_direction = om_direction::type::east;
+        } else if( string_ends_with( old, "_west" ) ) {
+            old_direction = om_direction::type::west;
+        }
+        const std::string old_rotation = "_" + om_direction::id( old_direction );
         struct convert_nearby {
             int xoffset;
             std::string x_id;
@@ -837,14 +847,42 @@ void overmap::convert_terrain( const std::unordered_map<tripoint, std::string> &
                 ter_set( pos + point_south_east, oter_id( "haz_sar_b_4_west" ) );
             }
 
-        } else if( old == "house_base_north" ) {
-            ter_set( pos, oter_id( "house_north" ) );
-        } else if( old == "house_base_south" ) {
-            ter_set( pos, oter_id( "house_south" ) );
-        } else if( old == "house_base_east" ) {
-            ter_set( pos, oter_id( "house_east" ) );
-        } else if( old == "house_base_west" ) {
-            ter_set( pos, oter_id( "house_west" ) );
+        } else if( old == "house_base" ||
+                   old == "house_base_north" ||
+                   old == "house_base_south" ||
+                   old == "house_base_east"  ||
+                   old == "house_base_west" ) {
+            std::vector<std::string> new_houses = { { "house_31", "house_32" } };
+            ter_set( pos, oter_id( random_entry( new_houses ) + old_rotation ) );
+        } else if( old == "rural_house" ||
+                   old == "rural_house_north" ||
+                   old == "rural_house_south" ||
+                   old == "rural_house_east" ||
+                   old == "rural_house_west" ) {
+            std::vector<std::string> new_houses = { { "rural_house1", "rural_house2" } };
+            ter_set( pos, oter_id( random_entry( new_houses ) + old_rotation ) );
+        } else if( old == "house" ||
+                   old == "house_north" ||
+                   old == "house_south" ||
+                   old == "house_east" ||
+                   old == "house_west" ) {
+            std::vector<std::string> new_houses = { {
+                    "house_w_1",
+                    "house_2story_base",
+                    "house_01",
+                    "house_02",
+                    "house_03",
+                    "house_04",
+                    "house_05",
+                    "house_06",
+                    "house_07",
+                    "house_08",
+                    "house_09",
+                    "house_10"
+                }
+            };
+            ter_set( pos,
+                     oter_id( random_entry( new_houses ) + old_rotation ) );
         }
 
         for( const auto &conv : nearby ) {
