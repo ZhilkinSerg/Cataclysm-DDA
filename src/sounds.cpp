@@ -61,7 +61,7 @@
 #   define dbg(x) DebugLog((x),D_SDL) << __FILE__ << ":" << __LINE__ << ": "
 #endif
 
-weather_type previous_weather;
+legacy_weather_type previous_weather;
 int prev_hostiles = 0;
 int previous_speed = 0;
 int previous_gear = 0;

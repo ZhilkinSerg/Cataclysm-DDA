@@ -168,11 +168,11 @@ w_point weather_generator::get_weather( const tripoint &location, const time_poi
     return w_point {T, H, P, W, wind_desc, current_winddir, acid};
 }
 
-weather_type weather_generator::get_weather_conditions( const tripoint &location,
+legacy_weather_type weather_generator::get_weather_conditions( const tripoint &location,
         const time_point &t, unsigned seed ) const
 {
     w_point w( get_weather( location, t, seed ) );
-    weather_type wt = get_weather_conditions( w );
+    legacy_weather_type wt = get_weather_conditions( w );
     // Make sure we don't say it's sunny at night! =P
     if( wt == WEATHER_SUNNY && is_night( t ) ) {
         return WEATHER_CLEAR;
@@ -180,9 +180,9 @@ weather_type weather_generator::get_weather_conditions( const tripoint &location
     return wt;
 }
 
-weather_type weather_generator::get_weather_conditions( const w_point &w ) const
+legacy_weather_type weather_generator::get_weather_conditions( const w_point &w ) const
 {
-    weather_type r( WEATHER_CLEAR );
+    legacy_weather_type r( WEATHER_CLEAR );
     if( w.pressure > 1020 && w.humidity < 70 ) {
         r = WEATHER_SUNNY;
     }
@@ -298,7 +298,7 @@ void weather_generator::test_weather( unsigned seed = 1000 ) const
         const time_point end = begin + 2 * calendar::year_length();
         for( time_point i = begin; i < end; i += 20_minutes ) {
             w_point w = get_weather( tripoint_zero, to_turn<int>( i ), seed );
-            weather_type c = get_weather_conditions( w );
+            legacy_weather_type c = get_weather_conditions( w );
             weather_datum wd = weather_data( c );
 
             int year = to_turns<int>( i - calendar::turn_zero ) / to_turns<int>

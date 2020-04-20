@@ -13,9 +13,9 @@
  * @{
  */
 
-weather_animation_t get_weather_animation( weather_type const type )
+weather_animation_t get_weather_animation( legacy_weather_type const type )
 {
-    static const std::map<weather_type, weather_animation_t> map {
+    static const std::map<legacy_weather_type, weather_animation_t> map {
         {WEATHER_ACID_DRIZZLE, weather_animation_t {0.01f, c_light_green, '.'}},
         {WEATHER_ACID_RAIN,    weather_animation_t {0.02f, c_light_green, ','}},
         {WEATHER_LIGHT_DRIZZLE, weather_animation_t{0.01f, c_light_blue, ','}},
@@ -39,7 +39,7 @@ struct weather_result {
     weather_datum datum;
     bool is_valid;
 };
-static weather_result weather_data_internal( weather_type const type )
+static weather_result weather_data_internal( legacy_weather_type const type )
 {
     /**
      * Weather types data definition.
@@ -116,7 +116,7 @@ static weather_result weather_data_internal( weather_type const type )
     return { data[0], false };
 }
 
-static weather_datum weather_data_interal_localized( weather_type const type )
+static weather_datum weather_data_interal_localized( legacy_weather_type const type )
 {
     weather_result res = weather_data_internal( type );
     if( res.is_valid ) {
@@ -125,62 +125,62 @@ static weather_datum weather_data_interal_localized( weather_type const type )
     return res.datum;
 }
 
-weather_datum weather_data( weather_type const type )
+weather_datum weather_data( legacy_weather_type const type )
 {
     return weather_data_interal_localized( type );
 }
 
 namespace weather
 {
-std::string name( weather_type const type )
+std::string name( legacy_weather_type const type )
 {
     return weather_data_interal_localized( type ).name;
 }
-nc_color color( weather_type const type )
+nc_color color( legacy_weather_type const type )
 {
     return weather_data_internal( type ).datum.color;
 }
-nc_color map_color( weather_type const type )
+nc_color map_color( legacy_weather_type const type )
 {
     return weather_data_internal( type ).datum.map_color;
 }
-char glyph( weather_type const type )
+char glyph( legacy_weather_type const type )
 {
     return weather_data_internal( type ).datum.glyph;
 }
-int ranged_penalty( weather_type const type )
+int ranged_penalty( legacy_weather_type const type )
 {
     return weather_data_internal( type ).datum.ranged_penalty;
 }
-float sight_penalty( weather_type const type )
+float sight_penalty( legacy_weather_type const type )
 {
     return weather_data_internal( type ).datum.sight_penalty;
 }
-int light_modifier( weather_type const type )
+int light_modifier( legacy_weather_type const type )
 {
     return weather_data_internal( type ).datum.light_modifier;
 }
-int sound_attn( weather_type const type )
+int sound_attn( legacy_weather_type const type )
 {
     return weather_data_internal( type ).datum.sound_attn;
 }
-bool dangerous( weather_type const type )
+bool dangerous( legacy_weather_type const type )
 {
     return weather_data_internal( type ).datum.dangerous;
 }
-precip_class precip( weather_type const type )
+precip_class precip( legacy_weather_type const type )
 {
     return weather_data_internal( type ).datum.precip;
 }
-bool rains( weather_type const type )
+bool rains( legacy_weather_type const type )
 {
     return weather_data_internal( type ).datum.rains;
 }
-bool acidic( weather_type const type )
+bool acidic( legacy_weather_type const type )
 {
     return weather_data_internal( type ).datum.acidic;
 }
-weather_effect_fn effect( weather_type const type )
+weather_effect_fn effect( legacy_weather_type const type )
 {
     return weather_data_internal( type ).datum.effect;
 }

@@ -1303,7 +1303,7 @@ bool Character::burn_fuel( int b, bool start )
                         mod_power_level( power_gain );
                     } else if( is_perpetual_fuel ) {
                         if( fuel == fuel_type_sun_light && g->is_in_sunlight( pos() ) ) {
-                            const weather_type &wtype = current_weather( pos() );
+                            const legacy_weather_type &wtype = current_weather( pos() );
                             const float tick_sunlight = incident_sunlight( wtype, calendar::turn );
                             const double intensity = tick_sunlight / default_daylight_level();
                             mod_power_level( units::from_kilojoule( fuel_energy ) * intensity * effective_efficiency );

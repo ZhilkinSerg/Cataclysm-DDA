@@ -1394,13 +1394,13 @@ void debug()
                                    _( "Keep normal weather patterns" ) : _( "Disable weather forcing" ) );
             for( int weather_id = 1; weather_id < NUM_WEATHER_TYPES; weather_id++ ) {
                 weather_menu.addentry( weather_id, true, MENU_AUTOASSIGN,
-                                       weather::name( static_cast<weather_type>( weather_id ) ) );
+                                       weather::name( static_cast<legacy_weather_type>( weather_id ) ) );
             }
 
             weather_menu.query();
 
             if( weather_menu.ret >= 0 && weather_menu.ret < NUM_WEATHER_TYPES ) {
-                weather_type selected_weather = static_cast<weather_type>( weather_menu.ret );
+                legacy_weather_type selected_weather = static_cast<legacy_weather_type>( weather_menu.ret );
                 g->weather.weather_override = selected_weather;
                 g->weather.set_nextweather( calendar::turn );
             }

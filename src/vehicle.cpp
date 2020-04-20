@@ -4612,7 +4612,7 @@ int vehicle::total_solar_epower_w() const
     }
     // Weather doesn't change much across the area of the vehicle, so just
     // sample it once.
-    weather_type wtype = current_weather( global_pos3() );
+    legacy_weather_type wtype = current_weather( global_pos3() );
     const float tick_sunlight = incident_sunlight( wtype, calendar::turn );
     double intensity = tick_sunlight / default_daylight_level();
     return epower_w * intensity;

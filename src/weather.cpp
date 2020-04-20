@@ -108,12 +108,12 @@ void weather_effect::glare( sun_intensity intensity )
 
 ////// food vs weather
 
-int incident_sunlight( weather_type wtype, const time_point &t )
+int incident_sunlight( legacy_weather_type wtype, const time_point &t )
 {
     return std::max<float>( 0.0f, sunlight( t, false ) + weather::light_modifier( wtype ) );
 }
 
-inline void proc_weather_sum( const weather_type wtype, weather_sum &data,
+inline void proc_weather_sum( const legacy_weather_type wtype, weather_sum &data,
                               const time_point &t, const time_duration &tick_size )
 {
     switch( wtype ) {
@@ -143,7 +143,7 @@ inline void proc_weather_sum( const weather_type wtype, weather_sum &data,
     data.sunlight += tick_sunlight * to_turns<int>( tick_size );
 }
 
-weather_type current_weather( const tripoint &location, const time_point &t )
+legacy_weather_type current_weather( const tripoint &location, const time_point &t )
 {
     const auto wgen = g->weather.get_cur_weather_gen();
     if( g->weather.weather_override != WEATHER_NULL ) {
@@ -169,7 +169,7 @@ weather_sum sum_conditions( const time_point &start, const time_point &end,
             tick_size = 1_minutes;
         }
 
-        weather_type wtype = current_weather( location, t );
+        legacy_weather_type wtype = current_weather( location, t );
         proc_weather_sum( wtype, data, t, tick_size );
         data.wind_amount += get_local_windpower( g->weather.windspeed,
                             overmap_buffer.ter( ms_to_omt_copy( location ) ),
@@ -422,7 +422,7 @@ double precip_mm_per_hour( precip_class const p )
         0;
 }
 
-void do_rain( weather_type const w )
+void do_rain( legacy_weather_type const w )
 {
     if( !weather::rains( w ) || weather::precip( w ) == precip_class::NONE ) {
         return;
@@ -646,7 +646,7 @@ std::string weather_forecast( const point &abs_sm_pos )
     const time_point last_hour = calendar::turn - ( calendar::turn - calendar::turn_zero ) %
                                  1_hours;
     for( int d = 0; d < 6; d++ ) {
-        weather_type forecast = WEATHER_NULL;
+        legacy_weather_type forecast = WEATHER_NULL;
         const auto wgen = g->weather.get_cur_weather_gen();
         for( time_point i = last_hour + d * 12_hours; i < last_hour + ( d + 1 ) * 12_hours; i += 1_hours ) {
             w_point w = wgen.get_weather( abs_ms_pos, i, g->get_seed() );
@@ -862,7 +862,7 @@ std::string get_wind_arrow( int dirangle )
     return wind_arrow;
 }
 
-int get_local_humidity( double humidity, weather_type weather, bool sheltered )
+int get_local_humidity( double humidity, legacy_weather_type weather, bool sheltered )
 {
     int tmphumidity = humidity;
     if( sheltered ) {
@@ -995,7 +995,7 @@ void weather_manager::update_weather()
     if( weather == WEATHER_NULL || calendar::turn >= nextweather ) {
         const weather_generator &weather_gen = get_cur_weather_gen();
         w = weather_gen.get_weather( g->u.global_square_location(), calendar::turn, g->get_seed() );
-        weather_type old_weather = weather;
+        legacy_weather_type old_weather = weather;
         weather = weather_override == WEATHER_NULL ?
                   weather_gen.get_weather_conditions( w )
                   : weather_override;

@@ -47,7 +47,7 @@ struct rl_vec2d;
 /**
  * Weather type enum.
  */
-enum weather_type : int {
+enum legacy_weather_type : int {
     WEATHER_NULL,         //!< For data and stuff
     WEATHER_CLEAR,        //!< No effects
     WEATHER_SUNNY,        //!< Glare if no eye protection
@@ -73,7 +73,7 @@ enum class precip_class : int {
 };
 
 double precip_mm_per_hour( precip_class p );
-void do_rain( weather_type w );
+void do_rain( legacy_weather_type w );
 
 /**
  * Weather animation class.
@@ -87,7 +87,7 @@ struct weather_animation_t {
 /**
  * Weather animation settings for the given type.
  */
-weather_animation_t get_weather_animation( weather_type type );
+weather_animation_t get_weather_animation( legacy_weather_type type );
 
 /**
  * Weather drawing tracking.
@@ -96,7 +96,7 @@ weather_animation_t get_weather_animation( weather_type type );
  */
 struct weather_printable {
     //!< Weather type in use.
-    weather_type wtype;
+    legacy_weather_type wtype;
     //!< Coordinates targeted for droplets.
     std::vector<std::pair<int, int> > vdrops;
     //!< Color to draw glyph this animation frame.
@@ -156,22 +156,22 @@ struct weather_sum {
     int wind_amount = 0;
 };
 
-weather_datum weather_data( weather_type type );
+weather_datum weather_data( legacy_weather_type type );
 namespace weather
 {
-std::string name( weather_type type );
-nc_color color( weather_type type );
-nc_color map_color( weather_type type );
-char glyph( weather_type type );
-int ranged_penalty( weather_type type );
-float sight_penalty( weather_type type );
-int light_modifier( weather_type type );
-int sound_attn( weather_type type );
-bool dangerous( weather_type type );
-precip_class precip( weather_type type );
-bool rains( weather_type type );
-bool acidic( weather_type type );
-weather_effect_fn effect( weather_type type );
+std::string name( legacy_weather_type type );
+nc_color color( legacy_weather_type type );
+nc_color map_color( legacy_weather_type type );
+char glyph( legacy_weather_type type );
+int ranged_penalty( legacy_weather_type type );
+float sight_penalty( legacy_weather_type type );
+int light_modifier( legacy_weather_type type );
+int sound_attn( legacy_weather_type type );
+bool dangerous( legacy_weather_type type );
+precip_class precip( legacy_weather_type type );
+bool rains( legacy_weather_type type );
+bool acidic( legacy_weather_type type );
+weather_effect_fn effect( legacy_weather_type type );
 } // namespace weather
 
 std::string get_shortdirstring( int angle );
@@ -193,7 +193,7 @@ std::string print_pressure( double pressure, int decimals = 0 );
 // Return windchill offset in degrees F, starting from given temperature, humidity and wind
 int get_local_windchill( double temperature_f, double humidity, double wind_mph );
 
-int get_local_humidity( double humidity, weather_type weather, bool sheltered = false );
+int get_local_humidity( double humidity, legacy_weather_type weather, bool sheltered = false );
 double get_local_windpower( double windpower, const oter_id &omter, const tripoint &location,
                             const int &winddirection,
                             bool sheltered = false );
@@ -231,14 +231,14 @@ bool warm_enough_to_plant( const tripoint &pos );
 
 bool is_wind_blocker( const tripoint &location );
 
-weather_type current_weather( const tripoint &location,
-                              const time_point &t = calendar::turn );
+legacy_weather_type current_weather( const tripoint &location,
+                                     const time_point &t = calendar::turn );
 
 /**
  * Amount of sunlight incident at the ground, taking weather and time of day
  * into account.
  */
-int incident_sunlight( weather_type wtype,
+int incident_sunlight( legacy_weather_type wtype,
                        const time_point &t = calendar::turn );
 
 class weather_manager
@@ -252,14 +252,14 @@ class weather_manager
         int temperature = 0;
         bool lightning_active = false;
         // Weather pattern
-        weather_type weather = weather_type::WEATHER_NULL;
+        legacy_weather_type weather = legacy_weather_type::WEATHER_NULL;
         int winddirection = 0;
         int windspeed = 0;
         // Cached weather data
         pimpl<w_point> weather_precise;
         cata::optional<int> wind_direction_override;
         cata::optional<int> windspeed_override;
-        weather_type weather_override;
+        legacy_weather_type weather_override;
         // not only sets nextweather, but updates weather as well
         void set_nextweather( time_point t );
         // The time at which weather will shift next.

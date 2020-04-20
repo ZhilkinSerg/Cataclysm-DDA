@@ -197,10 +197,10 @@ static void update_note_preview( const std::string &note,
     wnoutrefresh( *w_preview_map );
 }
 
-static weather_type get_weather_at_point( const tripoint &pos )
+static legacy_weather_type get_weather_at_point( const tripoint &pos )
 {
     // Weather calculation is a bit expensive, so it's cached here.
-    static std::map<tripoint, weather_type> weather_cache;
+    static std::map<tripoint, legacy_weather_type> weather_cache;
     static time_point last_weather_display = calendar::before_time_starts;
     if( last_weather_display != calendar::turn ) {
         last_weather_display = calendar::turn;
@@ -686,7 +686,7 @@ void draw( const catacurses::window &w, const catacurses::window &wbar, const tr
                 ter_color = g->u.symbol_color();
                 ter_sym = "@";
             } else if( viewing_weather && ( data.debug_weather || los_sky ) ) {
-                const weather_type type = get_weather_at_point( omp );
+                const legacy_weather_type type = get_weather_at_point( omp );
                 ter_color = weather::map_color( type );
                 ter_sym = weather::glyph( type );
             } else if( data.debug_scent && get_scent_glyph( omp, ter_color, ter_sym ) ) {
