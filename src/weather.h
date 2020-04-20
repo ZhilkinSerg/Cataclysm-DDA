@@ -8,6 +8,7 @@
 #include "point.h"
 #include "type_id.h"
 #include "weather_gen.h"
+#include "weather_type.h"
 #include "calendar.h"
 
 /**
@@ -74,15 +75,6 @@ enum class precip_class : int {
 
 double precip_mm_per_hour( precip_class p );
 void do_rain( legacy_weather_type w );
-
-/**
- * Weather animation class.
- */
-struct weather_animation_t {
-    float    factor;
-    nc_color color;
-    char     glyph;
-};
 
 /**
  * Weather animation settings for the given type.

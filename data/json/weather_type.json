@@ -1,0 +1,89 @@
+[
+  {
+    "id": "weather_null",
+    "type": "weather_type",
+    "legacy_enum_id": 0,
+    "name": "",
+    "description": "",
+    "sym": "",
+    "color": "white"
+  },
+  {
+    "id": "weather_clear",
+    "type": "weather_type",
+    "legacy_enum_id": 1,
+    "name": ""
+  },
+  {
+    "id": "weather_sunny",
+    "type": "weather_type",
+    "legacy_enum_id": 2,
+    "name": ""
+  },
+  {
+    "id": "weather_cloudy",
+    "type": "weather_type",
+    "legacy_enum_id": 3,
+    "name": ""
+  },
+  {
+    "id": "weather_light_drizzle",
+    "type": "weather_type",
+    "legacy_enum_id": 4,
+    "name": ""
+  },
+  {
+    "id": "weather_drizzle",
+    "type": "weather_type",
+    "legacy_enum_id": 5,
+    "name": ""
+  },
+  {
+    "id": "weather_rainy",
+    "type": "weather_type",
+    "legacy_enum_id": 6,
+    "name": ""
+  },
+  {
+    "id": "weather_thunder",
+    "type": "weather_type",
+    "legacy_enum_id": 7,
+    "name": ""
+  },
+  {
+    "id": "weather_lightning",
+    "type": "weather_type",
+    "legacy_enum_id": 8,
+    "name": ""
+  },
+  {
+    "id": "weather_acid_drizzle",
+    "type": "weather_type",
+    "legacy_enum_id": 9,
+    "name": ""
+  },
+  {
+    "id": "weather_acid_rain",
+    "type": "weather_type",
+    "legacy_enum_id": 10,
+    "name": ""
+  },
+  {
+    "id": "weather_flurries",
+    "type": "weather_type",
+    "legacy_enum_id": 11,
+    "name": ""
+  },
+  {
+    "id": "weather_snow",
+    "type": "weather_type",
+    "legacy_enum_id": 12,
+    "name": ""
+  },
+  {
+    "id": "weather_snowstorm",
+    "type": "weather_type",
+    "legacy_enum_id": 13,
+    "name": ""
+  }
+]
