@@ -13,28 +13,6 @@
  * @{
  */
 
-weather_animation_t get_weather_animation( legacy_weather_type const type )
-{
-    static const std::map<legacy_weather_type, weather_animation_t> map {
-        {WEATHER_ACID_DRIZZLE, weather_animation_t {0.01f, c_light_green, '.'}},
-        {WEATHER_ACID_RAIN,    weather_animation_t {0.02f, c_light_green, ','}},
-        {WEATHER_LIGHT_DRIZZLE, weather_animation_t{0.01f, c_light_blue, ','}},
-        {WEATHER_DRIZZLE,      weather_animation_t {0.01f, c_light_blue,  '.'}},
-        {WEATHER_RAINY,        weather_animation_t {0.02f, c_light_blue,  ','}},
-        {WEATHER_THUNDER,      weather_animation_t {0.02f, c_light_blue,  '.'}},
-        {WEATHER_LIGHTNING,    weather_animation_t {0.04f, c_light_blue,  ','}},
-        {WEATHER_FLURRIES,     weather_animation_t {0.01f, c_white,   '.'}},
-        {WEATHER_SNOW,         weather_animation_t {0.02f, c_white,   ','}},
-        {WEATHER_SNOWSTORM,    weather_animation_t {0.04f, c_white,   '*'}}
-    };
-
-    const auto it = map.find( type );
-    if( it != std::end( map ) ) {
-        return it->second;
-    }
-
-    return {0.0f, c_white, '?'};
-}
 struct weather_result {
     weather_datum datum;
     bool is_valid;

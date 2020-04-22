@@ -25,6 +25,27 @@
 class JsonObject;
 
 /**
+ * Weather type enum.
+ */
+enum legacy_weather_type : int {
+    WEATHER_NULL,         //!< For data and stuff
+    WEATHER_CLEAR,        //!< No effects
+    WEATHER_SUNNY,        //!< Glare if no eye protection
+    WEATHER_CLOUDY,       //!< No effects
+    WEATHER_LIGHT_DRIZZLE,//!< very Light rain
+    WEATHER_DRIZZLE,      //!< Light rain
+    WEATHER_RAINY,        //!< Lots of rain, sight penalties
+    WEATHER_THUNDER,      //!< Warns of lightning to come
+    WEATHER_LIGHTNING,    //!< Rare lightning strikes!
+    WEATHER_ACID_DRIZZLE, //!< No real effects; warning of acid rain
+    WEATHER_ACID_RAIN,    //!< Minor acid damage
+    WEATHER_FLURRIES,     //!< Light snow
+    WEATHER_SNOW,         //!< snow glare effects
+    WEATHER_SNOWSTORM,    //!< sight penalties
+    NUM_WEATHER_TYPES     //!< Sentinel value
+};
+
+/**
  * Weather animation class.
  */
 struct weather_animation_t {
@@ -32,6 +53,29 @@ struct weather_animation_t {
     nc_color color;
     char     glyph;
 };
+
+weather_animation_t get_weather_animation( legacy_weather_type const type )
+{
+    static const std::map<legacy_weather_type, weather_animation_t> map {
+        {WEATHER_ACID_DRIZZLE, weather_animation_t {0.01f, c_light_green, '.'}},
+        {WEATHER_ACID_RAIN,    weather_animation_t {0.02f, c_light_green, ','}},
+        {WEATHER_LIGHT_DRIZZLE, weather_animation_t{0.01f, c_light_blue, ','}},
+        {WEATHER_DRIZZLE,      weather_animation_t {0.01f, c_light_blue,  '.'}},
+        {WEATHER_RAINY,        weather_animation_t {0.02f, c_light_blue,  ','}},
+        {WEATHER_THUNDER,      weather_animation_t {0.02f, c_light_blue,  '.'}},
+        {WEATHER_LIGHTNING,    weather_animation_t {0.04f, c_light_blue,  ','}},
+        {WEATHER_FLURRIES,     weather_animation_t {0.01f, c_white,   '.'}},
+        {WEATHER_SNOW,         weather_animation_t {0.02f, c_white,   ','}},
+        {WEATHER_SNOWSTORM,    weather_animation_t {0.04f, c_white,   '*'}}
+    };
+
+    const auto it = map.find( type );
+    if( it != std::end( map ) ) {
+        return it->second;
+    }
+
+    return {0.0f, c_white, '?'};
+}
 
 struct weather_type {
     public:
@@ -46,15 +90,18 @@ struct weather_type {
 
         weather_animation_t animation;
 
+        /*
         translation name;
         uint32_t symbol;
         nc_color color;
         std::string looks_like;
+        */
 
     public:
         int legacy_enum_id = -1;
 
     public:
+        /*
         std::string get_name( int level = 0 ) const {
             return name.translated();
         }
@@ -67,6 +114,7 @@ struct weather_type {
         nc_color get_color( int level = 0 ) const {
             return color;
         }
+        */
 
         static size_t count();
 };

@@ -3,6 +3,7 @@
 #include <cstdlib>
 
 #include "bodypart.h"
+#include "color.h"
 #include "debug.h"
 #include "enum_conversions.h"
 #include "enums.h"
@@ -70,6 +71,7 @@ void weather_type::load( const JsonObject &jo, const std::string & )
 {
     optional( jo, was_loaded, "legacy_enum_id", legacy_enum_id, -1 );
 
+    /*
     mandatory( jo, was_loaded, "name", name );
     mandatory( jo, was_loaded, "sym", symbol, unicode_codepoint_from_symbol_reader );
     color = jo.has_member( "color" ) ? color_from_string( jo.get_string( "color" ) ) : color;
@@ -78,6 +80,7 @@ void weather_type::load( const JsonObject &jo, const std::string & )
         looks_like = jo.get_string( "copy-from" );
     }
     jo.read( "looks_like", looks_like );
+    */
 }
 
 void weather_type::finalize()
