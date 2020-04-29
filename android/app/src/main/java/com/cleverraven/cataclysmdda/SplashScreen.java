@@ -28,8 +28,8 @@ public class SplashScreen extends Activity {
     private static final int INSTALL_DIALOG_ID = 0;
     private ProgressDialog installDialog;
 
-    public CharSequence[] mSettingsNames = { "Software rendering", "Force fullscreen", "Trap Back button" };
-    public boolean[] mSettingsValues = { false, false, true };
+    public CharSequence[] mSettingsNames = { "Always show prelaunch menu", "Software rendering", "Allow screen orientation changes", "Force fullscreen", "Trap Back button" };
+    public boolean[] mSettingsValues = { true, false, false, false, true };
 
     private String getVersionName() {
         try {
@@ -49,7 +49,14 @@ public class SplashScreen extends Activity {
 
         // Start the game if already installed, otherwise start installing...
         if (getVersionName().equals(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("installed", ""))) {
-            startGameActivity(false);
+            if ( PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("Always show prelaunch menu", false) ) {
+                InstallProgramTask ipt = new InstallProgramTask();
+                ipt.skipInstallation = true;
+                ipt.execute();
+            }
+            else {
+                startGameActivity(false);
+            }
         }
         else {
             new InstallProgramTask().execute();
@@ -111,27 +118,31 @@ public class SplashScreen extends Activity {
         private AlertDialog installationAlert;
         private AlertDialog settingsAlert;
         private AlertDialog helpAlert;
+        
+        public Boolean skipInstallation = false;
 
         @Override
         protected void onPreExecute() {
-            installationAlert = new AlertDialog.Builder(SplashScreen.this)
-                .setTitle("Installation Failed")
-                .setCancelable(false)
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        SplashScreen.this.finish();
-                        return;
-                    }
-                }).create();
-            AssetManager assetManager = getAssets();
-            try {
-                totalFiles = countTotalAssets(assetManager, "data") +
-                    countTotalAssets(assetManager, "gfx") +
-                    countTotalAssets(assetManager, "lang");
-                showDialog(INSTALL_DIALOG_ID);
-            } catch(Exception e) {
-                installationAlert.setMessage(e.getMessage());
-                installationAlert.show();
+            if( !skipInstallation ) {
+                installationAlert = new AlertDialog.Builder(SplashScreen.this)
+                    .setTitle("Installation Failed")
+                    .setCancelable(false)
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            SplashScreen.this.finish();
+                            return;
+                        }
+                    }).create();
+                AssetManager assetManager = getAssets();
+                try {
+                    totalFiles = countTotalAssets(assetManager, "data") +
+                        countTotalAssets(assetManager, "gfx") +
+                        countTotalAssets(assetManager, "lang");
+                    showDialog(INSTALL_DIALOG_ID);
+                } catch(Exception e) {
+                    installationAlert.setMessage(e.getMessage());
+                    installationAlert.show();
+                }
             }
 
             helpAlert = new AlertDialog.Builder(SplashScreen.this)

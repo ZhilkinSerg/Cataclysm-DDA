@@ -891,8 +891,13 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
             }
         }
 
+        Context context = SDL.getContext();
+        Context appContext = context.getApplicationContext();
+        boolean mAllowSDLOrientationChanges = PreferenceManager.getDefaultSharedPreferences(appContext).getBoolean("Allow screen orientation changes", false);
         Log.v("SDL", "setOrientation() requestedOrientation=" + req + " width=" + w +" height="+ h +" resizable=" + resizable + " hint=" + hint);
-        mSingleton.setRequestedOrientation(req);
+        if (mAllowSDLOrientationChanges && req != -1) {
+            mSingleton.setRequestedOrientation(req);
+        }
     }
 
     /**
@@ -1826,8 +1831,11 @@ class SDLSurface extends SurfaceView implements SurfaceHolder.Callback,
         // Prevent a screen distortion glitch,
         // for instance when the device is in Landscape and a Portrait App is resumed.
         boolean skip = false;
-        int requestedOrientation = SDLActivity.mSingleton.getRequestedOrientation();
 
+        Context context = SDLActivity.getContext();
+        Context appContext = context.getApplicationContext();
+        boolean mAllowSDLOrientationChanges = PreferenceManager.getDefaultSharedPreferences(appContext).getBoolean("Allow screen orientation changes", false);
+        int requestedOrientation = mAllowSDLOrientationChanges ? SDLActivity.mSingleton.getRequestedOrientation() : ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE;
         if (requestedOrientation == ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED)
         {
             // Accept any

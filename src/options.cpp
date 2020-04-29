@@ -2172,6 +2172,21 @@ void options_manager::add_options_android()
 
     add_empty_line();
 
+    add( "ANDROID_ALWAYS_SHOW_PRELAUNCH_MENU", "android", translate_marker( "Always show prelaunch menu" ),
+         translate_marker( "If true, the app will always show prelaunch menu.  Requires restart." ),
+         android_get_default_setting( "Always show prelaunch menu", true )
+       );
+
+    add( "ANDROID_FORCE_FULLSCREEN", "android", translate_marker( "Force fullscreen" ),
+         translate_marker( "If true, the app will be run with forced fullscreen.  Requires restart." ),
+         android_get_default_setting( "Force fullscreen", false )
+       );
+
+    add( "ANDROID_ALLOW_SCREEN_ORIENTATION_CHANGES", "android", translate_marker( "Allow screen orientation changes" ),
+         translate_marker( "If true, the app will be allowed to change screen orientation.  Requires restart." ),
+         android_get_default_setting( "Allow screen orientation changes", false )
+       );
+
     add( "ANDROID_TRAP_BACK_BUTTON", "android", translate_marker( "Trap Back button" ),
          translate_marker( "If true, the back button will NOT back out of the app and will be passed to the application as SDL_SCANCODE_AC_BACK.  Requires restart." ),
          // take default setting from pre-game settings screen - important as there are issues with Back button on Android 9 with specific devices
