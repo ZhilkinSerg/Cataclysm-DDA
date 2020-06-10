@@ -62,15 +62,43 @@
   },
   {
     "type": "overmap_terrain",
-    "id": "bridge",
+    "abstract": "generic_bridge",
     "copy-from": "generic_transportation",
     "name": "bridge",
     "sym": "│",
     "color": "white",
     "see_cost": 2,
-    "extras": "bridge",
+    "extras": "bridge"
+  },
+  {
+    "type": "overmap_terrain",
+    "id": "bridge",
+    "copy-from": "generic_bridge",
     "mapgen": [ { "method": "builtin", "name": "bridge" } ],
+    "color": "blue",
     "flags": [ "RIVER" ]
+  },
+  {
+    "type": "overmap_terrain",
+    "id": "bridge_ramp",
+    "copy-from": "generic_bridge",
+    "name": "bridge (ramp)"
+  },
+  {
+    "type": "overmap_terrain",
+    "id": "bridgehead_ground",
+    "copy-from": "generic_bridge",
+    "name": "bridgehead (ground)",
+    "sym": "X",
+    "color": "red"
+  },
+  {
+    "type": "overmap_terrain",
+    "id": "bridgehead_ramp",
+    "copy-from": "generic_bridge",
+    "name": "bridgehead (ramp)",
+    "sym": "X",
+    "color": "red"
   },
   {
     "type": "overmap_terrain",
