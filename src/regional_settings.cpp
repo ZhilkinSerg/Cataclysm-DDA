@@ -531,16 +531,13 @@ void load_region_settings( const JsonObject &jo )
         const auto load_building_types = [&jo, &cjo, strict]( const std::string & type,
         building_bin & dest ) {
             if( !cjo.has_object( type ) && strict ) {
-                jo.throw_error( "railroad: \"" + type + "\": { ... } required for default" );
+                jo.throw_error( "railroad: \"" + type + "\": { … } required for default" );
             } else {
-                JsonObject wjo = cjo.get_object( type );
-                std::set<std::string> keys = wjo.get_member_names();
-                for( const auto &key : keys ) {
-                    if( key != "//" ) {
-                        if( wjo.has_int( key ) ) {
-                            dest.add( overmap_special_id( key ), wjo.get_int( key ) );
-                        }
+                for( const JsonMember member : cjo.get_object( type ) ) {
+                    if( member.is_comment() ) {
+                        continue;
                     }
+                    dest.add( overmap_special_id( member.name() ), member.get_int() );
                 }
             }
         };

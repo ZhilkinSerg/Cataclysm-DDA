@@ -2805,7 +2805,7 @@ void overmap::place_railroads( const overmap *north, const overmap *east, const 
         railroad_points.emplace_back( elem.pos );
     }
     for( const auto &elem : railroad_stations ) {
-        const auto &terrain_here( get_ter( elem.pos.x, elem.pos.y, 0 ) );
+        const auto &terrain_here( ter( tripoint( elem.pos.x, elem.pos.y, 0 ) ) );
         const om_direction::type dir = terrain_here->get_dir();
         DebugLog( D_ERROR, D_GAME ) << string_format( "terrain_here:%s|%d", terrain_here.id().str(), dir );
         point entry1 = elem.pos + rotate( point( 0, -1 ), dir );;
@@ -3008,7 +3008,7 @@ void overmap::place_railroad_stations()
             continue;
         }
         place_special( railroad_station_special, p, rotation, nearest_city, false, false );
-        city station( cx, cy, 1 );
+        city station( point( cx, cy ), 1 );
         railroad_stations.push_back( station );
         DebugLog( D_ERROR, D_GAME ) << " Near city [" << nearest_city.name << "] at [" << nearest_city.pos.x
                                     << "," << nearest_city.pos.y << "] placing [" << station_id << "] named ["
