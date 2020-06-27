@@ -2729,28 +2729,28 @@ void overmap::place_railroads( const overmap *north, const overmap *east, const 
     if( north != nullptr ) {
         for( auto &i : north->railroads_out ) {
             if( i.pos.y == OMAPY - 1 ) {
-                railroads_out.push_back( city( i.pos.x, 0, 0 ) );
+                railroads_out.push_back( city( point( i.pos.x, 0 ), 0 ) );
             }
         }
     }
     if( west != nullptr ) {
         for( auto &i : west->railroads_out ) {
             if( i.pos.x == OMAPX - 1 ) {
-                railroads_out.push_back( city( 0, i.pos.y, 0 ) );
+                railroads_out.push_back( city( point( 0, i.pos.y ), 0 ) );
             }
         }
     }
     if( south != nullptr ) {
         for( auto &i : south->railroads_out ) {
             if( i.pos.y == 0 ) {
-                railroads_out.push_back( city( i.pos.x, OMAPY - 1, 0 ) );
+                railroads_out.push_back( city( point( i.pos.x, OMAPY - 1 ), 0 ) );
             }
         }
     }
     if( east != nullptr ) {
         for( auto &i : east->railroads_out ) {
             if( i.pos.x == 0 ) {
-                railroads_out.push_back( city( OMAPX - 1, i.pos.y, 0 ) );
+                railroads_out.push_back( city( point( OMAPX - 1, i.pos.y ), 0 ) );
             }
         }
     }
@@ -2765,30 +2765,33 @@ void overmap::place_railroads( const overmap *north, const overmap *east, const 
         if( north == nullptr ) {
             do {
                 tmp = rng( 10, OMAPX - 11 );
-            } while( is_river( ter( tmp, 0, 0 ) ) || is_river( ter( tmp - 1, 0, 0 ) ) ||
-                     is_river( ter( tmp + 1, 0, 0 ) ) );
-            viable_railroads.push_back( city( tmp, 0, 0 ) );
+            } while( is_river( ter( tripoint( tmp, 0, 0 ) ) ) || is_river( ter( tripoint( tmp - 1, 0, 0 ) ) ) ||
+                     is_river( ter( tripoint( tmp + 1, 0, 0 ) ) ) );
+            viable_railroads.push_back( city( point( tmp, 0 ), 0 ) );
         }
         if( east == nullptr ) {
             do {
                 tmp = rng( 10, OMAPY - 11 );
-            } while( is_river( ter( OMAPX - 1, tmp, 0 ) ) || is_river( ter( OMAPX - 1, tmp - 1, 0 ) ) ||
-                     is_river( ter( OMAPX - 1, tmp + 1, 0 ) ) );
-            viable_railroads.push_back( city( OMAPX - 1, tmp, 0 ) );
+            } while( is_river( ter( tripoint( OMAPX - 1, tmp, 0 ) ) ) ||
+                     is_river( ter( tripoint( OMAPX - 1, tmp - 1, 0 ) ) ) ||
+                     is_river( ter( tripoint( OMAPX - 1, tmp + 1, 0 ) ) ) );
+            viable_railroads.push_back( city( point( OMAPX - 1, tmp ), 0 ) );
         }
         if( south == nullptr ) {
             do {
                 tmp = rng( 10, OMAPX - 11 );
-            } while( is_river( ter( tmp, OMAPY - 1, 0 ) ) || is_river( ter( tmp - 1, OMAPY - 1, 0 ) ) ||
-                     is_river( ter( tmp + 1, OMAPY - 1, 0 ) ) );
-            viable_railroads.push_back( city( tmp, OMAPY - 1, 0 ) );
+            } while( is_river( ter( tripoint( tmp, OMAPY - 1, 0 ) ) ) ||
+                     is_river( ter( tripoint( tmp - 1, OMAPY - 1, 0 ) ) ) ||
+                     is_river( ter( tripoint( tmp + 1, OMAPY - 1, 0 ) ) ) );
+            viable_railroads.push_back( city( point( tmp, OMAPY - 1 ), 0 ) );
         }
         if( west == nullptr ) {
             do {
                 tmp = rng( 10, OMAPY - 11 );
-            } while( is_river( ter( 0, tmp, 0 ) ) || is_river( ter( 0, tmp - 1, 0 ) ) ||
-                     is_river( ter( 0, tmp + 1, 0 ) ) );
-            viable_railroads.push_back( city( 0, tmp, 0 ) );
+            } while( is_river( ter( tripoint( 0, tmp, 0 ) ) ) ||
+                     is_river( ter( tripoint( 0, tmp - 1, 0 ) ) ) ||
+                     is_river( ter( tripoint( 0, tmp + 1, 0 ) ) ) );
+            viable_railroads.push_back( city( point( 0, tmp ), 0 ) );
         }
         while( railroads_out.size() < 2 && !viable_railroads.empty() ) {
             railroads_out.push_back( random_entry_removed( viable_railroads ) );
