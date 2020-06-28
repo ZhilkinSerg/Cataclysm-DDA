@@ -2397,6 +2397,7 @@ void debug()
     };
     const bool should_disable_achievements = action && !is_debug_character() &&
             !non_cheaty_options.count( *action );
+    bool should_disable_achievements = false; // action && !non_cheaty_options.count( *action );
     if( should_disable_achievements && achievements.is_enabled() ) {
         static const std::string query(
             translate_marker(
