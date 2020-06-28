@@ -2822,7 +2822,7 @@ void overmap::place_railroads( const overmap *north, const overmap *east, const 
 
     // And finally connect them via railroads.
     const string_id<overmap_connection> local_railroad( "local_railroad" );
-    connect_closest_points( railroad_points, 0, *local_railroad );
+    connect_closest_points( railroad_points, 0, *local_railroad, 10 );
 }
 
 void overmap::place_river( point pa, point pb )
@@ -3668,7 +3668,7 @@ void overmap::build_connection( const point &source, const point &dest, int z,
 }
 
 void overmap::connect_closest_points( const std::vector<point> &points, int z,
-                                      const overmap_connection &connection )
+                                      const overmap_connection &connection, int minimal_distance )
 {
     if( points.size() == 1 ) {
         return;
@@ -3678,12 +3678,12 @@ void overmap::connect_closest_points( const std::vector<point> &points, int z,
         int k = 0;
         for( size_t j = i + 1; j < points.size(); j++ ) {
             const int distance = trig_dist( points[i], points[j] );
-            if( distance < closest || closest < 0 ) {
+            if( distance < closest || closest < minimal_distance ) {
                 closest = distance;
                 k = j;
             }
         }
-        if( closest > 0 ) {
+        if( closest > minimal_distance ) {
             build_connection( points[i], points[k], z, connection, false );
         }
     }
