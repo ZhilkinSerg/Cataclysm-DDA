@@ -1183,7 +1183,7 @@ void debug()
         debug_menu_index::BENCHMARK,
         debug_menu_index::SHOW_MSG,
     };
-    bool should_disable_achievements = action && !non_cheaty_options.count( *action );
+    bool should_disable_achievements = false; // action && !non_cheaty_options.count( *action );
     if( should_disable_achievements && achievements.is_enabled() ) {
         if( query_yn( "Using this will disable achievements.  Proceed?" ) ) {
             achievements.set_enabled( false );
