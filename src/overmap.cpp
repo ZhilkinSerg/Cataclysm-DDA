@@ -1480,9 +1480,9 @@ void overmap::generate( const overmap *north, const overmap *east,
     place_swamps();
     place_cities();
     place_railroad_stations();
+    place_railroads( north, east, south, west );
     place_forest_trails();
     place_roads( north, east, south, west );
-    place_railroads( north, east, south, west );
     place_specials( enabled_specials );
     place_forest_trailheads();
 
@@ -2800,6 +2800,8 @@ void overmap::place_railroads( const overmap *north, const overmap *east, const 
     }
 
     std::vector<point> railroad_points; // cities and railroads_out together
+    std::vector<std::pair<point, bool>> railroad_exit_points;
+    std::vector<std::pair<point, bool>> railroad_enter_points;
     // Compile our master list of railroads; it's less messy if railroads_out is first
     railroad_points.reserve( railroads_out.size() + railroad_stations.size() );
     for( const auto &elem : railroads_out ) {
@@ -2811,8 +2813,10 @@ void overmap::place_railroads( const overmap *north, const overmap *east, const 
         DebugLog( D_ERROR, D_GAME ) << string_format( "terrain_here:%s|%d", terrain_here.id().str(), dir );
         point entry1 = elem.pos + rotate( point( 0, -1 ), dir );;
         point entry2 = elem.pos + rotate( point( 0, 4 ), dir );
-        railroad_points.emplace_back( entry1 );
-        railroad_points.emplace_back( entry2 );
+        //railroad_points.emplace_back( entry1 );
+        railroad_exit_points.emplace_back( entry1, false );
+        //railroad_points.emplace_back( entry2 );
+        railroad_enter_points.emplace_back( entry2, false );
         DebugLog( D_ERROR, D_GAME ) <<
                                     string_format( "railroad_points.emplace_back:\nSTAT:%d|%d\nENT1:%d|%d\nENT2:%d|%d",
                                             elem.pos.x, elem.pos.y,
@@ -2820,9 +2824,27 @@ void overmap::place_railroads( const overmap *north, const overmap *east, const 
                                             entry2.x, entry2.y );
     }
 
+    const int min_distance = 20;
     // And finally connect them via railroads.
     const string_id<overmap_connection> local_railroad( "local_railroad" );
-    connect_closest_points( railroad_points, 0, *local_railroad, 10 );
+    connect_closest_points( railroad_points, 0, *local_railroad, min_distance );
+
+    std::vector<point> railroad_points_temp;
+    for( auto &elem : railroad_enter_points ) {
+        const point enter = elem.first;
+        elem.second = true;
+        railroad_points_temp.emplace_back( enter );
+        while( true ) {
+            auto &ex = random_entry( railroad_exit_points );
+            const point exit = ex.first;
+            if( !ex.second && rl_dist( enter, exit ) >= min_distance ) {
+                ex.second = true;
+                railroad_points_temp.emplace_back( exit );
+                break;
+            }
+        }
+    }
+    connect_closest_points( railroad_points_temp, 0, *local_railroad );
 }
 
 void overmap::place_river( point pa, point pb )
