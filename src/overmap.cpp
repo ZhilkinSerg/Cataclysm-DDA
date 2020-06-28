@@ -2817,13 +2817,15 @@ void overmap::place_railroads( const overmap *north, const overmap *east, const 
     }
 
     std::vector<point> railroad_points; // cities and railroads_out together
-    std::vector<point> railroad_exit_points;
-    std::vector<point> railroad_enter_points;
+
     // Compile our master list of railroads; it's less messy if railroads_out is first
     railroad_points.reserve( railroads_out.size() + railroad_stations.size() );
     for( const auto &elem : railroads_out ) {
         railroad_points.emplace_back( elem.pos );
     }
+
+    std::vector<point> railroad_exit_points;
+    std::vector<point> railroad_enter_points;
     int num = 0;
     for( const auto &elem : railroad_stations ) {
         num++;
@@ -2848,19 +2850,17 @@ void overmap::place_railroads( const overmap *north, const overmap *east, const 
                                             entry2.to_string() );
     }
 
-    const int min_distance = 20;
-    // And finally connect them via railroads.
     const string_id<overmap_connection> local_railroad( "local_railroad" );
-    connect_closest_points( railroad_points, 0, *local_railroad, min_distance );
-
-    num = 0;
+    const int min_distance = 20;
     std::set<point> railroad_enter_points_used;
     std::set<point> railroad_exit_points_used;
-    DebugLog( D_ERROR, D_GAME ) << "ZZZ: railroad_enter_points: " << railroad_enter_points.size();
-    DebugLog( D_ERROR, D_GAME ) << "ZZZ: railroad_exit_points: " << railroad_exit_points.size();
+    DebugLog( D_ERROR, D_GAME ) << "AAA: railroad_enter_points: " << railroad_enter_points.size();
+    DebugLog( D_ERROR, D_GAME ) << "BBB: railroad_exit_points: " << railroad_exit_points.size();
     for( auto &enter : railroad_enter_points ) {
-        DebugLog( D_ERROR, D_GAME ) << "ZZZ: railroad_enter_points_used: " <<
+        DebugLog( D_ERROR, D_GAME ) << "CCC: railroad_enter_points_used: " <<
                                     railroad_enter_points_used.size();
+        DebugLog( D_ERROR, D_GAME ) << "DDD: railroad_exit_points_used: " <<
+                                    railroad_exit_points_used.size();
         std::vector<point> railroad_points_pairs;
         railroad_points_pairs.emplace_back( enter );
         railroad_enter_points_used.emplace( enter );
@@ -2870,20 +2870,28 @@ void overmap::place_railroads( const overmap *north, const overmap *east, const 
         while( tries <= max_tries ) {
             ++tries;
             const point exit = random_entry( railroad_exit_points );
+            DebugLog( D_ERROR, D_GAME ) << "MMM: trying to connect_closest_points " << enter.to_string()
+                                        << " to " << exit.to_string();
             if( railroad_exit_points_used.find( exit ) == railroad_exit_points_used.end() &&
                 ( rl_dist( enter, exit ) >= min_distance || max_tries < 2 ) ) {
+                DebugLog( D_ERROR, D_GAME ) << "NNN: success connect_closest_points" << enter.to_string()
+                                            << " to " << exit.to_string();
                 railroad_exit_points_used.emplace( exit );
                 railroad_points_pairs.emplace_back( exit );
                 try_successful = true;
                 DebugLog( D_ERROR, D_GAME ) <<
-                                            string_format( "XXX: connecting railroad stations:\nENTER:%s\nEXIT:%s",
+                                            string_format( "YYY: connecting railroad stations:\nENTER:%s\nEXIT:%s",
                                                     enter.to_string(), exit.to_string() );
                 connect_closest_points( railroad_points_pairs, 0, *local_railroad, min_distance );
                 break;
             }
         }
-        DebugLog( D_ERROR, D_GAME ) << ( !try_successful ? "YYY: failed to connect_closest_points" : "" );
+        DebugLog( D_ERROR, D_GAME ) << ( !try_successful ? "ZZZ: failed to connect_closest_points" : "" );
+        railroad_points.emplace_back( enter );
     }
+
+    // And finally connect them via railroads.
+    connect_closest_points( railroad_points, 0, *local_railroad );
 }
 
 void overmap::place_river( point pa, point pb )
