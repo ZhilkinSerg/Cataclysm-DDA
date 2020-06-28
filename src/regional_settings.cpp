@@ -528,6 +528,15 @@ void load_region_settings( const JsonObject &jo )
         if( ! cjo.read( "min_border_distance", new_region.railroad_spec.min_border_distance ) && strict ) {
             jo.throw_error( "railroad: min_border_distance required for default" );
         }
+        if( ! cjo.read( "max_tries", new_region.railroad_spec.max_tries ) && strict ) {
+            jo.throw_error( "railroad: max_tries required for default" );
+        }
+        if( ! cjo.read( "min_distance_between_stations", new_region.railroad_spec.min_distance_between_stations ) && strict ) {
+            jo.throw_error( "railroad: min_distance_between_stations required for default" );
+        }
+        if( ! cjo.read( "min_distance_between_enter_exit", new_region.railroad_spec.min_distance_between_enter_exit ) && strict ) {
+            jo.throw_error( "railroad: min_distance_between_enter_exit required for default" );
+        }
         const auto load_building_types = [&jo, &cjo, strict]( const std::string & type,
         building_bin & dest ) {
             if( !cjo.has_object( type ) && strict ) {

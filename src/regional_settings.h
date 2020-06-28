@@ -37,6 +37,9 @@ class building_bin
 struct railroad_settings {
     int num_stations = 5;
     int min_border_distance = 10;
+    int max_tries = 100;
+    int min_distance_between_stations = 40;
+    int min_distance_between_enter_exit = 40;
     building_bin stations;
 
     overmap_special_id pick_station() const {

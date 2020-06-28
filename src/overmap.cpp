@@ -2851,7 +2851,8 @@ void overmap::place_railroads( const overmap *north, const overmap *east, const 
     }
 
     const string_id<overmap_connection> local_railroad( "local_railroad" );
-    const int min_distance = 20;
+
+    const int min_distance_between_enter_exit = settings.railroad_spec.min_distance_between_enter_exit;
     std::set<point> railroad_enter_points_used;
     std::set<point> railroad_exit_points_used;
     DebugLog( D_ERROR, D_GAME ) << "AAA: railroad_enter_points: " << railroad_enter_points.size();
@@ -2873,7 +2874,7 @@ void overmap::place_railroads( const overmap *north, const overmap *east, const 
             DebugLog( D_ERROR, D_GAME ) << "MMM: trying to connect_closest_points " << enter.to_string()
                                         << " to " << exit.to_string();
             if( railroad_exit_points_used.find( exit ) == railroad_exit_points_used.end() &&
-                ( rl_dist( enter, exit ) >= min_distance || max_tries < 2 ) ) {
+                ( rl_dist( enter, exit ) >= min_distance_between_enter_exit || max_tries < 2 ) ) {
                 DebugLog( D_ERROR, D_GAME ) << "NNN: success connect_closest_points" << enter.to_string()
                                             << " to " << exit.to_string();
                 railroad_exit_points_used.emplace( exit );
@@ -2882,7 +2883,8 @@ void overmap::place_railroads( const overmap *north, const overmap *east, const 
                 DebugLog( D_ERROR, D_GAME ) <<
                                             string_format( "YYY: connecting railroad stations:\nENTER:%s\nEXIT:%s",
                                                     enter.to_string(), exit.to_string() );
-                connect_closest_points( railroad_points_pairs, 0, *local_railroad, min_distance );
+                connect_closest_points( railroad_points_pairs, 0, *local_railroad,
+                                        min_distance_between_enter_exit );
                 break;
             }
         }
@@ -3062,12 +3064,12 @@ void overmap::place_railroad_stations()
 {
     const size_t num_stations = settings.railroad_spec.num_stations;
     const int min_border_distance = settings.railroad_spec.min_border_distance;
+    const int max_tries = settings.railroad_spec.max_tries;
+    const int min_distance_between_stations = settings.railroad_spec.min_distance_between_stations;
     DebugLog( D_ERROR, D_GAME ) << "III: Running `place_railroad_stations` with [num_stations] = ["
                                 << num_stations << "].";
-    const int max_tries = 100;
     int tries = 0;
     int num = 0;
-    const int min_distance_between_stations = 20;
     while( railroad_stations.size() <= num_stations || tries <= max_tries ) {
         tries++;
         num++;

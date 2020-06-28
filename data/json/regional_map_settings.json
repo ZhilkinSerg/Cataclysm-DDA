@@ -551,7 +551,14 @@
       "river": { "chance": 3, "extras": { "mx_reed": 100 } },
       "lake_shore": { "chance": 2, "extras": { "mx_reed": 100 } }
     },
-    "railroad": { "num_stations": 5, "min_border_distance": 10, "stations": { "Railroad Station": 1 } },
+    "railroad": {
+      "max_stations": 5,
+      "min_border_distance": 10,
+      "max_tries": 100,
+      "min_distance_between_stations": 40,
+      "min_distance_between_enter_exit": 40,
+      "stations": { "Railroad Station": 1 }
+    },
     "city": {
       "shop_radius": 30,
       "shop_sigma": 50,
