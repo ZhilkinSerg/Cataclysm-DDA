@@ -2733,7 +2733,7 @@ void overmap::place_railroads( const overmap *north, const overmap *east, const 
             if( i.pos.y == OMAPY - 1 ) {
                 railroads_out.push_back( city( point( i.pos.x, 0 ), 0 ) );
                 add_note( tripoint( i.pos.x, 0, 0 ),
-                          string_format( "V:R;RR-O:NORTH_%s", opos ) );
+                          string_format( "V:R;%sRR-O:NORTH", opos ) );
             }
         }
     }
@@ -2742,7 +2742,7 @@ void overmap::place_railroads( const overmap *north, const overmap *east, const 
             if( i.pos.x == OMAPX - 1 ) {
                 railroads_out.push_back( city( point( 0, i.pos.y ), 0 ) );
                 add_note( tripoint( 0, i.pos.y, 0 ),
-                          string_format( ">:R;RR-O:WEST_%s", opos ) );
+                          string_format( ">:R;%sRR-O:WEST", opos ) );
             }
         }
     }
@@ -2751,7 +2751,7 @@ void overmap::place_railroads( const overmap *north, const overmap *east, const 
             if( i.pos.y == 0 ) {
                 railroads_out.push_back( city( point( i.pos.x, OMAPY - 1 ), 0 ) );
                 add_note( tripoint( i.pos.x, OMAPY - 1, 0 ),
-                          string_format( "^:Y;RR-O:SOUTH_%s", opos ) );
+                          string_format( "^:Y;%sRR-O:SOUTH", opos ) );
             }
         }
     }
@@ -2760,7 +2760,7 @@ void overmap::place_railroads( const overmap *north, const overmap *east, const 
             if( i.pos.x == 0 ) {
                 railroads_out.push_back( city( point( OMAPX - 1, i.pos.y ), 0 ) );
                 add_note( tripoint( OMAPX - 1, i.pos.y, 0 ),
-                          string_format( "<:Y;RR-O:EAST_%s", opos ) );
+                          string_format( "<:Y;%sRR-O:EAST", opos ) );
             }
         }
     }
@@ -2779,7 +2779,7 @@ void overmap::place_railroads( const overmap *north, const overmap *east, const 
                      is_river( ter( tripoint( tmp + 1, 0, 0 ) ) ) );
             viable_railroads.push_back( city( point( tmp, 0 ), 0 ) );
             add_note( tripoint( tmp, 0, 0 ),
-                      string_format( "^:R;RR-V:NORTH_%s", opos ) );
+                      string_format( "^:R;%sRR-V:NORTH", opos ) );
         }
         if( east == nullptr ) {
             do {
@@ -2789,7 +2789,7 @@ void overmap::place_railroads( const overmap *north, const overmap *east, const 
                      is_river( ter( tripoint( OMAPX - 1, tmp + 1, 0 ) ) ) );
             viable_railroads.push_back( city( point( OMAPX - 1, tmp ), 0 ) );
             add_note( tripoint( OMAPX - 1, tmp, 0 ),
-                      string_format( ">:Y;RR-V:EAST_%s", opos ) );
+                      string_format( ">:Y;%sRR-V:EAST", opos ) );
         }
         if( south == nullptr ) {
             do {
@@ -2799,7 +2799,7 @@ void overmap::place_railroads( const overmap *north, const overmap *east, const 
                      is_river( ter( tripoint( tmp + 1, OMAPY - 1, 0 ) ) ) );
             viable_railroads.push_back( city( point( tmp, OMAPY - 1 ), 0 ) );
             add_note( tripoint( tmp, OMAPY - 1, 0 ),
-                      string_format( "V:Y;RR-V:SOUTH_%s", opos ) );
+                      string_format( "V:Y;%sRR-V:SOUTH", opos ) );
         }
         if( west == nullptr ) {
             do {
@@ -2809,7 +2809,7 @@ void overmap::place_railroads( const overmap *north, const overmap *east, const 
                      is_river( ter( tripoint( 0, tmp + 1, 0 ) ) ) );
             viable_railroads.push_back( city( point( 0, tmp ), 0 ) );
             add_note( tripoint( 0, tmp, 0 ),
-                      string_format( "<:R;RR-V:WEST_%s", opos ) );
+                      string_format( "<:R;%sRR-V:WEST", opos ) );
         }
         while( railroads_out.size() < 2 && !viable_railroads.empty() ) {
             railroads_out.push_back( random_entry_removed( viable_railroads ) );
@@ -2817,8 +2817,8 @@ void overmap::place_railroads( const overmap *north, const overmap *east, const 
     }
 
     std::vector<point> railroad_points; // cities and railroads_out together
-    std::vector<std::pair<point, bool>> railroad_exit_points;
-    std::vector<std::pair<point, bool>> railroad_enter_points;
+    std::vector<point> railroad_exit_points;
+    std::vector<point> railroad_enter_points;
     // Compile our master list of railroads; it's less messy if railroads_out is first
     railroad_points.reserve( railroads_out.size() + railroad_stations.size() );
     for( const auto &elem : railroads_out ) {
@@ -2833,12 +2833,13 @@ void overmap::place_railroads( const overmap *north, const overmap *east, const 
         point entry1 = elem.pos + rotate( point( 0, -1 ), dir );;
         point entry2 = elem.pos + rotate( point( 0, 4 ), dir );
         //railroad_points.emplace_back( entry1 );
-        railroad_exit_points.emplace_back( entry1, false );
-        add_note( tripoint( entry1, 0 ), string_format( "E:<color_cyan>ENTRY %d_%s</color>", num, opos ) );
+        railroad_exit_points.emplace_back( entry1 );
+        add_note( tripoint( entry1, 0 ),
+                  string_format( "E:C;%s<color_cyan>ENTRY-%d</color>", opos, num ) );
         //railroad_points.emplace_back( entry2 );
-        railroad_enter_points.emplace_back( entry2, false );
-        add_note( tripoint( entry2, 0 ), string_format( "E:<color_light_cyan>EXIT %d_%s</color>", num,
-                  opos ) );
+        railroad_enter_points.emplace_back( entry2 );
+        add_note( tripoint( entry2, 0 ),
+                  string_format( "E:c;%s<color_light_cyan>EXIT-%d</color>", opos, num ) );
         DebugLog( D_ERROR, D_GAME ) <<
                                     string_format( "railroad_points.emplace_back:%s\nSTAT:%s\nENT1:%s\nENT2:%s",
                                             opos,
@@ -2852,40 +2853,36 @@ void overmap::place_railroads( const overmap *north, const overmap *east, const 
     const string_id<overmap_connection> local_railroad( "local_railroad" );
     connect_closest_points( railroad_points, 0, *local_railroad, min_distance );
 
-    std::vector<point> railroad_points_temp;
-    std::vector<point> used;
-    for( auto &elem : railroad_enter_points ) {
-        const point enter = elem.first;
-        elem.second = true;
-        railroad_points_temp.emplace_back( enter );
-        while( true ) {
-            const auto ex = random_entry( railroad_exit_points );
-            const point exit = ex.first;
-            if( !ex.second && rl_dist( enter, exit ) >= min_distance ) {
-                used.emplace_back( exit );
-                railroad_points_temp.emplace_back( exit );
+    num = 0;
+    std::set<point> railroad_enter_points_used;
+    std::set<point> railroad_exit_points_used;
+    DebugLog( D_ERROR, D_GAME ) << "ZZZ: railroad_enter_points: " << railroad_enter_points.size();
+    DebugLog( D_ERROR, D_GAME ) << "ZZZ: railroad_exit_points: " << railroad_exit_points.size();
+    for( auto &enter : railroad_enter_points ) {
+        DebugLog( D_ERROR, D_GAME ) << "ZZZ: railroad_enter_points_used: " <<
+                                    railroad_enter_points_used.size();
+        std::vector<point> railroad_points_pairs;
+        railroad_points_pairs.emplace_back( enter );
+        railroad_enter_points_used.emplace( enter );
+        const int max_tries = railroad_exit_points.size() - railroad_enter_points_used.size();
+        int tries = 0;
+        bool try_successful = false;
+        while( tries <= max_tries ) {
+            ++tries;
+            const point exit = random_entry( railroad_exit_points );
+            if( railroad_exit_points_used.find( exit ) == railroad_exit_points_used.end() &&
+                ( rl_dist( enter, exit ) >= min_distance || max_tries < 2 ) ) {
+                railroad_exit_points_used.emplace( exit );
+                railroad_points_pairs.emplace_back( exit );
+                try_successful = true;
+                DebugLog( D_ERROR, D_GAME ) <<
+                                            string_format( "XXX: connecting railroad stations:\nENTER:%s\nEXIT:%s",
+                                                    enter.to_string(), exit.to_string() );
+                connect_closest_points( railroad_points_pairs, 0, *local_railroad, min_distance );
                 break;
             }
         }
-    }
-    point prev = railroad_points_temp[0];
-
-    num = 0;
-    const point last = railroad_points_temp[railroad_points_temp.size() - 1];
-    for( auto &a : railroad_points_temp ) {
-        num++;
-        std::string original_note = note( tripoint( a, 0 ) );
-        add_note( tripoint( a, 0 ), string_format( "%s - <color_light_red>%d</color>", original_note,
-                  num ) );
-        if( a != prev && prev != last ) {
-            std::vector<point> railroad_points_temp2;
-            railroad_points_temp2.emplace_back( prev );
-            railroad_points_temp2.emplace_back( a );
-            DebugLog( D_ERROR, D_GAME ) <<
-                                        string_format( "connecting railroad stations:\nENT1:%s\nENT2:%s",
-                                                prev.to_string(), a.to_string() );
-            connect_closest_points( railroad_points_temp2, 0, *local_railroad, min_distance );
-        }
+        DebugLog( D_ERROR, D_GAME ) << ( !try_successful ? "YYY: failed to connect_closest_points" : "" );
     }
 }
 
@@ -3074,7 +3071,8 @@ void overmap::place_railroad_stations()
         if( rotation == om_direction::type::invalid ) {
             continue;
         }
-        add_note( p, string_format( "R:B;<color_red>Railroad Station %d</color>", num ) );
+        add_note( p, string_format( "R:B;%s<color_red>Railroad Station</color>-%d", pos().to_string(),
+                                    num ) );
         place_special( railroad_station_special, p, rotation, nearest_city, false, false );
         city station( point( cx, cy ), 1 );
         railroad_stations.push_back( station );
