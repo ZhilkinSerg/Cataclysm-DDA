@@ -3062,32 +3062,49 @@ void overmap::place_railroad_stations()
 {
     const size_t num_stations = settings.railroad_spec.num_stations;
     const int min_border_distance = settings.railroad_spec.min_border_distance;
-    DebugLog( D_ERROR, D_GAME ) << " Running `place_railroad_stations` with [num_stations] = ["
+    DebugLog( D_ERROR, D_GAME ) << "III: Running `place_railroad_stations` with [num_stations] = ["
                                 << num_stations << "].";
+    const int max_tries = 100;
+    int tries = 0;
     int num = 0;
-    while( railroad_stations.size() <= num_stations ) {
+    const int min_distance_between_stations = 20;
+    while( railroad_stations.size() <= num_stations || tries <= max_tries ) {
+        tries++;
         num++;
         // TODO put railroad_stations closer to the edge when they can span overmaps
         // don't draw railroad_stations across the edge of the map, they will get clipped
         int cx = rng( min_border_distance - 1, OMAPX - min_border_distance );
         int cy = rng( min_border_distance - 1, OMAPY - min_border_distance );
         const tripoint p = tripoint( cx, cy, 0 );
-        const city &nearest_city = get_nearest_city( p );
-        const std::string station_id = settings.railroad_spec.pick_station().c_str();
-        overmap_special railroad_station_special = overmap_specials::get_specific( station_id );
-        const auto rotation = random_special_rotation( railroad_station_special, p, false );
-        if( rotation == om_direction::type::invalid ) {
-            continue;
+        bool is_valid = true;
+        for( const auto &rs : railroad_stations )  {
+            if( rl_dist( p.xy(), rs.pos ) < min_distance_between_stations ) {
+                is_valid = false;
+                break;
+            }
         }
-        add_note( p, string_format( "R:B;%s<color_red>Railroad Station</color>-%d", pos().to_string(),
-                                    num ) );
-        place_special( railroad_station_special, p, rotation, nearest_city, false, false );
-        city station( point( cx, cy ), 1 );
-        railroad_stations.push_back( station );
-        DebugLog( D_ERROR, D_GAME ) << " Near city [" << nearest_city.name << "] at [" << nearest_city.pos.x
-                                    << "," << nearest_city.pos.y << "] placing [" << station_id << "] named ["
-                                    << station.name << "] at [" << station.pos.to_string() << "].";
+        if( is_valid ) {
+            const city &nearest_city = get_nearest_city( p );
+            const std::string station_id = settings.railroad_spec.pick_station().c_str();
+            overmap_special railroad_station_special = overmap_specials::get_specific( station_id );
+            const auto rotation = random_special_rotation( railroad_station_special, p, false );
+            if( rotation == om_direction::type::invalid ) {
+                continue;
+            }
+            add_note( p, string_format( "R:B;%s<color_red>Railroad Station</color>-%d", pos().to_string(),
+                                        num ) );
+            place_special( railroad_station_special, p, rotation, nearest_city, false, false );
+            city station( point( cx, cy ), 1 );
+            railroad_stations.push_back( station );
+            DebugLog( D_ERROR, D_GAME ) << " Near city [" << nearest_city.name << "] at [" << nearest_city.pos.x
+                                        << "," << nearest_city.pos.y << "] placing [" << station_id << "] named ["
+                                        << station.name << "] at [" << station.pos.to_string() << "].";
+        }
     }
+
+    DebugLog( D_ERROR, D_GAME ) <<
+                                "JJJ: Ended `place_railroad_stations` with [railroad_stations.size()] = ["
+                                << railroad_stations.size() << "].";
 }
 overmap_special_id overmap::pick_random_building_to_place( int town_dist ) const
 {
