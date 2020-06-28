@@ -2727,11 +2727,13 @@ void overmap::place_roads( const overmap *north, const overmap *east, const over
 void overmap::place_railroads( const overmap *north, const overmap *east, const overmap *south,
                                const overmap *west )
 {
+    const std::string opos = pos().to_string();
     if( north != nullptr ) {
         for( auto &i : north->railroads_out ) {
             if( i.pos.y == OMAPY - 1 ) {
                 railroads_out.push_back( city( point( i.pos.x, 0 ), 0 ) );
-                add_note( tripoint( i.pos.x, 0, 0 ), "O:RR-O:NORTH" );
+                add_note( tripoint( i.pos.x, 0, 0 ),
+                          string_format( "V:R;RR-O:NORTH_%s", opos ) );
             }
         }
     }
@@ -2739,7 +2741,8 @@ void overmap::place_railroads( const overmap *north, const overmap *east, const 
         for( auto &i : west->railroads_out ) {
             if( i.pos.x == OMAPX - 1 ) {
                 railroads_out.push_back( city( point( 0, i.pos.y ), 0 ) );
-                add_note( tripoint( 0, i.pos.y, 0 ), "O:RR-O:WEST" );
+                add_note( tripoint( 0, i.pos.y, 0 ),
+                          string_format( ">:R;RR-O:WEST_%s", opos ) );
             }
         }
     }
@@ -2747,7 +2750,8 @@ void overmap::place_railroads( const overmap *north, const overmap *east, const 
         for( auto &i : south->railroads_out ) {
             if( i.pos.y == 0 ) {
                 railroads_out.push_back( city( point( i.pos.x, OMAPY - 1 ), 0 ) );
-                add_note( tripoint( i.pos.x, OMAPY - 1, 0 ), "O:RR-O:SOUTH" );
+                add_note( tripoint( i.pos.x, OMAPY - 1, 0 ),
+                          string_format( "^:Y;RR-O:SOUTH_%s", opos ) );
             }
         }
     }
@@ -2755,7 +2759,8 @@ void overmap::place_railroads( const overmap *north, const overmap *east, const 
         for( auto &i : east->railroads_out ) {
             if( i.pos.x == 0 ) {
                 railroads_out.push_back( city( point( OMAPX - 1, i.pos.y ), 0 ) );
-                add_note( tripoint( OMAPX - 1, i.pos.y, 0 ), "O:RR-O:EAST" );
+                add_note( tripoint( OMAPX - 1, i.pos.y, 0 ),
+                          string_format( "<:Y;RR-O:EAST_%s", opos ) );
             }
         }
     }
@@ -2773,7 +2778,8 @@ void overmap::place_railroads( const overmap *north, const overmap *east, const 
             } while( is_river( ter( tripoint( tmp, 0, 0 ) ) ) || is_river( ter( tripoint( tmp - 1, 0, 0 ) ) ) ||
                      is_river( ter( tripoint( tmp + 1, 0, 0 ) ) ) );
             viable_railroads.push_back( city( point( tmp, 0 ), 0 ) );
-            add_note( tripoint( tmp, 0, 0 ), "V:RR-V:NORTH" );
+            add_note( tripoint( tmp, 0, 0 ),
+                      string_format( "^:R;RR-V:NORTH_%s", opos ) );
         }
         if( east == nullptr ) {
             do {
@@ -2782,7 +2788,8 @@ void overmap::place_railroads( const overmap *north, const overmap *east, const 
                      is_river( ter( tripoint( OMAPX - 1, tmp - 1, 0 ) ) ) ||
                      is_river( ter( tripoint( OMAPX - 1, tmp + 1, 0 ) ) ) );
             viable_railroads.push_back( city( point( OMAPX - 1, tmp ), 0 ) );
-            add_note( tripoint( OMAPX - 1, tmp, 0 ), "V:RR-V:EAST" );
+            add_note( tripoint( OMAPX - 1, tmp, 0 ),
+                      string_format( ">:Y;RR-V:EAST_%s", opos ) );
         }
         if( south == nullptr ) {
             do {
@@ -2791,7 +2798,8 @@ void overmap::place_railroads( const overmap *north, const overmap *east, const 
                      is_river( ter( tripoint( tmp - 1, OMAPY - 1, 0 ) ) ) ||
                      is_river( ter( tripoint( tmp + 1, OMAPY - 1, 0 ) ) ) );
             viable_railroads.push_back( city( point( tmp, OMAPY - 1 ), 0 ) );
-            add_note( tripoint( tmp, OMAPY - 1, 0 ), "V:RR-V:SOUTH" );
+            add_note( tripoint( tmp, OMAPY - 1, 0 ),
+                      string_format( "V:Y;RR-V:SOUTH_%s", opos ) );
         }
         if( west == nullptr ) {
             do {
@@ -2800,7 +2808,8 @@ void overmap::place_railroads( const overmap *north, const overmap *east, const 
                      is_river( ter( tripoint( 0, tmp - 1, 0 ) ) ) ||
                      is_river( ter( tripoint( 0, tmp + 1, 0 ) ) ) );
             viable_railroads.push_back( city( point( 0, tmp ), 0 ) );
-            add_note( tripoint( 0, tmp, 0 ), "V:RR-V:WEST" );
+            add_note( tripoint( 0, tmp, 0 ),
+                      string_format( "<:R;RR-V:WEST_%s", opos ) );
         }
         while( railroads_out.size() < 2 && !viable_railroads.empty() ) {
             railroads_out.push_back( random_entry_removed( viable_railroads ) );
@@ -2815,7 +2824,9 @@ void overmap::place_railroads( const overmap *north, const overmap *east, const 
     for( const auto &elem : railroads_out ) {
         railroad_points.emplace_back( elem.pos );
     }
+    int num = 0;
     for( const auto &elem : railroad_stations ) {
+        num++;
         const auto &terrain_here( ter( tripoint( elem.pos.x, elem.pos.y, 0 ) ) );
         const om_direction::type dir = terrain_here->get_dir();
         DebugLog( D_ERROR, D_GAME ) << string_format( "terrain_here:%s|%d", terrain_here.id().str(), dir );
@@ -2823,10 +2834,14 @@ void overmap::place_railroads( const overmap *north, const overmap *east, const 
         point entry2 = elem.pos + rotate( point( 0, 4 ), dir );
         //railroad_points.emplace_back( entry1 );
         railroad_exit_points.emplace_back( entry1, false );
+        add_note( tripoint( entry1, 0 ), string_format( "E:<color_cyan>ENTRY %d_%s</color>", num, opos ) );
         //railroad_points.emplace_back( entry2 );
         railroad_enter_points.emplace_back( entry2, false );
+        add_note( tripoint( entry2, 0 ), string_format( "E:<color_light_cyan>EXIT %d_%s</color>", num,
+                  opos ) );
         DebugLog( D_ERROR, D_GAME ) <<
-                                    string_format( "railroad_points.emplace_back:\nSTAT:%s\nENT1:%s\nENT2:%s",
+                                    string_format( "railroad_points.emplace_back:%s\nSTAT:%s\nENT1:%s\nENT2:%s",
+                                            opos,
                                             elem.pos.to_string(),
                                             entry1.to_string(),
                                             entry2.to_string() );
@@ -2854,11 +2869,14 @@ void overmap::place_railroads( const overmap *north, const overmap *east, const 
         }
     }
     point prev = railroad_points_temp[0];
-    int num = 0;
+
+    num = 0;
     const point last = railroad_points_temp[railroad_points_temp.size() - 1];
     for( auto &a : railroad_points_temp ) {
         num++;
-        add_note( tripoint( a, 0 ), string_format( "E:<color_cyan>ENTRY %d</color>", num ) );
+        std::string original_note = note( tripoint( a, 0 ) );
+        add_note( tripoint( a, 0 ), string_format( "%s - <color_light_red>%d</color>", original_note,
+                  num ) );
         if( a != prev && prev != last ) {
             std::vector<point> railroad_points_temp2;
             railroad_points_temp2.emplace_back( prev );
@@ -3056,7 +3074,7 @@ void overmap::place_railroad_stations()
         if( rotation == om_direction::type::invalid ) {
             continue;
         }
-        add_note( p, string_format( "R:<color_red>RailroadXXXZZZ</color> - %d", num ) );
+        add_note( p, string_format( "R:B;<color_red>Railroad Station %d</color>", num ) );
         place_special( railroad_station_special, p, rotation, nearest_city, false, false );
         city station( point( cx, cy ), 1 );
         railroad_stations.push_back( station );
