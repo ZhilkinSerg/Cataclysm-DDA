@@ -1215,15 +1215,15 @@ void debug()
             break;
 
         case debug_menu_index::REVEAL_MAP: {
-            const int radius = 1;
-            const tripoint min( -radius, -radius, 0 );
-            const tripoint max( radius, radius, 0 );
-            const tripoint_range om_range( min, max );
-            for( const tripoint &dir_ : om_range ) {
-                const tripoint offset( OMAPX * dir_.x, OMAPY * dir_.y, dir_.z );
-                const tripoint where( g->u.global_omt_location() + offset );
-                add_msg( m_critical, _( "Jumping to %s" ), where.to_string() );
-                g->place_player_overmap( where );
+            //const int radius = 0;
+            //const tripoint min( -radius, -radius, 0 );
+            //const tripoint max( radius, radius, 0 );
+            //const tripoint_range om_range( min, max );
+            //for( const tripoint &dir_ : om_range ) {
+            //    const tripoint offset( OMAPX * dir_.x, OMAPY * dir_.y, dir_.z );
+            //    const tripoint where( g->u.global_omt_location() + offset );
+            //    add_msg( m_critical, _( "Jumping to %s" ), where.to_string() );
+            //    g->place_player_overmap( where );
                 auto &cur_om = g->get_cur_om();
                 for( int i = 0; i < OMAPX; i++ ) {
                     for( int j = 0; j < OMAPY; j++ ) {
@@ -1233,7 +1233,7 @@ void debug()
                         //}
                     }
                 }
-            }
+            //}
             add_msg( m_good, _( "Current overmap revealed." ) );
         }
         break;
