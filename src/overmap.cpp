@@ -2830,21 +2830,34 @@ void overmap::place_railroads( const overmap *north, const overmap *east, const 
     connect_closest_points( railroad_points, 0, *local_railroad, min_distance );
 
     std::vector<point> railroad_points_temp;
+    std::vector<point> used;
     for( auto &elem : railroad_enter_points ) {
         const point enter = elem.first;
         elem.second = true;
         railroad_points_temp.emplace_back( enter );
         while( true ) {
-            auto &ex = random_entry( railroad_exit_points );
+            const auto ex = random_entry( railroad_exit_points );
             const point exit = ex.first;
             if( !ex.second && rl_dist( enter, exit ) >= min_distance ) {
-                ex.second = true;
+                used.emplace_back( exit );
                 railroad_points_temp.emplace_back( exit );
                 break;
             }
         }
     }
-    connect_closest_points( railroad_points_temp, 0, *local_railroad );
+    point prev = railroad_points_temp[0];
+    const point last = railroad_points_temp[railroad_points_temp.size() - 1];
+    for( auto &a : railroad_points_temp ) {
+        if( a != prev && prev != last ) {
+            std::vector<point> railroad_points_temp2;
+            railroad_points_temp2.emplace_back( prev );
+            railroad_points_temp2.emplace_back( a );
+            DebugLog( D_ERROR, D_GAME ) <<
+                                        string_format( "connecting railroad stations:\nENT1:%s\nENT2:%s",
+                                                prev.to_string(), a.to_string() );
+            connect_closest_points( railroad_points_temp2, 0, *local_railroad, min_distance );
+        }
+    }
 }
 
 void overmap::place_river( point pa, point pb )
