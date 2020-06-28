@@ -552,7 +552,7 @@
       "lake_shore": { "chance": 2, "extras": { "mx_reed": 100 } }
     },
     "railroad": {
-      "max_stations": 5,
+      "num_stations": 5,
       "min_border_distance": 10,
       "max_tries": 100,
       "min_distance_between_stations": 40,
