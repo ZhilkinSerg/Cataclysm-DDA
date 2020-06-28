@@ -445,7 +445,7 @@ class overmap
                                const overmap_connection &connection, bool must_be_unexplored,
                                const om_direction::type &initial_dir = om_direction::type::invalid );
         void connect_closest_points( const std::vector<point> &points, int z,
-                                     const overmap_connection &connection );
+                                     const overmap_connection &connection, int minimal_distance = 0 );
         // Polishing
         bool check_ot( const std::string &otype, ot_match_type match_type, const tripoint &p ) const;
         bool check_overmap_special_type( const overmap_special_id &id, const tripoint &location ) const;
