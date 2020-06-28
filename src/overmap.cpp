@@ -2818,10 +2818,10 @@ void overmap::place_railroads( const overmap *north, const overmap *east, const 
         //railroad_points.emplace_back( entry2 );
         railroad_enter_points.emplace_back( entry2, false );
         DebugLog( D_ERROR, D_GAME ) <<
-                                    string_format( "railroad_points.emplace_back:\nSTAT:%d|%d\nENT1:%d|%d\nENT2:%d|%d",
-                                            elem.pos.x, elem.pos.y,
-                                            entry1.x, entry1.y,
-                                            entry2.x, entry2.y );
+                                    string_format( "railroad_points.emplace_back:\nSTAT:%s\nENT1:%s\nENT2:%s",
+                                            elem.pos.to_string(),
+                                            entry1.to_string(),
+                                            entry2.to_string() );
     }
 
     const int min_distance = 20;
@@ -3030,7 +3030,9 @@ void overmap::place_railroad_stations()
     const int min_border_distance = settings.railroad_spec.min_border_distance;
     DebugLog( D_ERROR, D_GAME ) << " Running `place_railroad_stations` with [num_stations] = ["
                                 << num_stations << "].";
+    int num = 0;
     while( railroad_stations.size() <= num_stations ) {
+        num++;
         // TODO put railroad_stations closer to the edge when they can span overmaps
         // don't draw railroad_stations across the edge of the map, they will get clipped
         int cx = rng( min_border_distance - 1, OMAPX - min_border_distance );
@@ -3043,12 +3045,13 @@ void overmap::place_railroad_stations()
         if( rotation == om_direction::type::invalid ) {
             continue;
         }
+        add_note( p, string_format( "<color_red>RailroadXXXZZZ</color> - %d", num ) );
         place_special( railroad_station_special, p, rotation, nearest_city, false, false );
         city station( point( cx, cy ), 1 );
         railroad_stations.push_back( station );
         DebugLog( D_ERROR, D_GAME ) << " Near city [" << nearest_city.name << "] at [" << nearest_city.pos.x
                                     << "," << nearest_city.pos.y << "] placing [" << station_id << "] named ["
-                                    << station.name << "] at [" << station.pos.x << "," << station.pos.y << "].";
+                                    << station.name << "] at [" << station.pos.to_string() << "].";
     }
 }
 overmap_special_id overmap::pick_random_building_to_place( int town_dist ) const
