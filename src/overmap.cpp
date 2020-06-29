@@ -3107,7 +3107,7 @@ void overmap::place_railroad_stations()
                                 << num_stations << "].";
     int tries = 0;
     int num = 0;
-    while( railroad_stations.size() <= num_stations || tries <= max_tries ) {
+    while( tries <= max_tries && railroad_stations.size() <= num_stations ) {
         tries++;
         num++;
         // TODO put railroad_stations closer to the edge when they can span overmaps
