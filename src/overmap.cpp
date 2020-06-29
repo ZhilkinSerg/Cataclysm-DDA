@@ -2736,9 +2736,9 @@ void overmap::place_railroads( const overmap *north, const overmap *east, const 
                 add_note( tripoint( i.pos.x, 0, 0 ),
                           string_format( "V:R;%sRR-O:NORTH", opos ) );
                 for( int n = 0; n <= min_border_distance; n++ ) {
-                    railroads_out.push_back( city( point( i.pos.x, n ), 0 ) );
                     add_note( tripoint( i.pos.x, n, 0 ), string_format( "x:W;xxxxxxxxx", opos ) );
                 }
+                railroads_out.push_back( city( point( i.pos.x, min_border_distance ), 0 ) );
             }
         }
     }
@@ -2749,9 +2749,9 @@ void overmap::place_railroads( const overmap *north, const overmap *east, const 
                 add_note( tripoint( 0, i.pos.y, 0 ),
                           string_format( ">:R;%sRR-O:WEST", opos ) );
                 for( int n = 0; n <= min_border_distance; n++ ) {
-                    railroads_out.push_back( city( point( n, i.pos.y ), 0 ) );
                     add_note( tripoint( n, i.pos.y, 0 ), string_format( "x:W;xxxxxxxxx", opos ) );
                 }
+                railroads_out.push_back( city( point( min_border_distance, i.pos.y ), 0 ) );
             }
         }
     }
@@ -2762,9 +2762,9 @@ void overmap::place_railroads( const overmap *north, const overmap *east, const 
                 add_note( tripoint( i.pos.x, OMAPY - 1, 0 ),
                           string_format( "^:Y;%sRR-O:SOUTH", opos ) );
                 for( int n = 0; n <= min_border_distance; n++ ) {
-                    railroads_out.push_back( city( point( n, i.pos.y ), 0 ) );
                     add_note( tripoint( i.pos.x, OMAPY - 1 - n, 0 ), string_format( "x:W;xxxxxxxxx", opos ) );
                 }
+                railroads_out.push_back( city( point( i.pos.x, OMAPY - 1 - min_border_distance ), 0 ) );
             }
         }
     }
@@ -2775,9 +2775,9 @@ void overmap::place_railroads( const overmap *north, const overmap *east, const 
                 add_note( tripoint( OMAPX - 1, i.pos.y, 0 ),
                           string_format( "<:Y;%sRR-O:EAST", opos ) );
                 for( int n = 0; n <= min_border_distance; n++ ) {
-                    railroads_out.push_back( city( point( n, i.pos.y ), 0 ) );
                     add_note( tripoint( OMAPX - 1 - n, i.pos.y, 0 ), string_format( "x:W;xxxxxxxxx", opos ) );
                 }
+                railroads_out.push_back( city( point( OMAPX - 1 - min_border_distance, i.pos.y ), 0 ) );
             }
         }
     }
@@ -2797,10 +2797,10 @@ void overmap::place_railroads( const overmap *north, const overmap *east, const 
             viable_railroads.push_back( city( point( tmp, 0 ), 0 ) );
             add_note( tripoint( tmp, 0, 0 ),
                       string_format( "^:R;%sRR-V:NORTH", opos ) );
-                for( int n = 0; n <= min_border_distance; n++ ) {
-                    railroads_out.push_back( city( point( tmp, n ), 0 ) );
-                    add_note( tripoint( tmp, n, 0 ), string_format( "x:M;zzzzzzzzz", opos ) );
-                }
+            for( int n = 0; n <= min_border_distance; n++ ) {
+                railroads_out.push_back( city( point( tmp, n ), 0 ) );
+                add_note( tripoint( tmp, n, 0 ), string_format( "x:M;zzzzzzzzz", opos ) );
+            }
         }
         if( east == nullptr ) {
             do {
@@ -2811,10 +2811,10 @@ void overmap::place_railroads( const overmap *north, const overmap *east, const 
             viable_railroads.push_back( city( point( OMAPX - 1, tmp ), 0 ) );
             add_note( tripoint( OMAPX - 1, tmp, 0 ),
                       string_format( ">:Y;%sRR-V:EAST", opos ) );
-                for( int n = 0; n <= min_border_distance; n++ ) {
-                    railroads_out.push_back( city( point( OMAPX - 1 - n, tmp ), 0 ) );
-                    add_note( tripoint( OMAPX - 1 - n, tmp, 0 ), string_format( "x:M;zzzzzzzzz", opos ) );
-                }
+            for( int n = 0; n <= min_border_distance; n++ ) {
+                railroads_out.push_back( city( point( OMAPX - 1 - n, tmp ), 0 ) );
+                add_note( tripoint( OMAPX - 1 - n, tmp, 0 ), string_format( "x:M;zzzzzzzzz", opos ) );
+            }
         }
         if( south == nullptr ) {
             do {
@@ -2825,10 +2825,10 @@ void overmap::place_railroads( const overmap *north, const overmap *east, const 
             viable_railroads.push_back( city( point( tmp, OMAPY - 1 ), 0 ) );
             add_note( tripoint( tmp, OMAPY - 1, 0 ),
                       string_format( "V:Y;%sRR-V:SOUTH", opos ) );
-                for( int n = 0; n <= min_border_distance; n++ ) {
-                    railroads_out.push_back( city( point( tmp, OMAPY - 1 - n ), 0 ) );
-                    add_note( tripoint( tmp, OMAPY - 1 - n, 0 ), string_format( "x:M;zzzzzzzzz", opos ) );
-                }
+            for( int n = 0; n <= min_border_distance; n++ ) {
+                railroads_out.push_back( city( point( tmp, OMAPY - 1 - n ), 0 ) );
+                add_note( tripoint( tmp, OMAPY - 1 - n, 0 ), string_format( "x:M;zzzzzzzzz", opos ) );
+            }
         }
         if( west == nullptr ) {
             do {
@@ -2839,10 +2839,10 @@ void overmap::place_railroads( const overmap *north, const overmap *east, const 
             viable_railroads.push_back( city( point( 0, tmp ), 0 ) );
             add_note( tripoint( 0, tmp, 0 ),
                       string_format( "<:R;%sRR-V:WEST", opos ) );
-                for( int n = 0; n <= min_border_distance; n++ ) {
-                    railroads_out.push_back( city( point( n, tmp ), 0 ) );
-                    add_note( tripoint( n, tmp, 0 ), string_format( "x:M;zzzzzzzzz", opos ) );
-                }
+            for( int n = 0; n <= min_border_distance; n++ ) {
+                railroads_out.push_back( city( point( n, tmp ), 0 ) );
+                add_note( tripoint( n, tmp, 0 ), string_format( "x:M;zzzzzzzzz", opos ) );
+            }
         }
         DebugLog( D_ERROR, D_GAME ) << string_format( "viable_railroads=%d", viable_railroads.size() );
         while( railroads_out.size() < 2 && !viable_railroads.empty() ) {
