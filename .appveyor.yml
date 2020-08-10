@@ -15,3 +15,9 @@ install:
 cache:
   - c:\tools\vcpkg
   - c:\Users\appveyor\AppData\Local\vcpkg\
+build:
+  project: /msvc-full-features/Cataclysm-vcpkg-static.sln
+  parallel: true
+  verbosity: detailed
+test_script:
+  - cmd: Cataclysm-test-vcpkg-static-Release-x64.exe --rng-seed time --min-duration 0.2
