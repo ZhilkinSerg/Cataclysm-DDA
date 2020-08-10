@@ -9,11 +9,11 @@ install:
   - cmd: git pull
   - cmd: .\bootstrap-vcpkg.bat -disableMetrics
   - cmd: .\vcpkg integrate install
-  - cmd: vcpkg --triplet x64-windows-static install sdl2 sdl2-image sdl2-mixer sdl2-ttf gettext
+  - cmd: vcpkg --triplet x64-windows-static install sdl2 sdl2-image sdl2-mixer sdl2-ttf gettext --recurse
 cache: c:\tools\vcpkg\installed\
 build:
   project: /msvc-full-features/Cataclysm-vcpkg-static.sln
   parallel: true
-  verbosity: minimal
+  verbosity: detailed
 test_script:
   - cmd: Cataclysm-test-vcpkg-static-Release-x64.exe --rng-seed time --min-duration 0.2
