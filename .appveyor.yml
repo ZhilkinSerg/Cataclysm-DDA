@@ -5,6 +5,10 @@ platform: x64
 shallow_clone: true
 clone_folder: C:\Projects\Cataclysm-DDA
 install:
+  - cmd: cd c:\tools\vcpkg\
+  - cmd: git pull
+  - cmd: .\bootstrap-vcpkg.bat -disableMetrics
+  - cmd: .\vcpkg integrate install
   - cmd: vcpkg --triplet x64-windows-static install sdl2 sdl2-image sdl2-mixer sdl2-ttf gettext
 cache: c:\tools\vcpkg\installed\
 build:
