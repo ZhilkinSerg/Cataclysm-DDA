@@ -10270,7 +10270,7 @@ bool game::grabbed_furn_move( const tripoint &dp )
     }
     str_req += furniture_contents_weight / 4_kilogram;
     if( canmove ) {
-        u.increase_activity_level( ACTIVE_EXERCISE );
+        u.set_activity_level( ACTIVE_EXERCISE );
     }
     const float weary_mult = 1.0f / u.exertion_adjusted_move_multiplier();
     if( !canmove ) {

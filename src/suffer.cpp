@@ -1475,7 +1475,7 @@ void Character::suffer_from_exertion()
 
     // Significantly slow the rate of messaging when in an activity
     int chance = activity ? 2000 : 60;
-    if( attempted_activity_level > max_activity && one_in( chance ) && !in_sleep_state() ) {
+    if( activity_history.activity() > max_activity && one_in( chance ) && !in_sleep_state() ) {
         add_msg_if_player( m_bad,
                            _( "You're tiring out, continuing to work at this rate will be slower." ) );
     }

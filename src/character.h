@@ -20,6 +20,7 @@
 #include <utility>
 #include <vector>
 
+#include "activity_tracker.h"
 #include "bodypart.h"
 #include "calendar.h"
 #include "cata_utility.h"
@@ -308,20 +309,6 @@ struct consumption_event {
         type_id = food.typeId();
         component_hash = food.make_component_hash();
     }
-    void serialize( JsonOut &json ) const;
-    void deserialize( JsonIn &jsin );
-};
-
-struct weariness_tracker {
-    int tracker = 0;
-    int intake = 0;
-
-    // Semi-consecutive 5 minute ticks of low activity (or 2.5 if we're sleeping)
-    int low_activity_ticks = 0;
-    // How many ticks since we've decreased intake
-    int tick_counter = 0;
-
-    void clear();
     void serialize( JsonOut &json ) const;
     void deserialize( JsonIn &jsin );
 };
@@ -2043,10 +2030,10 @@ class Character : public Creature, public visitable<Character>
         units::mass bodyweight() const;
         // returns total weight of installed bionics
         units::mass bionics_weight() const;
-        // increases the activity level to the next level
+        // increases the activity level to the specified level
         // does not decrease activity level
-        void increase_activity_level( float new_level );
-        // decreases the activity level to the previous level
+        void set_activity_level( float new_level );
+        // decreases activity level to the specified level
         // does not increase activity level
         void decrease_activity_level( float new_level );
         // sets activity level to NO_EXERCISE
@@ -2609,7 +2596,6 @@ class Character : public Creature, public visitable<Character>
         int weariness_level() const;
         float activity_level() const;
         float exertion_adjusted_move_multiplier( float level = -1.0f ) const;
-        void try_reduce_weariness( float exertion );
         float maximum_exertion_level() const;
         std::string debug_weary_info() const;
         // returns empty because this is avatar specific
@@ -2657,9 +2643,7 @@ class Character : public Creature, public visitable<Character>
         int healthy = 0;
         int healthy_mod = 0;
 
-        weariness_tracker weary;
         int weary_threshold() const;
-        int weariness() const;
         // Our bmr at no activity level
         int base_bmr() const;
 
@@ -2671,7 +2655,7 @@ class Character : public Creature, public visitable<Character>
         creature_size size_class = creature_size::medium;
 
         // the player's activity level for metabolism calculations
-        float attempted_activity_level = NO_EXERCISE;
+        activity_tracker activity_history;
 
         trap_map known_traps;
         mutable std::map<std::string, double> cached_info;
