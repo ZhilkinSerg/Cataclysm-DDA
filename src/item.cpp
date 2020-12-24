@@ -5586,13 +5586,13 @@ void item::set_rot( time_duration val )
     rot = val;
 }
 
-int item::spoilage_sort_order()
+int item::spoilage_sort_order() const
 {
     int bottom = std::numeric_limits<int>::max();
 
     bool any_goes_bad = false;
     time_duration min_spoil_time = calendar::INDEFINITELY_LONG_DURATION;
-    visit_items( [&]( item * const node, item * const parent ) {
+    visit_items( [&]( const item * const node, const item * const parent ) {
         if( node && node->goes_bad() ) {
             float spoil_multiplier = 1.0f;
             if( parent ) {
