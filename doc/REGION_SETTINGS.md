@@ -16,6 +16,7 @@ as follows:
 | `map_extras`                    | Defines the map extra groups referenced by overmap terrains.          |
 | `weather`                       | Defines the base weather attributes for the region.                   |
 | `overmap_feature_flag_settings` | Defines operations on overmap features based on their flags.          |
+| `cities                       ` | Defines cities on overmaps.                                           |
 
 Note that for the default region, all attributes and sections are required.
 
@@ -550,6 +551,33 @@ This is currently used to provide a mechanism for whitelisting and blacklisting 
 		"clear_whitelist": false,
 		"whitelist": []
 	}
+}
+```
+
+## Cities
+
+The **cities** section defines list of cities that would appear on overmap.
+Cities from this list will appear in specific locations on specific overmaps.
+Note that no random cities would be spawned if this list is not empty.
+
+### Fields
+
+|    Identifier     |                                        Description                                         |
+| ----------------- | ------------------------------------------------------------------------------------------ |
+| `id`              | Id of the city in MA database.                                                             |
+| `name`            | Name of the city.                                                                          |
+| `population`      | Original population of the city.                                                           |
+| `size`            | Size of the city.                                                                          |
+| `om_pos`          | location of the city (in overmap coordinates).                                             |
+| `omt_pos`         | location of the city (in overmap terrain coordinates).                                     |
+
+### Example
+
+```json
+{
+	"cities": [
+		{ "id": 1, "name": "ABINGTON", "population": 15985, "pos_om": [ 48, 20 ], "pos_omt": [ 145, 109 ] }
+	]
 }
 ```
 

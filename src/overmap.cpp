@@ -2941,8 +2941,22 @@ void overmap::place_cities()
     const double omts_per_city = ( op_city_size * 2 + 1 ) * ( op_city_size * 2 + 1 ) * 3 / 4.0;
 
     // how many cities on this overmap?
-    const int NUM_CITIES =
-        roll_remainder( omts_per_overmap * city_map_coverage_ratio / omts_per_city );
+    int num_cities_on_this_overmap = 0;
+    std::vector<city> cities_to_place;
+    for( const city &c : settings.cities ) {
+        if( c.pos_om == pos() ) {
+            num_cities_on_this_overmap++;
+            cities_to_place.emplace_back( c );
+        }
+    }
+
+    const bool use_random_cities = cities_to_place.empty();
+
+    // Random cities if no cities were defined in regional settings
+    if( !use_random_cities ) {
+        num_cities_on_this_overmap = roll_remainder( omts_per_overmap * city_map_coverage_ratio /
+                                     omts_per_city );
+    }
 
     const string_id<overmap_connection> local_road_id( "local_road" );
     const overmap_connection &local_road( *local_road_id );
@@ -2951,45 +2965,49 @@ void overmap::place_cities()
     // is (1 - 1/(OMAPX * OMAPY))^MAX_PLACEMENT_ATTEMPTS ≈ 36% for the OMAPX=OMAPY=180 and MAX_PLACEMENT_ATTEMPTS=OMAPX * OMAPY
     const int MAX_PLACEMENT_ATTEMPTS = OMAPX * OMAPY;
     int placement_attempts = 0;
-
     // place a seed for NUM_CITIES cities, and maybe one more
-    while( cities.size() < static_cast<size_t>( NUM_CITIES ) &&
+    // place a seed for NUM_CITIES cities, and maybe one more
+    while( cities.size() < static_cast<size_t>( num_cities_on_this_overmap ) &&
            placement_attempts < MAX_PLACEMENT_ATTEMPTS ) {
         placement_attempts++;
 
-        // randomly make some cities smaller or larger
-        int size = rng( op_city_size - 1, op_city_size + 1 );
-        if( one_in( 3 ) ) {      // 33% tiny
-            size = 1;
-        } else if( one_in( 2 ) ) { // 33% small
-            size = size * 2 / 3;
-        } else if( one_in( 2 ) ) { // 17% large
-            size = size * 3 / 2;
-        } else {                 // 17% huge
-            size = size * 2;
+        tripoint_om_omt p;
+        city tmp;
+        if( use_random_cities ) {
+            // randomly make some cities smaller or larger
+            int size = rng( op_city_size - 1, op_city_size + 1 );
+            if( one_in( 3 ) ) { // 33% tiny
+                size = 1;
+            } else if( one_in( 2 ) ) { // 33% small
+                size = size * 2 / 3;
+            } else if( one_in( 2 ) ) { // 17% large
+                size = size * 3 / 2;
+            } else {             // 17% huge
+                size = size * 2;
+            }
+            size = std::max( size, 1 );
+            // TODO: put cities closer to the edge when they can span overmaps
+            // don't draw cities across the edge of the map, they will get clipped
+            point_om_omt c( rng( size - 1, OMAPX - size ), rng( size - 1, OMAPY - size ) );
+            p = tripoint_om_omt( c, 0 );
+            if( ter( p ) == settings.default_oter ) {
+                placement_attempts = 0;
+                ter_set( p, oter_id( "road_nesw" ) ); // every city starts with an intersection
+                tmp.pos = p.xy();
+                tmp.size = size;
+            }
+        } else {
+            tmp = random_entry( cities_to_place );
+            p = tripoint_om_omt( tmp.pos, 0 );
+            ter_set( tripoint_om_omt( tmp.pos, 0 ), oter_id( "road_nesw" ) );
         }
-        size = std::max( size, 1 );
+        cities.push_back( tmp );
+        const om_direction::type start_dir = om_direction::random();
+        om_direction::type cur_dir = start_dir;
 
-        // TODO: put cities closer to the edge when they can span overmaps
-        // don't draw cities across the edge of the map, they will get clipped
-        point_om_omt c( rng( size - 1, OMAPX - size ), rng( size - 1, OMAPY - size ) );
-        const tripoint_om_omt p( c, 0 );
-
-        if( ter( p ) == settings.default_oter ) {
-            placement_attempts = 0;
-            ter_set( p, oter_id( "road_nesw" ) ); // every city starts with an intersection
-            city tmp;
-            tmp.pos = p.xy();
-            tmp.size = size;
-            cities.push_back( tmp );
-
-            const om_direction::type start_dir = om_direction::random();
-            om_direction::type cur_dir = start_dir;
-
-            do {
-                build_city_street( local_road, tmp.pos, size, cur_dir, tmp );
-            } while( ( cur_dir = om_direction::turn_right( cur_dir ) ) != start_dir );
-        }
+        do {
+            build_city_street( local_road, tmp.pos, tmp.size, cur_dir, tmp );
+        } while( ( cur_dir = om_direction::turn_right( cur_dir ) ) != start_dir );
     }
 }
 

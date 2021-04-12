@@ -20,6 +20,26 @@
 
 class JsonObject;
 
+struct city {
+    // id of the city in database
+    int id = 0;
+    // location of the city (in overmap coordinates)
+    point_abs_om pos_om;
+    // location of the city (in overmap terrain coordinates)
+    point_om_omt pos;
+    // original population
+    int population = 0;
+    int size = -1;
+    std::string name;
+    explicit city( const point_om_omt &P = point_om_omt(), int S = -1 );
+
+    explicit operator bool() const {
+        return size >= 0;
+    }
+
+    int get_distance_from( const tripoint_om_omt &p ) const;
+};
+
 class building_bin
 {
     private:
@@ -253,6 +273,7 @@ struct regional_settings {
     overmap_lake_settings overmap_lake;
     overmap_ravine_settings overmap_ravine;
     region_terrain_and_furniture_settings region_terrain_and_furniture;
+    std::vector<city> cities;
 
     std::unordered_map<std::string, map_extras> region_extras;
 
