@@ -448,6 +448,9 @@ static void load_cities( const JsonObject &jo, std::vector<city> &cities,
         if( c.size < 0 ) {
             c.size = rng( 1, 16 );
         }
+        // Use Boston overmap as basepoint
+        //const point base_point( 46, 15 );
+        //c.pos_om.raw() += base_point;
     }
 }
 
