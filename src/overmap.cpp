@@ -1490,8 +1490,8 @@ void overmap::generate( const overmap *north, const overmap *east,
 
         if( pregenerated_terrain_file_found ) {
             JsonIn jsin( fin );
-            JsonArray o = jsin.get_array();
-            debugmsg( "overmap:\n***\n%s\n***", o.str() );
+            //JsonArray o = jsin.get_array();
+            //debugmsg( "overmap:\n***\n%s\n***", o.str() );
 
             //debugmsg( "Peeking pregen terrain0:\n[%s]", jsin.substr( 0, 100 ) );
             //debugmsg( "Peeking pregen terrain1:\n[%s]", jsin.substr( 1, 100 ) );
