@@ -3,7 +3,8 @@ select distinct
 	om_y, om_x,
 	--omt_pagenumber,
 	omt_y, omt_x,
-(case when land_use_code is null then 0 --null
+	--land_use_code,
+(case when land_use_code is null then 9 --null - must be Ocean (or some other state)
 when land_use_code =  1  then 0 --{ $overmap_terrain="field"} #Cropland
 when land_use_code =  2  then 0 --{ $overmap_terrain="field"} #Pasture
 when land_use_code =  3  then 2 --{ $overmap_terrain="forest_thick"} #Forest
@@ -40,8 +41,8 @@ when land_use_code = 40  then 1 --{ $overmap_terrain="forest"} #Brushland/Succes
 else 0 end --any other
 ) as "ot"
 from omt
-where
-	om_y = 15 and om_x = 46
+--where
+--	om_y = 21 and om_x = 65
 order by
 	om_pagenumber, om_y, om_x, omt_pagenumber, omt_y, omt_x
 ;
@@ -52,6 +53,8 @@ order by
 --3   forest_water
 --4   lake_surface
 --5   lake_shore
+--999 lake_surface - represents ocean/some other state
+-- empty_rock
 
 /*
 select distinct

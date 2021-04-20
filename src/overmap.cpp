@@ -1502,42 +1502,51 @@ void overmap::generate( const overmap *north, const overmap *east,
             JsonArray jal = jo.get_array( "layers" );
 
             if( type == "overmap" ) {
+                std::unordered_map<tripoint_om_omt, std::string> needs_conversion;
                 if( om_pos != pos() ) {
                     debugmsg( "Loaded invalid overmap from omap file %s. Loaded %s, expected %s",
                               fpath, om_pos.to_string(), pos().to_string() );
-                }
-                std::unordered_map<tripoint_om_omt, std::string> needs_conversion;
-                int count = 0;
-                std::string tmp_ter;
-                oter_id tmp_otid( 0 );
-                for( int j = 0; j < OMAPY; j++ ) {
-                    for( int i = 0; i < OMAPX; i++ ) {
-                        if( count == 0 ) {
-                            JsonArray jat = jal.next_array();
-                            tmp_ter = jat.next_string();
-                            count = jat.next_int();
-                            if( obsolete_terrain( tmp_ter ) ) {
-                                for( int p = i; p < i + count; p++ ) {
-                                    needs_conversion.emplace(
-                                        tripoint_om_omt( p, j, z - OVERMAP_DEPTH ), tmp_ter );
+                } else {
+                    int count = 0;
+                    std::string tmp_ter;
+                    oter_id tmp_otid( 0 );
+                    for( int j = 0; j < OMAPY; j++ ) {
+                        for( int i = 0; i < OMAPX; i++ ) {
+                            if( count == 0 ) {
+                                JsonArray jat = jal.next_array();
+                                tmp_ter = jat.next_string();
+                                count = jat.next_int();
+                                if( obsolete_terrain( tmp_ter ) ) {
+                                    for( int p = i; p < i + count; p++ ) {
+                                        needs_conversion.emplace(
+                                            tripoint_om_omt( p, j, z - OVERMAP_DEPTH ), tmp_ter );
+                                    }
+                                    tmp_otid = oter_id( 0 );
+                                } else if( oter_str_id( tmp_ter ).is_valid() ) {
+                                    tmp_otid = oter_id( tmp_ter );
+                                } else {
+                                    debugmsg( "Loaded bad ter!  ter %s", tmp_ter.c_str() );
+                                    tmp_otid = oter_id( 0 );
                                 }
-                                tmp_otid = oter_id( 0 );
-                            } else if( oter_str_id( tmp_ter ).is_valid() ) {
-                                tmp_otid = oter_id( tmp_ter );
-                            } else {
-                                debugmsg( "Loaded bad ter!  ter %s", tmp_ter.c_str() );
-                                tmp_otid = oter_id( 0 );
                             }
+                            count--;
+                            layer[z + OVERMAP_DEPTH].terrain[i][j] = tmp_otid;
                         }
-                        count--;
-                        layer[z + OVERMAP_DEPTH].terrain[i][j] = tmp_otid;
                     }
                 }
                 convert_terrain( needs_conversion );
             }
             loaded_pregenerated_terrain = true;
+        } else {
+            int z = 0;
+            const oter_id lake_surface( "lake_surface" );
+            for( int j = 0; j < OMAPY; j++ ) {
+                for( int i = 0; i < OMAPX; i++ ) {
+                    layer[z + OVERMAP_DEPTH].terrain[i][j] = lake_surface;
+                }
+            }
+            loaded_pregenerated_terrain = true;
         }
-
     }
 
     if( !loaded_pregenerated_terrain ) {

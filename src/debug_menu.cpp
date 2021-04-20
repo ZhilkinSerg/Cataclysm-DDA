@@ -444,7 +444,7 @@ void teleport_long()
     add_msg( _( "You teleport to submap (%s)." ), where.to_string() );
 }
 
-void teleport_overmap( bool specific_coordinates )
+void teleport_overmap( bool specific_coordinates, bool reveal_overmap )
 {
     Character &player_character = get_player_character();
     tripoint_abs_omt where;
@@ -475,6 +475,23 @@ void teleport_overmap( bool specific_coordinates )
     const tripoint_abs_om new_pos =
         project_to<coords::om>( player_character.global_omt_location() );
     add_msg( _( "You teleport to overmap %s." ), new_pos.to_string() );
+
+    if( reveal_overmap ) {
+        debug_menu::reveal_overmap();
+    }
+}
+
+void reveal_overmap()
+{
+    auto &cur_om = g->get_cur_om();
+    for( int i = 0; i < OMAPX; i++ ) {
+        for( int j = 0; j < OMAPY; j++ ) {
+            for( int k = -OVERMAP_DEPTH; k <= OVERMAP_HEIGHT; k++ ) {
+                cur_om.seen( { i, j, k } ) = true;
+            }
+        }
+    }
+    add_msg( m_good, _( "Current overmap revealed." ) );
 }
 
 void spawn_nested_mapgen()
@@ -1360,15 +1377,8 @@ void debug()
             break;
 
         case debug_menu_index::REVEAL_MAP: {
-            auto &cur_om = g->get_cur_om();
-            for( int i = 0; i < OMAPX; i++ ) {
-                for( int j = 0; j < OMAPY; j++ ) {
-                    for( int k = -OVERMAP_DEPTH; k <= OVERMAP_HEIGHT; k++ ) {
-                        cur_om.seen( { i, j, k } ) = true;
-                    }
-                }
-            }
-            add_msg( m_good, _( "Current overmap revealed." ) );
+            debug_menu::reveal_overmap();
+            break;
         }
         break;
 
@@ -1931,10 +1941,10 @@ void debug()
         break;
 
         case debug_menu_index::OM_TELEPORT:
-            debug_menu::teleport_overmap();
+            debug_menu::teleport_overmap( false, true );
             break;
         case debug_menu_index::OM_TELEPORT_COORDINATES:
-            debug_menu::teleport_overmap( true );
+            debug_menu::teleport_overmap( true, true );
             break;
         case debug_menu_index::TRAIT_GROUP:
             trait_group::debug_spawn();

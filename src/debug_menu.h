@@ -91,7 +91,9 @@ enum class debug_menu_index : int {
 
 void teleport_short();
 void teleport_long();
-void teleport_overmap( bool specific_coordinates = false );
+void teleport_overmap( bool specific_coordinates = false, bool reveal_overmap = false );
+
+void reveal_overmap();
 
 void spawn_nested_mapgen();
 void character_edit_menu();

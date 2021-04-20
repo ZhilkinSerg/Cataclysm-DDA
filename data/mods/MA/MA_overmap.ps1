@@ -8,7 +8,8 @@ function Get-Terrain  {
         3 { [string]$overmap_terrain = "forest_water" }
         4 { [string]$overmap_terrain = "lake_surface" }
         5 { [string]$overmap_terrain = "lake_shore" }
-        Default { [string]$overmap_terrain = "field" }
+        9 { [string]$overmap_terrain = "lake_shore" }
+        Default { [string]$overmap_terrain = "empty_rock" }
     }
     return $overmap_terrain
 }
