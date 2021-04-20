@@ -5,11 +5,14 @@
 #include <cmath>
 #include <cstring>
 #include <exception>
+#include <fstream>
 #include <istream>
 #include <memory>
 #include <numeric>
 #include <ostream>
 #include <set>
+#include <sstream>
+#include <string>
 #include <type_traits>
 #include <unordered_set>
 #include <vector>
@@ -46,6 +49,7 @@
 #include "overmap_noise.h"
 #include "overmap_types.h"
 #include "overmapbuffer.h"
+#include "path_info.h"
 #include "regional_settings.h"
 #include "rng.h"
 #include "rotatable_symbols.h"
@@ -1462,13 +1466,110 @@ void overmap::generate( const overmap *north, const overmap *east,
 
     dbg( D_INFO ) << "overmap::generate start…";
 
-    populate_connections_out_from_neighbors( north, east, south, west );
+    bool use_pregenerated_terrain = get_option<bool>( "PREGENERATED_OVERMAP_TERRAIN" );
+    bool loaded_pregenerated_terrain = false;
+    if( use_pregenerated_terrain ) {
+        bool pregenerated_terrain_file_found = false;
+        const std::string fpath = string_format( "%s/%s/overmap_%d_%d.omap",
+                                  PATH_INFO::moddir(),
+                                  R"(MA/MA_overmap)", pos().x(), pos().y() );
+        std::ifstream fin( fpath.c_str(), std::ifstream::in | std::ios::binary );
+        try {
+            if( !fin ) {
+                throw std::runtime_error( "opening file failed" );
+            }
+            if( fin.bad() ) {
+                throw std::runtime_error( "reading file failed" );
+            }
+            //debugmsg( "Successfully read from \"%1$s\"", fpath );
+            pregenerated_terrain_file_found = true;
+        } catch( const std::exception &err ) {
+            //debugmsg( "Failed to read from \"%1$s\": %2$s", fpath, err.what() );
+            pregenerated_terrain_file_found = false;
+        }
 
-    place_rivers( north, east, south, west );
-    place_lakes();
-    place_forests();
-    place_swamps();
-    place_ravines();
+        if( pregenerated_terrain_file_found ) {
+            JsonIn jsin( fin );
+            JsonArray o = jsin.get_array();
+            debugmsg( "overmap:\n***\n%s\n***", o.str() );
+
+            //debugmsg( "Peeking pregen terrain0:\n[%s]", jsin.substr( 0, 100 ) );
+            //debugmsg( "Peeking pregen terrain1:\n[%s]", jsin.substr( 1, 100 ) );
+            //debugmsg( "Peeking pregen terrain2:\n[%s]", jsin.substr( 2, 100 ) );
+            //debugmsg( "Peeking pregen terrain3:\n[%s]", jsin.substr( 3, 100 ) );
+            //debugmsg( "Peeking pregen terrain4:\n[%s]", jsin.substr( 4, 100 ) );
+            //debugmsg( "Peeking pregen terrain5:\n[%s]", jsin.substr( 5, 100 ) );
+            //debugmsg( "Peeking pregen terrain6:\n[%s]", jsin.substr( 6, 100 ) );
+            jsin.start_array();
+            while( !jsin.end_array() ) {
+                std::string type;
+                point_abs_om om_pos( point_min );
+                int z = 0;
+                JsonArray jal;
+                jsin.start_object();
+                while( !jsin.end_object() ) {
+                    std::string name = jsin.get_member_name();
+                    if( name == "type" ) {
+                        type = jsin.get_string();
+                    } else if( name == "om_pos" ) {
+                        jsin.read( om_pos );
+                    } else if( name == "z" ) {
+                        z = jsin.get_int();
+                    } else if( name == "layers" ) {
+                        jal = jsin.get_array();
+                    } else {
+                        jsin.skip_value();
+                    }
+                }
+                if( type == "overmap" ) {
+                    if( om_pos != pos() ) {
+                        debugmsg( "Loaded invalid overmap from omap file %s. Loaded %s, expected %s",
+                                  fpath, om_pos.to_string(), pos().to_string() );
+                    }
+                    std::unordered_map<tripoint_om_omt, std::string> needs_conversion;
+                    int count = 0;
+                    std::string tmp_ter;
+                    oter_id tmp_otid( 0 );
+                    for( int j = 0; j < OMAPY; j++ ) {
+                        for( int i = 0; i < OMAPX; i++ ) {
+                            if( count == 0 ) {
+                                JsonArray jat = jal.next_array();
+                                tmp_ter = jat.next_string();
+                                count = jat.next_int();
+                                if( obsolete_terrain( tmp_ter ) ) {
+                                    for( int p = i; p < i + count; p++ ) {
+                                        needs_conversion.emplace(
+                                            tripoint_om_omt( p, j, z - OVERMAP_DEPTH ), tmp_ter );
+                                    }
+                                    tmp_otid = oter_id( 0 );
+                                } else if( oter_str_id( tmp_ter ).is_valid() ) {
+                                    tmp_otid = oter_id( tmp_ter );
+                                } else {
+                                    debugmsg( "Loaded bad ter!  ter %s", tmp_ter.c_str() );
+                                    tmp_otid = oter_id( 0 );
+                                }
+                            }
+                            count--;
+                            layer[z].terrain[i][j] = tmp_otid;
+                        }
+                    }
+                    convert_terrain( needs_conversion );
+                }
+            }
+            loaded_pregenerated_terrain = true;
+        }
+
+    }
+
+    if( !loaded_pregenerated_terrain ) {
+        populate_connections_out_from_neighbors( north, east, south, west );
+        place_rivers( north, east, south, west );
+        place_lakes();
+        place_forests();
+        place_swamps();
+        place_ravines();
+    }
+
     place_cities();
     place_forest_trails();
     place_roads( north, east, south, west );
