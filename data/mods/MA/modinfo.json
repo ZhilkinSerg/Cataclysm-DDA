@@ -8,5 +8,19 @@
     "description": "Cataclysm in one state.",
     "category": "rebalance",
     "dependencies": [ "dda" ]
+  },
+  {
+    "type": "SCENARIO_BLACKLIST",
+    "subtype": "whitelist",
+    "scenarios": [
+      "wilderness"
+    ]
+  },
+  {
+    "type": "EXTERNAL_OPTION",
+    "name": "PREGENERATED_OVERMAP_TERRAIN",
+    "info": "Use pregenerated overmap terrain.",
+    "stype": "bool",
+    "value": true
   }
 ]
