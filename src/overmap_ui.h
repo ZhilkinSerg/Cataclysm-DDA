@@ -3,6 +3,7 @@
 #define CATA_SRC_OVERMAP_UI_H
 
 #include "coordinates.h"
+#include "string_id.h"
 
 namespace catacurses
 {
@@ -10,6 +11,10 @@ class window;
 } // namespace catacurses
 
 class input_context;
+class nc_color;
+
+struct weather_type;
+using weather_type_id = string_id<weather_type>;
 
 namespace ui
 {
@@ -76,12 +81,6 @@ namespace overmap_ui
 {
 // drawing relevant data, e.g. what to draw.
 struct draw_data_t {
-    // draw monster groups on the overmap.
-    bool debug_mongroup = false;
-    // draw weather, e.g. clouds etc.
-    bool debug_weather = false;
-    // draw weather only around player position
-    bool visible_weather = false;
     // draw editor.
     bool debug_editor = false;
     // draw scent traces.
