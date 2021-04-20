@@ -49,7 +49,7 @@ function Compress-RLE ($s) {
 [int]$om_y_prev = $input_line_first[0]
 [int]$om_x_prev = $input_line_first[1]
 
-[string]$output_file = $output_path +"overmap_" + $om_x_prev + "_" + $om_y_prev + ".json"
+[string]$output_file = $output_path +"overmap_" + $om_x_prev + "_" + $om_y_prev + ".omap"
 
 [string]$land_use_codes = ""
 
@@ -67,13 +67,13 @@ ForEach ($input_line In [System.IO.File]::ReadLines($input_file)) {
 
     if( ( $om_y_prev -ne $om_y ) -or ( $om_x_prev -ne $om_x ) ) {
         Write-Host "Overmap changed from "$om_y_prev`,$om_x_prev" to "$om_y`,$om_x
-        [string]$output_file = $output_path +"overmap_" + $om_x_prev + "_" + $om_y_prev + ".json"
+        [string]$output_file = $output_path +"overmap_" + $om_x_prev + "_" + $om_y_prev + ".omap"
         [string]$rle = Compress-RLE($land_use_codes)
         #[string]$rle = $rle.Substring(0, $rle.Length - 1)
         
-        Write-Output [`{`"type`":`"overmap`"`,`"om_pos`":[$om_x_prev`,$om_y_prev]`,`"layers`":[ | Out-File -FilePath $output_file
-        Write-Output $rle | Out-File -FilePath $output_file -Append
-        Write-Output ]`}] | Out-File -FilePath $output_file -Append
+        Write-Output [`{`"type`":`"overmap`"`,`"om_pos`":[$om_x_prev`,$om_y_prev]`,`"layers`":[ | Out-File -FilePath $output_file -Encoding ascii
+        Write-Output $rle | Out-File -FilePath $output_file -Append -Encoding ascii
+        Write-Output ]`}] | Out-File -FilePath $output_file -Append -Encoding ascii
 
         [int]$om_y_prev = $om_y
         [int]$om_x_prev = $om_x
@@ -84,8 +84,8 @@ ForEach ($input_line In [System.IO.File]::ReadLines($input_file)) {
     }
 }
 
-[string]$output_file = $output_path +"overmap_" + $om_x_prev + "_" + $om_y_prev + ".json"
+[string]$output_file = $output_path +"overmap_" + $om_x_prev + "_" + $om_y_prev + ".omap"
 
-Write-Output [`{`"type`":`"overmap`"`,`"om_pos`":[$om_x_prev`,$om_y_prev]`,`"layers`":[ | Out-File -FilePath $output_file
-Write-Output $rle | Out-File -FilePath $output_file -Append
-Write-Output ]`}] | Out-File -FilePath $output_file -Append
+Write-Output [`{`"type`":`"overmap`"`,`"om_pos`":[$om_x_prev`,$om_y_prev]`,`"layers`":[ | Out-File -FilePath $output_file -Encoding ascii
+Write-Output $rle | Out-File -FilePath $output_file -Append -Encoding ascii
+Write-Output ]`}] | Out-File -FilePath $output_file -Append -Encoding ascii
