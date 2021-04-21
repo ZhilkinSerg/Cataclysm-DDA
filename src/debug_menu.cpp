@@ -424,6 +424,49 @@ static cata::optional<debug_menu_index> debug_menu_uilist( bool display_all_entr
 
 void teleport_short()
 {
+    Character &player_character = get_player_character();
+    const tripoint_abs_omt initial = player_character.global_omt_location();
+    std::vector<point> points1337;
+    points1337.emplace_back( point( 61, 39 ) );
+    points1337.emplace_back( point( 62, 39 ) );
+    points1337.emplace_back( point( 63, 39 ) );
+    points1337.emplace_back( point( 64, 39 ) );
+    points1337.emplace_back( point( 65, 39 ) );
+    points1337.emplace_back( point( 66, 39 ) );
+    points1337.emplace_back( point( 67, 39 ) );
+    points1337.emplace_back( point( 68, 39 ) );
+    points1337.emplace_back( point( 61, 40 ) );
+    points1337.emplace_back( point( 62, 40 ) );
+    points1337.emplace_back( point( 63, 40 ) );
+    points1337.emplace_back( point( 64, 40 ) );
+    points1337.emplace_back( point( 65, 40 ) );
+    points1337.emplace_back( point( 66, 40 ) );
+    points1337.emplace_back( point( 67, 40 ) );
+    points1337.emplace_back( point( 68, 40 ) );
+    points1337.emplace_back( point( 61, 41 ) );
+    points1337.emplace_back( point( 62, 41 ) );
+    points1337.emplace_back( point( 63, 41 ) );
+    points1337.emplace_back( point( 64, 41 ) );
+    points1337.emplace_back( point( 65, 41 ) );
+    points1337.emplace_back( point( 66, 41 ) );
+    points1337.emplace_back( point( 67, 41 ) );
+    points1337.emplace_back( point( 68, 41 ) );
+    points1337.emplace_back( point( 61, 42 ) );
+    points1337.emplace_back( point( 62, 42 ) );
+    points1337.emplace_back( point( 63, 42 ) );
+    points1337.emplace_back( point( 64, 42 ) );
+    points1337.emplace_back( point( 65, 42 ) );
+    points1337.emplace_back( point( 66, 42 ) );
+    points1337.emplace_back( point( 67, 42 ) );
+    points1337.emplace_back( point( 68, 42 ) );
+    for( const point &p : points1337 ) {
+        const tripoint offset = tripoint( OMAPX * p.x, OMAPY * p.y, 0 );
+        const tripoint_abs_omt where = initial + offset;
+        g->place_player_overmap( where );
+        debug_menu::reveal_overmap();
+    }
+    return;
+
     const cata::optional<tripoint> where = g->look_around();
     location &player_location = get_player_location();
     if( !where || *where == player_location.pos() ) {
