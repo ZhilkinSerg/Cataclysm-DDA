@@ -23,7 +23,7 @@ void creator::dual_list_box::initialize( const QStringList &items )
 
     QHBoxLayout *listbox_layout = new QHBoxLayout();
     listbox_layout->setSpacing( 0 );
-    listbox_layout->setMargin( 0 );
+    listbox_layout->setContentsMargins( 0, 0, 0, 0 );
     setLayout( listbox_layout );
 
     listbox_layout->addWidget( &included_box );

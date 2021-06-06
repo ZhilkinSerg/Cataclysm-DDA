@@ -1,19 +1,19 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'fake_spell_listbox.h'
 **
-** Created by: The Qt Meta Object Compiler version 67 (Qt 5.15.0)
+** Created by: The Qt Meta Object Compiler version 68 (Qt 6.1.0)
 **
 ** WARNING! All changes made in this file will be lost!
 *****************************************************************************/
 
 #include <memory>
-#include "../../object_creator/fake_spell_listbox.h"
+#include "fake_spell_listbox.h"
 #include <QtCore/qbytearray.h>
 #include <QtCore/qmetatype.h>
 #if !defined(Q_MOC_OUTPUT_REVISION)
 #error "The header file 'fake_spell_listbox.h' doesn't include <QObject>."
-#elif Q_MOC_OUTPUT_REVISION != 67
-#error "This file was generated using the moc from 5.15.0. It"
+#elif Q_MOC_OUTPUT_REVISION != 68
+#error "This file was generated using the moc from 6.1.0. It"
 #error "cannot be used with the include files from this version of Qt."
 #error "(The moc has changed too much.)"
 #endif
@@ -22,20 +22,17 @@ QT_BEGIN_MOC_NAMESPACE
 QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_creator__fake_spell_listbox_t {
-    QByteArrayData data[3];
+    const uint offsetsAndSize[6];
     char stringdata0[38];
 };
-#define QT_MOC_LITERAL(idx, ofs, len) \
-    Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
-            qptrdiff(offsetof(qt_meta_stringdata_creator__fake_spell_listbox_t, stringdata0) + ofs \
-                     - idx * sizeof(QByteArrayData)) \
-            )
+#define QT_MOC_LITERAL(ofs, len) \
+    uint(offsetof(qt_meta_stringdata_creator__fake_spell_listbox_t, stringdata0) + ofs), len
 static const qt_meta_stringdata_creator__fake_spell_listbox_t
 qt_meta_stringdata_creator__fake_spell_listbox = {
     {
-        QT_MOC_LITERAL( 0, 0, 27 ), // "creator::fake_spell_listbox"
-        QT_MOC_LITERAL( 1, 28, 8 ), // "modified"
-        QT_MOC_LITERAL( 2, 37, 0 ) // ""
+        QT_MOC_LITERAL( 0, 27 ), // "creator::fake_spell_listbox"
+        QT_MOC_LITERAL( 28, 8 ), // "modified"
+        QT_MOC_LITERAL( 37, 0 ) // ""
 
     },
     "creator::fake_spell_listbox\0modified\0"
@@ -46,7 +43,7 @@ qt_meta_stringdata_creator__fake_spell_listbox = {
 static const uint qt_meta_data_creator__fake_spell_listbox[] = {
 
     // content:
-    8,       // revision
+    9,       // revision
     0,       // classname
     0,    0, // classinfo
     1,   14, // methods
@@ -56,8 +53,8 @@ static const uint qt_meta_data_creator__fake_spell_listbox[] = {
     0,       // flags
     1,       // signalCount
 
-    // signals: name, argc, parameters, tag, flags
-    1,    0,   19,    2, 0x06 /* Public */,
+    // signals: name, argc, parameters, tag, flags, initial metatype offsets
+    1,    0,   20,    2, 0x06,    0 /* Public */,
 
     // signals: parameters
     QMetaType::Void,
@@ -70,7 +67,7 @@ void creator::fake_spell_listbox::qt_static_metacall( QObject *_o, QMetaObject::
 {
     if( _c == QMetaObject::InvokeMetaMethod ) {
         auto *_t = static_cast<fake_spell_listbox *>( _o );
-        Q_UNUSED( _t )
+        ( void )_t;
         switch( _id ) {
             case 0:
                 _t->modified();
@@ -88,15 +85,21 @@ void creator::fake_spell_listbox::qt_static_metacall( QObject *_o, QMetaObject::
             }
         }
     }
-    Q_UNUSED( _a );
+    ( void )_a;
 }
 
-QT_INIT_METAOBJECT const QMetaObject creator::fake_spell_listbox::staticMetaObject = { {
+const QMetaObject creator::fake_spell_listbox::staticMetaObject = { {
         QMetaObject::SuperData::link<QListWidget::staticMetaObject>(),
-        qt_meta_stringdata_creator__fake_spell_listbox.data,
+        qt_meta_stringdata_creator__fake_spell_listbox.offsetsAndSize,
         qt_meta_data_creator__fake_spell_listbox,
         qt_static_metacall,
         nullptr,
+        qt_incomplete_metaTypeArray<qt_meta_stringdata_creator__fake_spell_listbox_t
+        , QtPrivate::TypeAndForceComplete<void, std::false_type>
+
+
+
+        >,
         nullptr
     }
 };
@@ -131,7 +134,7 @@ int creator::fake_spell_listbox::qt_metacall( QMetaObject::Call _c, int _id, voi
         _id -= 1;
     } else if( _c == QMetaObject::RegisterMethodArgumentMetaType ) {
         if( _id < 1 ) {
-            *reinterpret_cast<int *>( _a[0] ) = -1;
+            *reinterpret_cast<QMetaType *>( _a[0] ) = QMetaType();
         }
         _id -= 1;
     }
