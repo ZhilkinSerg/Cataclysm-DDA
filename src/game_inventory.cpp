@@ -349,7 +349,7 @@ class wear_inventory_preset: public armor_inventory_preset
             const auto ret = p.can_wear( *loc );
 
             if( !ret.success() ) {
-                return trim_punctuation_marks( ret.str() );
+                return trim_trailing_punctuations( ret.str() );
             }
 
             return std::string();
@@ -381,7 +381,7 @@ class take_off_inventory_preset: public armor_inventory_preset
             const ret_val<bool> ret = p.can_takeoff( *loc );
 
             if( !ret.success() ) {
-                return trim_punctuation_marks( ret.str() );
+                return trim_trailing_punctuations( ret.str() );
             }
 
             return std::string();
@@ -946,7 +946,7 @@ class activatable_inventory_preset : public pickup_inventory_preset
             if( uses.size() == 1 ) {
                 const auto ret = uses.begin()->second.can_call( p, it, false, p.pos() );
                 if( !ret.success() ) {
-                    return trim_punctuation_marks( ret.str() );
+                    return trim_trailing_punctuations( ret.str() );
                 }
             }
 
@@ -1319,7 +1319,7 @@ class weapon_inventory_preset: public inventory_selector_preset
             const auto ret = p.can_wield( *loc );
 
             if( !ret.success() ) {
-                return trim_punctuation_marks( ret.str() );
+                return trim_trailing_punctuations( ret.str() );
             }
 
             return std::string();
@@ -1423,7 +1423,7 @@ class saw_barrel_inventory_preset: public weapon_inventory_preset
             const auto ret = actor.can_use_on( p, tool, *loc );
 
             if( !ret.success() ) {
-                return trim_punctuation_marks( ret.str() );
+                return trim_trailing_punctuations( ret.str() );
             }
 
             return std::string();

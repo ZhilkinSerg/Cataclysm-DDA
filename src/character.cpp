@@ -3927,6 +3927,16 @@ ret_val<bool> Character::can_wear( const item &it, bool with_equip_change ) cons
         if( i.has_flag( flag_ONLY_ONE ) && i.typeId() == it.typeId() ) {
             return ret_val<bool>::make_failure( _( "Can't wear more than one %s!" ), it.tname() );
         }
+<<<<<<< ours
+=======
+
+        if( this_restricts_only_one || i.has_flag( flag_id( "ONE_PER_LAYER" ) ) ) {
+            cata::optional<side> overlaps = it.covers_overlaps( i );
+            if( overlaps && sidedness_conflicts( *overlaps ) ) {
+                return ret_val<bool>::make_failure( _( "%1$s conflicts with %2$s!" ), it.tname(), i.tname() );
+            }
+        }
+>>>>>>> theirs
     }
 
     if( amount_worn( it.typeId() ) >= MAX_WORN_PER_TYPE ) {
