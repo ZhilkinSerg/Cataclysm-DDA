@@ -15,6 +15,7 @@
 #include "init.h"
 #include "int_id.h"
 #include "json.h"
+#include "mod_tracker.h"
 #include "output.h"
 #include "string_id.h"
 #include "units.h"
@@ -263,6 +264,7 @@ class generic_factory
             }
             if( jo.has_string( id_member_name ) ) {
                 def.id = string_id<T>( jo.get_string( id_member_name ) );
+                assign_src( def, src );
                 def.load( jo, src );
                 insert( def );
 
@@ -283,6 +285,7 @@ class generic_factory
                         break;
                     }
                     def.id = string_id<T>( e );
+                    assign_src( def, src );
                     def.load( jo, src );
                     insert( def );
                 }
@@ -293,6 +296,7 @@ class generic_factory
 
             } else if( jo.has_string( legacy_id_member_name ) ) {
                 def.id = string_id<T>( jo.get_string( legacy_id_member_name ) );
+                assign_src( def, src );
                 def.load( jo, src );
                 insert( def );
 
@@ -313,6 +317,7 @@ class generic_factory
                         break;
                     }
                     def.id = string_id<T>( e );
+                    assign_src( def, src );
                     def.load( jo, src );
                     insert( def );
                 }
