@@ -45,20 +45,6 @@ template<typename Point>
 struct directed_path;
 } // namespace pf
 
-struct city {
-    // location of the city (in overmap terrain coordinates)
-    point_om_omt pos;
-    int size;
-    std::string name;
-    explicit city( const point_om_omt &P = point_om_omt(), int S = -1 );
-
-    explicit operator bool() const {
-        return size >= 0;
-    }
-
-    int get_distance_from( const tripoint_om_omt &p ) const;
-};
-
 struct om_note {
     std::string text;
     point_om_omt p;

@@ -5,11 +5,14 @@
 #include <cmath>
 #include <cstring>
 #include <exception>
+#include <fstream>
 #include <istream>
 #include <memory>
 #include <numeric>
 #include <ostream>
 #include <set>
+#include <sstream>
+#include <string>
 #include <type_traits>
 #include <unordered_set>
 #include <vector>
@@ -49,6 +52,7 @@
 #include "overmap_noise.h"
 #include "overmap_types.h"
 #include "overmapbuffer.h"
+#include "path_info.h"
 #include "regional_settings.h"
 #include "rng.h"
 #include "rotatable_symbols.h"
@@ -2554,13 +2558,98 @@ void overmap::generate( const overmap *north, const overmap *east,
 
     dbg( D_INFO ) << "overmap::generate start…";
 
-    populate_connections_out_from_neighbors( north, east, south, west );
+    bool use_pregenerated_terrain = get_option<bool>( "PREGENERATED_OVERMAP_TERRAIN" );
+    bool loaded_pregenerated_terrain = false;
+    if( use_pregenerated_terrain ) {
+        bool pregenerated_terrain_file_found = false;
+        const std::string fpath = string_format( "%s/%s/overmap_%d_%d.omap",
+                                  PATH_INFO::moddir(),
+                                  R"(MA/MA_overmap)", pos().x(), pos().y() );
+        std::ifstream fin( fpath.c_str(), std::ifstream::in | std::ios::binary );
+        try {
+            if( !fin ) {
+                throw std::runtime_error( "opening file failed" );
+            }
+            if( fin.bad() ) {
+                throw std::runtime_error( "reading file failed" );
+            }
+            //debugmsg( "Successfully read from \"%1$s\"", fpath );
+            pregenerated_terrain_file_found = true;
+        } catch( const std::exception &err ) {
+            //debugmsg( "Failed to read from \"%1$s\": %2$s", fpath, err.what() );
+            pregenerated_terrain_file_found = false;
+        }
 
-    place_rivers( north, east, south, west );
-    place_lakes();
-    place_forests();
-    place_swamps();
-    place_ravines();
+        if( pregenerated_terrain_file_found ) {
+            JsonIn jsin( fin );
+            JsonObject jo = jsin.get_array().next_object();
+
+            std::string type;
+            point_abs_om om_pos( point_min );
+            int z = 0;
+
+            jo.read( "type", type );
+            jo.read( "om_pos", om_pos );
+            jo.read( "z", z );
+            JsonArray jal = jo.get_array( "layers" );
+
+            if( type == "overmap" ) {
+                std::unordered_map<tripoint_om_omt, std::string> needs_conversion;
+                if( om_pos != pos() ) {
+                    debugmsg( "Loaded invalid overmap from omap file %s. Loaded %s, expected %s",
+                              fpath, om_pos.to_string(), pos().to_string() );
+                } else {
+                    int count = 0;
+                    std::string tmp_ter;
+                    oter_id tmp_otid( 0 );
+                    for( int j = 0; j < OMAPY; j++ ) {
+                        for( int i = 0; i < OMAPX; i++ ) {
+                            if( count == 0 ) {
+                                JsonArray jat = jal.next_array();
+                                tmp_ter = jat.next_string();
+                                count = jat.next_int();
+                                if( obsolete_terrain( tmp_ter ) ) {
+                                    for( int p = i; p < i + count; p++ ) {
+                                        needs_conversion.emplace(
+                                            tripoint_om_omt( p, j, z - OVERMAP_DEPTH ), tmp_ter );
+                                    }
+                                    tmp_otid = oter_id( 0 );
+                                } else if( oter_str_id( tmp_ter ).is_valid() ) {
+                                    tmp_otid = oter_id( tmp_ter );
+                                } else {
+                                    debugmsg( "Loaded bad ter!  ter %s", tmp_ter.c_str() );
+                                    tmp_otid = oter_id( 0 );
+                                }
+                            }
+                            count--;
+                            layer[z + OVERMAP_DEPTH].terrain[i][j] = tmp_otid;
+                        }
+                    }
+                }
+                convert_terrain( needs_conversion );
+            }
+            loaded_pregenerated_terrain = true;
+        } else {
+            int z = 0;
+            const oter_id lake_surface( "lake_surface" );
+            for( int j = 0; j < OMAPY; j++ ) {
+                for( int i = 0; i < OMAPX; i++ ) {
+                    layer[z + OVERMAP_DEPTH].terrain[i][j] = lake_surface;
+                }
+            }
+            loaded_pregenerated_terrain = true;
+        }
+    }
+
+    if( !loaded_pregenerated_terrain ) {
+        populate_connections_out_from_neighbors( north, east, south, west );
+        place_rivers( north, east, south, west );
+        place_lakes();
+        place_forests();
+        place_swamps();
+        place_ravines();
+    }
+
     place_cities();
     place_forest_trails();
     place_roads( north, east, south, west );
@@ -4117,8 +4206,22 @@ void overmap::place_cities()
     const double omts_per_city = ( op_city_size * 2 + 1 ) * ( op_city_size * 2 + 1 ) * 3 / 4.0;
 
     // how many cities on this overmap?
-    const int NUM_CITIES =
-        roll_remainder( omts_per_overmap * city_map_coverage_ratio / omts_per_city );
+    int num_cities_on_this_overmap = 0;
+    std::vector<city> cities_to_place;
+    for( const city &c : settings.cities ) {
+        if( c.pos_om == pos() ) {
+            num_cities_on_this_overmap++;
+            cities_to_place.emplace_back( c );
+        }
+    }
+
+    const bool use_random_cities = cities_to_place.empty();
+
+    // Random cities if no cities were defined in regional settings
+    if( !use_random_cities ) {
+        num_cities_on_this_overmap = roll_remainder( omts_per_overmap * city_map_coverage_ratio /
+                                     omts_per_city );
+    }
 
     const string_id<overmap_connection> local_road_id( "local_road" );
     const overmap_connection &local_road( *local_road_id );
@@ -4127,45 +4230,49 @@ void overmap::place_cities()
     // is (1 - 1/(OMAPX * OMAPY))^MAX_PLACEMENT_ATTEMPTS ≈ 36% for the OMAPX=OMAPY=180 and MAX_PLACEMENT_ATTEMPTS=OMAPX * OMAPY
     const int MAX_PLACEMENT_ATTEMPTS = OMAPX * OMAPY;
     int placement_attempts = 0;
-
     // place a seed for NUM_CITIES cities, and maybe one more
-    while( cities.size() < static_cast<size_t>( NUM_CITIES ) &&
+    // place a seed for NUM_CITIES cities, and maybe one more
+    while( cities.size() < static_cast<size_t>( num_cities_on_this_overmap ) &&
            placement_attempts < MAX_PLACEMENT_ATTEMPTS ) {
         placement_attempts++;
 
-        // randomly make some cities smaller or larger
-        int size = rng( op_city_size - 1, op_city_size + 1 );
-        if( one_in( 3 ) ) {      // 33% tiny
-            size = size * 1 / 3;
-        } else if( one_in( 2 ) ) { // 33% small
-            size = size * 2 / 3;
-        } else if( one_in( 2 ) ) { // 17% large
-            size = size * 3 / 2;
-        } else {                 // 17% huge
-            size = size * 2;
+        tripoint_om_omt p;
+        city tmp;
+        if( use_random_cities ) {
+            // randomly make some cities smaller or larger
+            int size = rng( op_city_size - 1, op_city_size + 1 );
+            if( one_in( 3 ) ) { // 33% tiny
+                size = 1;
+            } else if( one_in( 2 ) ) { // 33% small
+                size = size * 2 / 3;
+            } else if( one_in( 2 ) ) { // 17% large
+                size = size * 3 / 2;
+            } else {             // 17% huge
+                size = size * 2;
+            }
+            size = std::max( size, 1 );
+            // TODO: put cities closer to the edge when they can span overmaps
+            // don't draw cities across the edge of the map, they will get clipped
+            point_om_omt c( rng( size - 1, OMAPX - size ), rng( size - 1, OMAPY - size ) );
+            p = tripoint_om_omt( c, 0 );
+            if( ter( p ) == settings->default_oter[OVERMAP_DEPTH] ) {
+                placement_attempts = 0;
+                ter_set( p, oter_id( "road_nesw" ) ); // every city starts with an intersection
+                tmp.pos = p.xy();
+                tmp.size = size;
+            }
+        } else {
+            tmp = random_entry( cities_to_place );
+            p = tripoint_om_omt( tmp.pos, 0 );
+            ter_set( tripoint_om_omt( tmp.pos, 0 ), oter_id( "road_nesw" ) );
         }
-        size = std::max( size, 1 );
+        cities.push_back( tmp );
+        const om_direction::type start_dir = om_direction::random();
+        om_direction::type cur_dir = start_dir;
 
-        // TODO: put cities closer to the edge when they can span overmaps
-        // don't draw cities across the edge of the map, they will get clipped
-        point_om_omt c( rng( size - 1, OMAPX - size ), rng( size - 1, OMAPY - size ) );
-        const tripoint_om_omt p( c, 0 );
-
-        if( ter( p ) == settings->default_oter[OVERMAP_DEPTH] ) {
-            placement_attempts = 0;
-            ter_set( p, oter_id( "road_nesw" ) ); // every city starts with an intersection
-            city tmp;
-            tmp.pos = p.xy();
-            tmp.size = size;
-            cities.push_back( tmp );
-
-            const om_direction::type start_dir = om_direction::random();
-            om_direction::type cur_dir = start_dir;
-
-            do {
-                build_city_street( local_road, tmp.pos, size, cur_dir, tmp );
-            } while( ( cur_dir = om_direction::turn_right( cur_dir ) ) != start_dir );
-        }
+        do {
+            build_city_street( local_road, tmp.pos, tmp.size, cur_dir, tmp );
+        } while( ( cur_dir = om_direction::turn_right( cur_dir ) ) != start_dir );
     }
 }
 
