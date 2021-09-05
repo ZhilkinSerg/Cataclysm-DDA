@@ -430,6 +430,29 @@ static void load_region_terrain_and_furniture_settings( const JsonObject &jo,
     }
 }
 
+static void load_cities( const JsonObject &jo, std::vector<city> &cities,
+                         const bool strict, const bool overlay )
+{
+    ( void ) strict;
+    ( void ) overlay;
+
+    JsonArray jca = jo.get_array( "cities" );
+
+    for( const JsonObject jco : jca ) {
+        city c;
+        jco.read( "id", c.id );
+        jco.read( "name", c.name );
+        jco.read( "population", c.population );
+        jco.read( "size", c.size );
+        jco.read( "pos_om", c.pos_om );
+        jco.read( "pos", c.pos );
+        cities.emplace_back( c );
+        if( c.size < 0 ) {
+            c.size = rng( 1, 16 );
+        }
+    }
+}
+
 void load_region_settings( const JsonObject &jo )
 {
     regional_settings new_region;
@@ -593,6 +616,8 @@ void load_region_settings( const JsonObject &jo )
 
     load_region_terrain_and_furniture_settings( jo, new_region.region_terrain_and_furniture, strict,
             false );
+
+    load_cities( jo, new_region.cities, strict, false );
 
     region_settings_map[new_region.id] = new_region;
 }
@@ -785,6 +810,8 @@ void apply_region_overlay( const JsonObject &jo, regional_settings &region )
     load_overmap_ravine_settings( jo, region.overmap_ravine, false, true );
 
     load_region_terrain_and_furniture_settings( jo, region.region_terrain_and_furniture, false, true );
+
+    load_cities( jo, region.cities, false, true );
 }
 
 void groundcover_extra::finalize()   // FIXME: return bool for failure
