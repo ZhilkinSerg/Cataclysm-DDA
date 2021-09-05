@@ -1,0 +1,28 @@
+[
+  {
+    "type": "start_location",
+    "id": "sloc_wilderness_MA",
+    "name": "Wilderness",
+    "terrain": [ "field", "forest", "forest_thick", "forest_water" ],
+    "flags": [ "ALLOW_OUTSIDE" ]
+  },
+  {
+    "type": "start_location",
+    "id": "sloc_house_MA",
+    "name": "House",
+    "terrain": [ { "om_terrain": "house", "om_terrain_match_type": "PREFIX" } ],
+    "flags": [ "ALLOW_OUTSIDE" ]
+  },
+  {
+    "type": "start_location",
+    "id": "sloc_road_MA",
+    "name": "Road",
+    "terrain": [
+      "road_nesw_manhole",
+      { "om_terrain": "road_straight", "om_terrain_match_type": "PREFIX" },
+      { "om_terrain": "road_curved", "om_terrain_match_type": "PREFIX" },
+      { "om_terrain": "road_end", "om_terrain_match_type": "PREFIX" }
+    ],
+    "flags": [ "ALLOW_OUTSIDE" ]
+  }
+]
