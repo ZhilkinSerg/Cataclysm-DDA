@@ -5,5 +5,12 @@
     "info": "Allows to select starting city in new character menu.",
     "stype": "bool",
     "value": true
+  },
+  {
+    "type": "EXTERNAL_OPTION",
+    "name": "PREGENERATED_OVERMAP_TERRAIN",
+    "info": "Use pregenerated overmap terrain.",
+    "stype": "bool",
+    "value": true
   }
 ]
