@@ -697,7 +697,40 @@ bool game::start_game()
 
     const start_location &start_loc = u.random_start_location ? scen->random_start_location().obj() :
                                       u.start_location.obj();
-    const tripoint_abs_omt omtstart = start_loc.find_player_initial_location();
+    point_abs_om world_origin;
+    overmap &omap = overmap_buffer.get( world_origin );
+    std::vector<city> sorted_cities = omap.get_settings().cities;
+    int static_city_count = omap.get_settings().cities.size();
+    if( get_option<bool>( "SELECT_STARTING_CITY" ) && static_city_count > 0 ) {
+        if( u.random_start_city ) {
+            world_origin = random_entry( sorted_cities ).pos_om;
+        } else {
+            //std::vector<city> sorted_cities( sorted_cities.begin(), sorted_cities.end() );
+            const auto cities_cmp_population = []( city a, city b ) {
+                return std::tie( a.population, a.name ) > std::tie( b.population, b.name );
+            };
+            std::sort( sorted_cities.begin(), sorted_cities.end(), cities_cmp_population );
+
+            uilist select_city;
+            select_city.desc_enabled = true;
+            select_city.allow_cancel = false;
+            select_city.title = _( "Select a starting city" );
+            for( const auto &c : sorted_cities ) {
+                uilist_entry entry( c.id, true, -1, c.name,
+                                    string_format(
+                                        _( "Location: <color_white>%s</color>:<color_white>%s</color>" ),
+                                        c.pos_om.to_string(), c.pos.to_string(), c.size ),
+                                    string_format( _( "(pop <color_white>%s</color>)" ), c.population ) );
+                select_city.entries.emplace_back( entry );
+            }
+            select_city.w_height_setup = TERMY - 4;
+            select_city.setup();
+            select_city.query();
+
+            world_origin = sorted_cities[select_city.selected].pos_om;
+        }
+    }
+    const tripoint_abs_omt omtstart = start_loc.find_player_initial_location( world_origin );
     if( omtstart == overmap::invalid_tripoint ) {
         return false;
     }

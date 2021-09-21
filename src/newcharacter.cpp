@@ -359,6 +359,7 @@ void avatar::randomize( const bool random_scenario, bool play_now )
 
     prof = get_scenario()->weighted_random_profession();
     randomize_hobbies();
+    random_start_city = true;
     random_start_location = true;
 
     str_max = rng( 6, HIGH_STAT - 2 );
@@ -4184,6 +4185,7 @@ void reset_scenario( avatar &u, const scenario *scen )
     const auto permitted = scen->permitted_professions();
     const auto default_prof = *std::min_element( permitted.begin(), permitted.end(), psorter );
 
+    u.random_start_city = true;
     u.random_start_location = true;
     u.str_max = 8;
     u.dex_max = 8;

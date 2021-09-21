@@ -434,6 +434,7 @@ class Character : public Creature, public visitable
         // Relative direction of a grab, add to posx, posy to get the coordinates of the grabbed thing.
         tripoint grab_point;
 
+        bool random_start_city = true;
         bool random_start_location = true;
         start_location_id start_location;
 

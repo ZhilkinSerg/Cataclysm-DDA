@@ -200,12 +200,12 @@ void start_location::prepare_map( tinymap &m ) const
     }
 }
 
-tripoint_abs_omt start_location::find_player_initial_location() const
+tripoint_abs_omt start_location::find_player_initial_location( const point_abs_om &origin ) const
 {
     // Spiral out from the world origin scanning for a compatible starting location,
     // creating overmaps as necessary.
     const int radius = 3;
-    for( const point_abs_om &omp : closest_points_first( point_abs_om(), radius ) ) {
+    for( const point_abs_om &omp : closest_points_first( origin, radius ) ) {
         overmap &omap = overmap_buffer.get( omp );
         const tripoint_om_omt omtstart = omap.find_random_omt( random_target() );
         if( omtstart.raw() != tripoint_min ) {
