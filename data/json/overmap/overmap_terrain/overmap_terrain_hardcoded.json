@@ -25,7 +25,7 @@
     "copy-from": "generic_forest",
     "name": "forest",
     "sym": "F",
-    "color": "green",
+    "color": "light_green",
     "see_cost": 3,
     "extras": "forest",
     "spawns": { "group": "GROUP_FOREST", "population": [ 0, 3 ], "chance": 13 },
