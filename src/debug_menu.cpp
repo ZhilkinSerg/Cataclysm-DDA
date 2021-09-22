@@ -172,6 +172,7 @@ std::string enum_to_string<debug_menu::debug_menu_index>( debug_menu::debug_menu
         case debug_menu::debug_menu_index::BENCHMARK: return "BENCHMARK";
         case debug_menu::debug_menu_index::OM_TELEPORT: return "OM_TELEPORT";
         case debug_menu::debug_menu_index::OM_TELEPORT_COORDINATES: return "OM_TELEPORT_COORDINATES";
+        case debug_menu::debug_menu_index::OM_TELEPORT_CITY: return "OM_TELEPORT_CITY";
         case debug_menu::debug_menu_index::TRAIT_GROUP: return "TRAIT_GROUP";
         case debug_menu::debug_menu_index::ENABLE_ACHIEVEMENTS: return "ENABLE_ACHIEVEMENTS";
         case debug_menu::debug_menu_index::SHOW_MSG: return "SHOW_MSG";
@@ -339,6 +340,7 @@ static int teleport_uilist()
         { uilist_entry( debug_menu_index::LONG_TELEPORT, true, 'l', _( "Teleport - long range" ) ) },
         { uilist_entry( debug_menu_index::OM_TELEPORT, true, 'o', _( "Teleport - adjacent overmap" ) ) },
         { uilist_entry( debug_menu_index::OM_TELEPORT_COORDINATES, true, 'p', _( "Teleport - specific overmap coordinates" ) ) },
+        { uilist_entry( debug_menu_index::OM_TELEPORT_CITY, true, 'c', _( "Teleport - specific city" ) ) },
     };
 
     return uilist( _( "Teleport…" ), uilist_initializer );
@@ -1060,11 +1062,46 @@ static void teleport_long()
     add_msg( _( "You teleport to submap %s." ), where.to_string() );
 }
 
-static void teleport_overmap( bool specific_coordinates = false )
+static void teleport_overmap( bool specific_coordinates = false, bool specific_city = false )
 {
     Character &player_character = get_player_character();
     tripoint_abs_omt where;
-    if( specific_coordinates ) {
+    if( specific_city ) {
+        point_abs_om world_origin;
+        overmap &omap = overmap_buffer.get( world_origin );
+        std::vector<city> sorted_cities = omap.get_settings().cities;
+        int static_city_count = omap.get_settings().cities.size();
+        if( static_city_count > 0 ) {
+            //std::vector<city> sorted_cities( sorted_cities.begin(), sorted_cities.end() );
+            const auto cities_cmp_population = []( city a, city b ) {
+                return std::tie( a.population, a.name ) > std::tie( b.population, b.name );
+            };
+            std::sort( sorted_cities.begin(), sorted_cities.end(), cities_cmp_population );
+
+            uilist select_city;
+            select_city.desc_enabled = true;
+            select_city.allow_cancel = false;
+            select_city.title = _( "Select a starting city" );
+            for( const auto &c : sorted_cities ) {
+                uilist_entry entry( c.id, true, -1, c.name,
+                                    string_format(
+                                        _( "Location: <color_white>%s</color>:<color_white>%s</color>" ),
+                                        c.pos_om.to_string(), c.pos.to_string(), c.size ),
+                                    string_format( _( "(pop <color_white>%s</color>)" ), c.population ) );
+                select_city.entries.emplace_back( entry );
+            }
+            select_city.w_height_setup = TERMY - 4;
+            select_city.setup();
+            select_city.query();
+            tripoint coord_om( sorted_cities[select_city.selected].pos_om.raw(), 0 );
+            point coord_omt = sorted_cities[select_city.selected].pos.raw();
+            where = tripoint_abs_omt( OMAPX * coord_om.x + coord_omt.x,
+                                      OMAPY * coord_om.y + coord_omt.y,
+                                      coord_om.z );
+        } else {
+            return;
+        }
+    } else if( specific_coordinates ) {
         const std::string text = string_input_popup()
                                  .title( _( "Teleport where?" ) )
                                  .width( 20 )
@@ -2735,6 +2772,9 @@ void debug()
             break;
         case debug_menu_index::OM_TELEPORT_COORDINATES:
             debug_menu::teleport_overmap( true );
+            break;
+        case debug_menu_index::OM_TELEPORT_CITY:
+            debug_menu::teleport_overmap( false, true );
             break;
         case debug_menu_index::TRAIT_GROUP:
             trait_group::debug_spawn();

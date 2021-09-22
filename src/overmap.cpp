@@ -2253,6 +2253,7 @@ bool &overmap::seen( const tripoint_om_omt &p )
         nullbool = false;
         return nullbool;
     }
+    layer[p.z() + OVERMAP_DEPTH].visible[p.x()][p.y()] = true;
     return layer[p.z() + OVERMAP_DEPTH].visible[p.x()][p.y()];
 }
 
@@ -2270,6 +2271,7 @@ bool &overmap::explored( const tripoint_om_omt &p )
         nullbool = false;
         return nullbool;
     }
+    //layer[p.z() + OVERMAP_DEPTH].explored[p.x()][p.y()] = true;
     return layer[p.z() + OVERMAP_DEPTH].explored[p.x()][p.y()];
 }
 
