@@ -83,6 +83,12 @@ void setup_cities_menu( uilist &cities_menu, std::vector<city> &cities_container
 cata::optional<city> select_city( uilist &cities_menu, std::vector<city> &cities_container,
                                   bool random = false );
 
+void setup_railroad_stations_menu( uilist &railroad_stations_menu,
+                                   std::vector<railroad_station> &railroad_stations_container );
+
+cata::optional<railroad_station> select_railroad_station( uilist &railroad_stations_menu,
+        std::vector<railroad_station> &railroad_stations_container, bool random = false );
+
 } // namespace omap
 
 } // namespace ui

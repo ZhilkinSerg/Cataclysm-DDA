@@ -184,6 +184,7 @@ std::string enum_to_string<debug_menu::debug_menu_index>( debug_menu::debug_menu
         case debug_menu::debug_menu_index::OM_TELEPORT: return "OM_TELEPORT";
         case debug_menu::debug_menu_index::OM_TELEPORT_COORDINATES: return "OM_TELEPORT_COORDINATES";
         case debug_menu::debug_menu_index::OM_TELEPORT_CITY: return "OM_TELEPORT_CITY";
+        case debug_menu::debug_menu_index::OM_TELEPORT_RAILROAD_STATION: return "OM_TELEPORT_RAILROAD_STATION";
         case debug_menu::debug_menu_index::TRAIT_GROUP: return "TRAIT_GROUP";
         case debug_menu::debug_menu_index::ENABLE_ACHIEVEMENTS: return "ENABLE_ACHIEVEMENTS";
         case debug_menu::debug_menu_index::SHOW_MSG: return "SHOW_MSG";
@@ -365,6 +366,9 @@ static int teleport_uilist()
     uilist_initializer.emplace_back( uilist_entry( debug_menu_index::OM_TELEPORT_CITY,
                                      teleport_city_enabled, 'c', _( "Teleport - specific city" ) ) );
 
+    const bool teleport_railroad_station_enabled = !railroad_station::get_all().empty();
+    uilist_initializer.emplace_back( uilist_entry( debug_menu_index::OM_TELEPORT_RAILROAD_STATION,
+                                     teleport_railroad_station_enabled, 'r', _( "Teleport - specific railroad station" ) ) );
     return uilist( _( "Teleport…" ), uilist_initializer );
 }
 
@@ -1177,6 +1181,24 @@ static void teleport_city()
     if( c.has_value() ) {
         const tripoint_abs_omt where = tripoint_abs_omt(
                                            project_to<coords::omt>( c->pos_om ) + c->pos.raw(), 0 );
+        g->place_player_overmap( where );
+    }
+}
+static void teleport_railroad_station()
+{
+    std::vector<railroad_station> railroad_stations( railroad_station::get_all() );
+    const auto railroad_stations_cmp_database_id = [](
+    const railroad_station & a, const railroad_station & b ) {
+        return std::tie( a.name, a.database_id ) < std::tie( b.name, b.database_id );
+    };
+    std::sort( railroad_stations.begin(), railroad_stations.end(), railroad_stations_cmp_database_id );
+    uilist railroad_stations_menu;
+    ui::omap::setup_railroad_stations_menu( railroad_stations_menu, railroad_stations );
+    cata::optional<railroad_station> r = ui::omap::select_railroad_station( railroad_stations_menu,
+                                         railroad_stations, false );
+    if( r.has_value() ) {
+        const tripoint_abs_omt where = tripoint_abs_omt(
+                                           project_to<coords::omt>( r->pos_om ) + r->pos.raw(), 0 );
         g->place_player_overmap( where );
     }
 }
@@ -2881,6 +2903,9 @@ void debug()
             break;
         case debug_menu_index::OM_TELEPORT_CITY:
             debug_menu::teleport_city();
+            break;
+        case debug_menu_index::OM_TELEPORT_RAILROAD_STATION:
+            debug_menu::teleport_railroad_station();
             break;
         case debug_menu_index::TRAIT_GROUP:
             trait_group::debug_spawn();
