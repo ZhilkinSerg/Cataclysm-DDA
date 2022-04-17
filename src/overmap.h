@@ -40,6 +40,8 @@ class npc;
 class overmap_connection;
 struct regional_settings;
 
+static const overmap_special_id overmap_special_Railroad_Station( "Railroad Station" );
+
 namespace pf
 {
 template<typename Point>
@@ -83,6 +85,37 @@ struct city {
     }
 
     int get_distance_from( const tripoint_om_omt &p ) const;
+};
+
+struct railroad_station {
+    void load( const JsonObject &, const std::string & );
+    void check() const;
+    static void load_railroad_station( const JsonObject &, const std::string & );
+    static void finalize();
+    static void check_consistency();
+    static const std::vector<railroad_station> &get_all();
+    static void reset();
+
+    railroad_station_id id;
+    bool was_loaded = false;
+
+    int database_id = 0;
+    // location of the railroad station (in overmap coordinates)
+    point_abs_om pos_om;
+    // location of the railroad station (in overmap terrain coordinates)
+    point_om_omt pos;
+    std::string name;
+    overmap_special_id special_id = overmap_special_Railroad_Station;
+    om_direction::type dir;
+
+    explicit railroad_station( const point_om_omt &P = point_om_omt() );
+
+    bool operator==( const railroad_station &rhs ) const {
+        return id == rhs.id ||
+               database_id == rhs.database_id ||
+               ( pos_om == rhs.pos_om && pos == rhs.pos ) ;
+    }
+
 };
 
 struct om_note {
@@ -358,6 +391,7 @@ class overmap
         std::map<int, om_vehicle> vehicles;
         std::vector<basecamp> camps;
         std::vector<city> cities;
+        std::vector<railroad_station> railroad_stations;
         std::map<string_id<overmap_connection>, std::vector<tripoint_om_omt>> connections_out;
         cata::optional<basecamp *> find_camp( const point_abs_omt &p );
         /// Adds the npc to the contained list of npcs ( @ref npcs ).
@@ -477,6 +511,8 @@ class overmap
 
         void place_roads( const overmap *north, const overmap *east, const overmap *south,
                           const overmap *west );
+        void place_railroads( const overmap *north, const overmap *east, const overmap *south,
+                              const overmap *west );
 
         void populate_connections_out_from_neighbors( const overmap *north, const overmap *east,
                 const overmap *south, const overmap *west );
@@ -485,6 +521,7 @@ class overmap
         overmap_special_id pick_random_building_to_place( int town_dist ) const;
 
         void place_cities();
+        void place_railroad_stations();
         void place_building( const tripoint_om_omt &p, om_direction::type dir, const city &town );
 
         void build_city_street( const overmap_connection &connection, const point_om_omt &p, int cs,
