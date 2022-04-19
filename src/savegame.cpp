@@ -482,7 +482,7 @@ void overmap::convert_terrain(
         }
     }
 
-    generate_bridgeheads( bridge_points );
+    generate_bridgeheads( bridge_points, "bridge", "bridgehead_ground", "bridgehead_ramp" );
 }
 
 void overmap::load_monster_groups( JsonIn &jsin )

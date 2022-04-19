@@ -4959,7 +4959,7 @@ void overmap::place_railroads( const overmap *north, const overmap *east, const 
             point_om_omt northmost = *north_south_most.first;
             std::vector<point_om_omt> railroad_points_north;
             if( !viable_railroads_north.empty() ) {
-                const tripoint_om_omt &p = random_entry_removed( viable_railroads );
+                const tripoint_om_omt &p = random_entry_removed( viable_railroads_north );
                 railroads_out.push_back( p );
                 railroad_points_north.push_back( p.xy() );
                 railroad_points_north.emplace_back( northmost );
@@ -4969,7 +4969,7 @@ void overmap::place_railroads( const overmap *north, const overmap *east, const 
             point_om_omt eastmost = *west_east_most.second;
             std::vector<point_om_omt> railroad_points_east;
             if( !viable_railroads_east.empty() ) {
-                const tripoint_om_omt &p = random_entry_removed( viable_railroads );
+                const tripoint_om_omt &p = random_entry_removed( viable_railroads_east );
                 railroads_out.push_back( p );
                 railroad_points_east.push_back( p.xy() );
                 railroad_points_east.emplace_back( eastmost );
@@ -4979,7 +4979,7 @@ void overmap::place_railroads( const overmap *north, const overmap *east, const 
             point_om_omt southmost = *north_south_most.second;
             std::vector<point_om_omt> railroad_points_south;
             if( !viable_railroads_south.empty() ) {
-                const tripoint_om_omt &p = random_entry_removed( viable_railroads );
+                const tripoint_om_omt &p = random_entry_removed( viable_railroads_south );
                 railroads_out.push_back( p );
                 railroad_points_south.push_back( p.xy() );
                 railroad_points_south.emplace_back( southmost );
@@ -4989,7 +4989,7 @@ void overmap::place_railroads( const overmap *north, const overmap *east, const 
             point_om_omt westmost = *west_east_most.first;
             std::vector<point_om_omt> railroad_points_west;
             if( !viable_railroads_west.empty() ) {
-                const tripoint_om_omt &p = random_entry_removed( viable_railroads );
+                const tripoint_om_omt &p = random_entry_removed( viable_railroads_west );
                 railroads_out.push_back( p );
                 railroad_points_west.push_back( p.xy() );
                 railroad_points_west.emplace_back( westmost );
