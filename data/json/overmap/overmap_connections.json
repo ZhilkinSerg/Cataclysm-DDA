@@ -40,12 +40,12 @@
     "id": "local_railroad",
     "subtypes": [
       { "terrain": "railroad", "locations": [ "field", "railroad" ] },
-      { "terrain": "railroad", "locations": [ "forest_without_trail" ], "basic_cost": 20 },
-      { "terrain": "railroad", "locations": [ "forest_trail" ], "basic_cost": 25 },
-      { "terrain": "railroad", "locations": [ "swamp" ], "basic_cost": 40 },
+      { "terrain": "railroad", "locations": [ "forest_without_trail" ], "basic_cost": 2 },
+      { "terrain": "railroad", "locations": [ "forest_trail" ], "basic_cost": 3 },
+      { "terrain": "railroad", "locations": [ "swamp" ], "basic_cost": 4 },
       { "terrain": "railroad_level_crossing", "locations": [ "railroad_level_crossing_allowed" ], "basic_cost": 1 },
-      { "terrain": "railroad_bridge", "locations": [ "water" ], "basic_cost": 120 },
-      { "terrain": "railroad_bridgehead_ground", "locations": [ "water" ], "basic_cost": 120 }
+      { "terrain": "railroad_bridge", "locations": [ "water" ], "basic_cost": 12, "flags": [ "ORTHOGONAL" ] },
+      { "terrain": "railroad_bridgehead_ground", "locations": [ "water" ], "basic_cost": 12 }
     ]
   },
   {
