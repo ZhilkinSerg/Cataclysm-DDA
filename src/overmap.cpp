@@ -5209,8 +5209,14 @@ void overmap::place_railroad_stations()
     for( const auto &elem : railroad_station::get_all() ) {
         if( elem.pos_om == pos() ) {
             const tripoint_om_omt &p = tripoint_om_omt( elem.pos, 0 );
+            auto special = elem.special_id.obj();
+            // See if we can actually place the special there.
+            const om_direction::type rotation = random_special_rotation( special, p, false );
+            if( rotation == om_direction::type::invalid ) {
+                continue;
+            }
             railroad_stations.emplace_back( elem );
-            place_special( elem.special_id.obj(), p, elem.dir, get_nearest_city( p ), false, true );
+            place_special( special, p, rotation, get_nearest_city( p ), false, false );
         }
     }
 }

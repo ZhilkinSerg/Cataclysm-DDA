@@ -103,7 +103,7 @@
   {
     "type": "overmap_location",
     "id": "railroad",
-    "terrains": [ "railroad" ]
+    "terrains": [ "railroad", "railroad_station_0_1", "railroad_station_0_2", "railroad_station_0_3", "railroad_station_0_4" ]
   },
   {
     "type": "overmap_location",
