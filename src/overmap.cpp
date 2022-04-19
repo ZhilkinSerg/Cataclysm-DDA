@@ -4871,11 +4871,10 @@ void overmap::place_roads( const overmap *north, const overmap *east, const over
 void overmap::place_railroads( const overmap *north, const overmap *east, const overmap *south,
                                const overmap *west )
 {
-    std::vector<railroad_station> railroad_stations_temp;
     for( const auto elem : railroad_station::get_all() ) {
         if( elem.pos_om == pos() ) {
             const tripoint_om_omt &p = tripoint_om_omt( elem.pos, 0 );
-            railroad_stations_temp.emplace_back( elem );
+            railroad_stations.emplace_back( elem );
         }
     }
 
@@ -4946,33 +4945,33 @@ void overmap::place_railroads( const overmap *north, const overmap *east, const 
             }
         }
         std::vector<point_om_omt> railroad_points;
-        railroad_points.reserve( railroads_out.size() + railroad_stations_temp.size() * 2 );
+        railroad_points.reserve( railroads_out.size() + railroad_stations.size() * 2 );
         for( const auto &elem : railroads_out ) {
             railroad_points.emplace_back( elem.xy() );
         }
-        if( railroad_stations_temp.empty() ) {
+        if( railroad_stations.empty() ) {
             while( railroads_out.size() < 3 && !viable_railroads_all.empty() ) {
                 railroads_out.push_back( random_entry_removed( viable_railroads_all ) );
             }
             connect_closest_points( railroad_points, 0, *overmap_connection_local_railroad );
         } else {
             std::vector<point_om_omt> railroad_station_points;
-            for( const auto &elem : railroad_stations_temp ) {
+            for( const auto &elem : railroad_stations ) {
                 const point_om_omt p1 = elem.pos;
                 const point_om_omt p2 = elem.pos + point( 0, 5 ).rotate( static_cast<int>( elem.dir ) );
                 railroad_station_points.emplace_back( p1 );
                 railroad_station_points.emplace_back( p2 );
             }
             // Get the north and south most railroad station on overmap.
-            auto north_south_most = std::minmax_element( railroad_stations_temp.begin(),
-                                    railroad_stations_temp.end(), []( const railroad_station & lhs,
+            auto north_south_most = std::minmax_element( railroad_stations.begin(),
+                                    railroad_stations.end(), []( const railroad_station & lhs,
             const railroad_station & rhs ) {
                 return lhs.pos.y() < rhs.pos.y();
             } );
 
             // Get the west and east most railroad station on overmap.
-            auto west_east_most = std::minmax_element( railroad_stations_temp.begin(),
-                                  railroad_stations_temp.end(), []( const railroad_station & lhs,
+            auto west_east_most = std::minmax_element( railroad_stations.begin(),
+                                  railroad_stations.end(), []( const railroad_station & lhs,
             const railroad_station & rhs ) {
                 return lhs.pos.x() < rhs.pos.x();
             } );
