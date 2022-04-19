@@ -5228,11 +5228,11 @@ void overmap::place_railroad_stations()
                 continue;
             }
             railroad_stations.emplace_back( elem );
-            add_note( tripoint_om_omt( elem.pos, 0 ), string_format( "RS0 %s | %s",  elem.pos_om.to_string(),
-                      elem.pos.to_string() ) );
-            const point_om_omt far_end = elem.pos + point( 0, 5 ).rotate( static_cast<int>( rotation ) );
-            add_note( tripoint_om_omt( far_end, 0 ), string_format( "RS1 %s | %s",  elem.pos_om.to_string(),
-                      far_end.to_string() ) );
+            //add_note( tripoint_om_omt( elem.pos, 0 ), string_format( "RS0 %s | %s",  elem.pos_om.to_string(),
+            //          elem.pos.to_string() ) );
+            //const point_om_omt far_end = elem.pos + point( 0, 5 ).rotate( static_cast<int>( rotation ) );
+            //add_note( tripoint_om_omt( far_end, 0 ), string_format( "RS1 %s | %s",  elem.pos_om.to_string(),
+            //          far_end.to_string() ) );
             place_special( special, p, rotation, get_nearest_city( p ), false, false );
         }
     }
