@@ -122,23 +122,12 @@
     "copy-from": "generic_transportation",
     "color": "light_green",
     "see_cost": 2,
-    "extras": "railroad",
     "mapgen_straight": [ { "method": "builtin", "name": "railroad_straight" } ],
     "mapgen_curved": [ { "method": "builtin", "name": "railroad_curved" } ],
     "mapgen_end": [ { "method": "builtin", "name": "railroad_end" } ],
     "mapgen_tee": [ { "method": "builtin", "name": "railroad_tee" } ],
     "mapgen_four_way": [ { "method": "builtin", "name": "railroad_four_way" } ],
-    "flags": [ "LINEAR", "IGNORE_ROTATION_FOR_ADJACENCY", "SHOULD_NOT_SPAWN" ]
-  },
-  {
-    "type": "overmap_terrain",
-    "id": "railroad_bridge",
-    "name": "railroad bridge",
-    "sym": "│",
-    "color": "light_cyan",
-    "see_cost": 2,
-    "mapgen": [ { "method": "builtin", "name": "railroad_bridge" } ],
-    "flags": [ "RIVER", "SHOULD_NOT_SPAWN" ]
+    "flags": [ "LINEAR", "SHOULD_NOT_SPAWN" ]
   },
   {
     "type": "overmap_terrain",
@@ -151,39 +140,30 @@
   },
   {
     "type": "overmap_terrain",
-    "abstract": "generic_bridge",
-    "copy-from": "generic_transportation",
-    "name": "bridge",
-    "sym": "│",
-    "color": "white",
-    "see_cost": 2
+    "id": "railroad_bridge",
+    "copy-from": "generic_railroad_bridge",
+    "color": "light_cyan",
+    "mapgen": [ { "method": "builtin", "name": "railroad_bridge" } ],
+    "flags": [ "RIVER", "SHOULD_NOT_SPAWN" ]
   },
   {
     "type": "overmap_terrain",
-    "id": "bridge",
-    "copy-from": "generic_bridge",
-    "color": "blue",
-    "flags": [ "RIVER" ]
+    "id": "railroad_bridge_road",
+    "copy-from": "generic_railroad_bridge",
+    "name": "railroad bridge (overpass)"
   },
   {
     "type": "overmap_terrain",
-    "id": "bridge_road",
-    "copy-from": "generic_bridge",
-    "name": "bridge (overpass)"
+    "id": "railroad_bridgehead_ground",
+    "copy-from": "generic_railroad_bridge",
+    "name": "railroad bridgehead (ground)",
+    "sym": "v"
   },
   {
     "type": "overmap_terrain",
-    "id": "bridgehead_ground",
-    "copy-from": "generic_bridge",
-    "name": "bridgehead (ground)",
-    "sym": "v",
-    "extras": "bridgehead_ground"
-  },
-  {
-    "type": "overmap_terrain",
-    "id": "bridgehead_ramp",
-    "copy-from": "generic_bridge",
-    "name": "bridgehead (ramp)",
+    "id": "railroad_bridgehead_ramp",
+    "copy-from": "generic_railroad_bridge",
+    "name": "railroad bridgehead (ramp)",
     "sym": "^"
   },
   {
