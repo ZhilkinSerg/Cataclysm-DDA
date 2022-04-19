@@ -5210,23 +5210,22 @@ void overmap::place_cities()
 
 void overmap::place_railroad_stations()
 {
-    for( const auto elem : railroad_station::get_all() ) {
-        if( elem.pos_om == pos() ) {
-            const tripoint_om_omt &p = tripoint_om_omt( elem.pos, 0 );
-            //auto special = elem.special_id.obj();
-            // See if we can actually place the special there.
-            //const om_direction::type rotation = random_special_rotation( special, p, false );
-            //if( rotation == om_direction::type::invalid || rotation != elem.dir ) {
-            //    continue;
-            //}
-            railroad_stations.emplace_back( elem );
-            add_note( tripoint_om_omt( elem.pos, 0 ), string_format( "1:R;S0 %s | %s",  elem.pos_om.to_string(),
-                      elem.pos.to_string() ) );
-            const point_om_omt far_end = elem.pos + point( 0, 5 ).rotate( static_cast<int>( elem.dir ) );
-            add_note( tripoint_om_omt( far_end, 0 ), string_format( "2:G;S1 %s | %s",  elem.pos_om.to_string(),
-                      far_end.to_string() ) );
-            //place_special( special, p, rotation, get_nearest_city( p ), false, false );
-        }
+    for( const auto elem : railroad_stations ) {
+        const tripoint_om_omt &p = tripoint_om_omt( elem.pos, 0 );
+        auto special = elem.special_id.obj();
+        //See if we can actually place the special there.
+        //const om_direction::type rotation = random_special_rotation(special, p, false);
+        //if( rotation == om_direction::type::invalid ) {
+        //   continue;
+        //}
+        const point_om_omt p1 = elem.pos;
+        add_note( tripoint_om_omt( p1, 0 ), string_format( "1:R;S0 %s | %s",  elem.pos_om.to_string(),
+                  p1.to_string() ) );
+        const point_om_omt p2 = elem.pos +
+                                point( 0, 5 ).rotate( static_cast<int>( elem.dir ) );
+        add_note( tripoint_om_omt( p2, 0 ), string_format( "2:G;S1 %s | %s",  elem.pos_om.to_string(),
+                  p2.to_string() ) );
+        place_special( special, p, elem.dir, get_nearest_city( p ), false, true );
     }
 }
 
