@@ -481,7 +481,10 @@ class overmap
         bool generate_sub( int z );
         bool generate_over( int z );
         // Check and put bridgeheads
-        void generate_bridgeheads( const std::vector<point_om_omt> &bridge_points );
+        void generate_bridgeheads( const std::vector<point_om_omt> &bridge_points,
+                                   const std::string &bridge,
+                                   const std::string &bridgehead_ground,
+                                   const std::string &bridgehead_ramp );
 
         const city &get_nearest_city( const tripoint_om_omt &p ) const;
 

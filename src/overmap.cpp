@@ -124,6 +124,8 @@ static const oter_type_str_id oter_type_ice_lab_stairs( "ice_lab_stairs" );
 static const oter_type_str_id oter_type_lab_core( "lab_core" );
 static const oter_type_str_id oter_type_lab_stairs( "lab_stairs" );
 static const oter_type_str_id oter_type_microlab_sub_connector( "microlab_sub_connector" );
+static const oter_type_str_id oter_type_mine_down( "mine_down" );
+static const oter_type_str_id oter_type_railroad_bridge( "railroad_bridge" );
 static const oter_type_str_id oter_type_road( "road" );
 static const oter_type_str_id oter_type_road_nesw_manhole( "road_nesw_manhole" );
 static const oter_type_str_id oter_type_slimepit_bottom( "slimepit_bottom" );
@@ -3692,6 +3694,7 @@ bool overmap::generate_over( const int z )
 {
     bool requires_over = false;
     std::vector<point_om_omt> bridge_points;
+    std::vector<point_om_omt> railroad_bridge_points;
 
     // These are so common that it's worth checking first as int.
     const std::set<oter_id> skip_below = {
@@ -3715,16 +3718,27 @@ bool overmap::generate_over( const int z )
                     ter_set( p, oter_id( "bridge_road" + oter_get_rotation_string( oter_ground ) ) );
                     bridge_points.push_back( p.xy() );
                 }
+
+                if( oter_ground->get_type_id() == oter_type_railroad_bridge ) {
+                    ter_set( p, oter_id( "railroad_bridge_road" + oter_get_rotation_string( oter_ground ) ) );
+                    railroad_bridge_points.push_back( p.xy() );
+                }
+
             }
         }
     }
 
-    generate_bridgeheads( bridge_points );
+    generate_bridgeheads( bridge_points, "bridge", "bridgehead_ground", "bridgehead_ramp" );
+    generate_bridgeheads( railroad_bridge_points, "railroad_bridge", "railroad_bridgehead_ground",
+                          "railroad_bridgehead_ramp" );
 
     return requires_over;
 }
 
-void overmap::generate_bridgeheads( const std::vector<point_om_omt> &bridge_points )
+void overmap::generate_bridgeheads( const std::vector<point_om_omt> &bridge_points,
+                                    const std::string &type_bridge,
+                                    const std::string &bridgehead_ground,
+                                    const std::string &bridgehead_ramp )
 {
     std::vector<std::pair<point_om_omt, std::string>> bridgehead_points;
     for( const point_om_omt &bp : bridge_points ) {
@@ -3733,15 +3747,13 @@ void overmap::generate_bridgeheads( const std::vector<point_om_omt> &bridge_poin
         const oter_id oter_ground_south = ter( tripoint_om_omt( bp, 0 ) + tripoint_south );
         const oter_id oter_ground_east = ter( tripoint_om_omt( bp, 0 ) + tripoint_east );
         const oter_id oter_ground_west = ter( tripoint_om_omt( bp, 0 ) + tripoint_west );
-        const bool is_bridge_north = ( oter_ground_north->get_type_id() ==
-                                       oter_type_bridge )
+        const bool is_bridge_north = ( oter_ground_north->get_type_id() == oter_type_str_id( type_bridge ) )
                                      && ( oter_get_rotation( oter_ground_north ) % 2 == 0 );
-        const bool is_bridge_south = ( oter_ground_south->get_type_id() ==
-                                       oter_type_bridge )
+        const bool is_bridge_south = ( oter_ground_south->get_type_id() == oter_type_str_id( type_bridge ) )
                                      && ( oter_get_rotation( oter_ground_south ) % 2 == 0 );
-        const bool is_bridge_east = ( oter_ground_east->get_type_id() == oter_type_bridge )
+        const bool is_bridge_east = ( oter_ground_east->get_type_id() == oter_type_str_id( type_bridge ) )
                                     && ( oter_get_rotation( oter_ground_east ) % 2 == 1 );
-        const bool is_bridge_west = ( oter_ground_west->get_type_id() == oter_type_bridge )
+        const bool is_bridge_west = ( oter_ground_west->get_type_id() == oter_type_str_id( type_bridge ) )
                                     && ( oter_get_rotation( oter_ground_west ) % 2 == 1 );
 
         if( is_bridge_north ^ is_bridge_south || is_bridge_east ^ is_bridge_west ) {
@@ -3760,8 +3772,8 @@ void overmap::generate_bridgeheads( const std::vector<point_om_omt> &bridge_poin
     }
     for( const std::pair<point_om_omt, std::string> &bhp : bridgehead_points ) {
         tripoint_om_omt p( bhp.first, 0 );
-        ter_set( p, oter_id( "bridgehead_ground" + bhp.second ) );
-        ter_set( p + tripoint_above, oter_id( "bridgehead_ramp" + bhp.second ) );
+        ter_set( p, oter_id( bridgehead_ground + bhp.second ) );
+        ter_set( p + tripoint_above, oter_id( bridgehead_ramp + bhp.second ) );
     }
 }
 
