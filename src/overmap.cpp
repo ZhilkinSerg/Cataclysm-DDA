@@ -492,6 +492,8 @@ void railroad_station::load( const JsonObject &jo, const std::string & )
     optional( jo, was_loaded, "special_id", special_id );
     mandatory( jo, was_loaded, "pos_om", pos_om );
     mandatory( jo, was_loaded, "pos", pos );
+    dir = om_direction::random();
+    optional( jo, was_loaded, "dir", dir );
 }
 
 void railroad_station::check() const
@@ -3368,9 +3370,6 @@ void overmap::generate( const overmap *north, const overmap *east,
     if( get_option<bool>( "OVERMAP_PLACE_CITIES" ) ) {
         place_cities();
     }
-    if( get_option<bool>( "OVERMAP_PLACE_RAILROAD_STATIONS" ) ) {
-        place_railroad_stations();
-    }
     if( get_option<bool>( "OVERMAP_PLACE_FOREST_TRAILS" ) ) {
         place_forest_trails();
     }
@@ -3379,6 +3378,9 @@ void overmap::generate( const overmap *north, const overmap *east,
     }
     if( get_option<bool>( "OVERMAP_PLACE_RAILROADS" ) ) {
         place_railroads( north, east, south, west );
+    }
+    if( get_option<bool>( "OVERMAP_PLACE_RAILROAD_STATIONS" ) ) {
+        place_railroad_stations();
     }
     if( get_option<bool>( "OVERMAP_PLACE_SPECIALS" ) ) {
         place_specials( enabled_specials );
@@ -4869,11 +4871,19 @@ void overmap::place_roads( const overmap *north, const overmap *east, const over
 void overmap::place_railroads( const overmap *north, const overmap *east, const overmap *south,
                                const overmap *west )
 {
+    std::vector<railroad_station> railroad_stations_temp;
+    for( const auto elem : railroad_station::get_all() ) {
+        if( elem.pos_om == pos() ) {
+            const tripoint_om_omt &p = tripoint_om_omt( elem.pos, 0 );
+            railroad_stations_temp.emplace_back( elem );
+        }
+    }
+
     std::vector<tripoint_om_omt> &railroads_out = connections_out[overmap_connection_local_railroad];
 
     // At least 3 exit points, to guarantee railroad continuity across overmaps
     if( railroads_out.size() < 3 ) {
-        std::vector<tripoint_om_omt> viable_railroads;
+        std::vector<tripoint_om_omt> viable_railroads_all;
         std::vector<tripoint_om_omt> viable_railroads_north;
         std::vector<tripoint_om_omt> viable_railroads_east;
         std::vector<tripoint_om_omt> viable_railroads_south;
@@ -4893,7 +4903,7 @@ void overmap::place_railroads( const overmap *north, const overmap *east, const 
                 tmp = tripoint_om_omt( i, 0, 0 );
                 if( !( is_river( ter( tmp ) ) || is_river( ter( tmp + point_east ) ) ||
                        is_river( ter( tmp + point_west ) ) ) ) {
-                    viable_railroads.push_back( tmp );
+                    viable_railroads_all.push_back( tmp );
                     viable_railroads_north.push_back( tmp );
                     break;
                 }
@@ -4905,7 +4915,7 @@ void overmap::place_railroads( const overmap *north, const overmap *east, const 
                 tmp = tripoint_om_omt( OMAPX - 1, i, 0 );
                 if( !( is_river( ter( tmp ) ) || is_river( ter( tmp + point_north ) ) ||
                        is_river( ter( tmp + point_south ) ) ) ) {
-                    viable_railroads.push_back( tmp );
+                    viable_railroads_all.push_back( tmp );
                     viable_railroads_east.push_back( tmp );
                     break;
                 }
@@ -4917,7 +4927,7 @@ void overmap::place_railroads( const overmap *north, const overmap *east, const 
                 tmp = tripoint_om_omt( i, OMAPY - 1, 0 );
                 if( !( is_river( ter( tmp ) ) || is_river( ter( tmp + point_east ) ) ||
                        is_river( ter( tmp + point_west ) ) ) ) {
-                    viable_railroads.push_back( tmp );
+                    viable_railroads_all.push_back( tmp );
                     viable_railroads_south.push_back( tmp );
                     break;
                 }
@@ -4929,98 +4939,80 @@ void overmap::place_railroads( const overmap *north, const overmap *east, const 
                 tmp = tripoint_om_omt( 0, i, 0 );
                 if( !( is_river( ter( tmp ) ) || is_river( ter( tmp + point_north ) ) ||
                        is_river( ter( tmp + point_south ) ) ) ) {
-                    viable_railroads.push_back( tmp );
+                    viable_railroads_all.push_back( tmp );
                     viable_railroads_west.push_back( tmp );
                     break;
                 }
             }
         }
-        if( railroad_stations.empty() ) {
-            while( railroads_out.size() < 3 && !viable_railroads.empty() ) {
-                railroads_out.push_back( random_entry_removed( viable_railroads ) );
+        std::vector<point_om_omt> railroad_points;
+        railroad_points.reserve( railroads_out.size() + railroad_stations_temp.size() * 2 );
+        for( const auto &elem : railroads_out ) {
+            railroad_points.emplace_back( elem.xy() );
+        }
+        if( railroad_stations_temp.empty() ) {
+            while( railroads_out.size() < 3 && !viable_railroads_all.empty() ) {
+                railroads_out.push_back( random_entry_removed( viable_railroads_all ) );
             }
+            connect_closest_points( railroad_points, 0, *overmap_connection_local_railroad );
         } else {
             std::vector<point_om_omt> railroad_station_points;
-            for( const auto &elem : railroad_stations ) {
-                railroad_station_points.emplace_back( elem.pos );
+            for( const auto &elem : railroad_stations_temp ) {
+                const point_om_omt p1 = elem.pos;
+                const point_om_omt p2 = elem.pos + point( 0, 5 ).rotate( static_cast<int>( elem.dir ) );
+                railroad_station_points.emplace_back( p1 );
+                railroad_station_points.emplace_back( p2 );
             }
             // Get the north and south most railroad station on overmap.
-            auto north_south_most = std::minmax_element( railroad_station_points.begin(),
-            railroad_station_points.end(), []( const point_om_omt & lhs, const point_om_omt & rhs ) {
-                return lhs.y() < rhs.y();
+            auto north_south_most = std::minmax_element( railroad_stations_temp.begin(),
+                                    railroad_stations_temp.end(), []( const railroad_station & lhs,
+            const railroad_station & rhs ) {
+                return lhs.pos.y() < rhs.pos.y();
             } );
 
             // Get the west and east most railroad station on overmap.
-            auto west_east_most = std::minmax_element( railroad_station_points.begin(),
-            railroad_station_points.end(), []( const point_om_omt & lhs, const point_om_omt & rhs ) {
-                return lhs.x() < rhs.x();
+            auto west_east_most = std::minmax_element( railroad_stations_temp.begin(),
+                                  railroad_stations_temp.end(), []( const railroad_station & lhs,
+            const railroad_station & rhs ) {
+                return lhs.pos.x() < rhs.pos.x();
             } );
 
-            point_om_omt northmost = *north_south_most.first;
-            std::vector<point_om_omt> railroad_points_north;
-            if( !viable_railroads_north.empty() ) {
-                const tripoint_om_omt &p = random_entry_removed( viable_railroads_north );
-                railroads_out.push_back( p );
-                //point_om_omt far_end = northmost + point( 0, 4 ).rotate( 0 );
-                //add_note( tripoint_om_omt( far_end, 0 ), string_format( "%s | %s",  northmost.to_string(),
-                //          far_end.to_string() ) );
-                //railroad_points_north.push_back( far_end );
-                railroad_points_north.emplace_back( northmost );
-                connect_closest_points( railroad_points_north, 0, *overmap_connection_local_railroad );
-            }
+            auto connect_railroad_stations = [&]( std::vector<tripoint_om_omt> &viable_railroads1,
+                                                  std::vector<tripoint_om_omt> &viable_railroads2,
+            const railroad_station & rs ) {
+                if( !viable_railroads1.empty() ) {
+                    const tripoint_om_omt &o1 = random_entry_removed( viable_railroads1 );
+                    railroads_out.push_back( o1 );
+                    railroad_points.clear();
+                    railroad_points.emplace_back( o1.xy() );
+                    railroad_points.emplace_back( rs.pos );
+                    connect_closest_points( railroad_points, 0, *overmap_connection_local_railroad );
+                }
+                if( !viable_railroads2.empty() ) {
+                    const tripoint_om_omt &o2 = random_entry_removed( viable_railroads2 );
+                    railroads_out.push_back( o2 );
+                    railroad_points.clear();
+                    railroad_points.emplace_back( o2.xy() );
+                    railroad_points.emplace_back( rs.pos + point( 0, 5 ).rotate( static_cast<int>( rs.dir ) ) );
+                    connect_closest_points( railroad_points, 0, *overmap_connection_local_railroad );
+                }
+            };
 
-            point_om_omt eastmost = *west_east_most.second;
-            std::vector<point_om_omt> railroad_points_east;
-            if( !viable_railroads_east.empty() ) {
-                const tripoint_om_omt &p = random_entry_removed( viable_railroads_east );
-                railroads_out.push_back( p );
-                //point_om_omt far_end = eastmost + point( 0, 4 ).rotate( 1 );
-                //add_note( tripoint_om_omt( far_end, 0 ), string_format( "%s | %s", eastmost.to_string(),
-                //          far_end.to_string() ) );
-                //railroad_points_east.push_back( far_end );
-                railroad_points_east.emplace_back( eastmost );
-                connect_closest_points( railroad_points_east, 0, *overmap_connection_local_railroad );
-            }
+            connect_railroad_stations( viable_railroads_north,
+                                       viable_railroads_south,
+                                       *north_south_most.first );
+            connect_railroad_stations( viable_railroads_west,
+                                       viable_railroads_east,
+                                       *west_east_most.first );
+            connect_railroad_stations( viable_railroads_south,
+                                       viable_railroads_north,
+                                       *north_south_most.second );
+            connect_railroad_stations( viable_railroads_east,
+                                       viable_railroads_west,
+                                       *west_east_most.first );
 
-            point_om_omt southmost = *north_south_most.second;
-            std::vector<point_om_omt> railroad_points_south;
-            if( !viable_railroads_south.empty() ) {
-                const tripoint_om_omt &p = random_entry_removed( viable_railroads_south );
-                railroads_out.push_back( p );
-                //point_om_omt far_end = southmost + point( 0, 4 ).rotate( 2 );
-                //add_note( tripoint_om_omt( far_end, 0 ), string_format( "%s | %s",  southmost.to_string(),
-                //          far_end.to_string() ) );
-                //railroad_points_south.push_back( far_end );
-                railroad_points_south.emplace_back( southmost );
-                connect_closest_points( railroad_points_south, 0, *overmap_connection_local_railroad );
-            }
-
-            point_om_omt westmost = *west_east_most.first;
-            std::vector<point_om_omt> railroad_points_west;
-            if( !viable_railroads_west.empty() ) {
-                const tripoint_om_omt &p = random_entry_removed( viable_railroads_west );
-                railroads_out.push_back( p );
-                //point_om_omt far_end = westmost + point( 0, 4 ).rotate( 3 );
-                //add_note( tripoint_om_omt( far_end, 0 ), string_format( "%s | %s",  westmost.to_string(),
-                //          far_end.to_string() ) );
-                //railroad_points_west.push_back( far_end );
-                railroad_points_west.emplace_back( westmost );
-                connect_closest_points( railroad_points_west, 0, *overmap_connection_local_railroad );
-            }
         }
     }
-
-    std::vector<point_om_omt> railroad_points; // railroad stations and railroads_out together
-    // Compile our master list of railroads; it's less messy if railroads_out is first
-    railroad_points.reserve( railroads_out.size() + railroad_stations.size() );
-    for( const auto &elem : railroads_out ) {
-        railroad_points.emplace_back( elem.xy() );
-    }
-    for( const auto &elem : railroad_stations ) {
-        railroad_points.emplace_back( elem.pos );
-    }
-    // And finally connect them via railroads.
-    connect_closest_points( railroad_points, 0, *overmap_connection_local_railroad );
 }
 
 void overmap::place_river( const point_om_omt &pa, const point_om_omt &pb )
@@ -5218,22 +5210,22 @@ void overmap::place_cities()
 
 void overmap::place_railroad_stations()
 {
-    for( const auto &elem : railroad_station::get_all() ) {
+    for( const auto elem : railroad_station::get_all() ) {
         if( elem.pos_om == pos() ) {
             const tripoint_om_omt &p = tripoint_om_omt( elem.pos, 0 );
-            auto special = elem.special_id.obj();
+            //auto special = elem.special_id.obj();
             // See if we can actually place the special there.
-            const om_direction::type rotation = random_special_rotation( special, p, false );
-            if( rotation == om_direction::type::invalid ) {
-                continue;
-            }
+            //const om_direction::type rotation = random_special_rotation( special, p, false );
+            //if( rotation == om_direction::type::invalid || rotation != elem.dir ) {
+            //    continue;
+            //}
             railroad_stations.emplace_back( elem );
-            //add_note( tripoint_om_omt( elem.pos, 0 ), string_format( "RS0 %s | %s",  elem.pos_om.to_string(),
-            //          elem.pos.to_string() ) );
-            //const point_om_omt far_end = elem.pos + point( 0, 5 ).rotate( static_cast<int>( rotation ) );
-            //add_note( tripoint_om_omt( far_end, 0 ), string_format( "RS1 %s | %s",  elem.pos_om.to_string(),
-            //          far_end.to_string() ) );
-            place_special( special, p, rotation, get_nearest_city( p ), false, false );
+            add_note( tripoint_om_omt( elem.pos, 0 ), string_format( "1:R;S0 %s | %s",  elem.pos_om.to_string(),
+                      elem.pos.to_string() ) );
+            const point_om_omt far_end = elem.pos + point( 0, 5 ).rotate( static_cast<int>( elem.dir ) );
+            add_note( tripoint_om_omt( far_end, 0 ), string_format( "2:G;S1 %s | %s",  elem.pos_om.to_string(),
+                      far_end.to_string() ) );
+            //place_special( special, p, rotation, get_nearest_city( p ), false, false );
         }
     }
 }
