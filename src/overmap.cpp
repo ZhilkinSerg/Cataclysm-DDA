@@ -146,7 +146,7 @@ static const overmap_location_id overmap_location_swamp( "swamp" );
 
 static const species_id species_ZOMBIE( "ZOMBIE" );
 
-static const point railroad_station_exits( 0, 7 );
+static const point railroad_station_exits( 0, 5 );
 
 class map_extra;
 
