@@ -146,6 +146,8 @@ static const overmap_location_id overmap_location_swamp( "swamp" );
 
 static const species_id species_ZOMBIE( "ZOMBIE" );
 
+static const point railroad_station_exits( 0, 7 );
+
 class map_extra;
 
 #define dbg(x) DebugLog((x),D_MAP_GEN) << __FILE__ << ":" << __LINE__ << ": "
@@ -3378,11 +3380,11 @@ void overmap::generate( const overmap *north, const overmap *east,
     if( get_option<bool>( "OVERMAP_PLACE_ROADS" ) ) {
         place_roads( north, east, south, west );
     }
-    if( get_option<bool>( "OVERMAP_PLACE_RAILROADS" ) ) {
-        place_railroads( north, east, south, west );
-    }
     if( get_option<bool>( "OVERMAP_PLACE_RAILROAD_STATIONS" ) ) {
         place_railroad_stations();
+    }
+    if( get_option<bool>( "OVERMAP_PLACE_RAILROADS" ) ) {
+        place_railroads( north, east, south, west );
     }
     if( get_option<bool>( "OVERMAP_PLACE_SPECIALS" ) ) {
         place_specials( enabled_specials );
@@ -4873,13 +4875,6 @@ void overmap::place_roads( const overmap *north, const overmap *east, const over
 void overmap::place_railroads( const overmap *north, const overmap *east, const overmap *south,
                                const overmap *west )
 {
-    for( const auto elem : railroad_station::get_all() ) {
-        if( elem.pos_om == pos() ) {
-            const tripoint_om_omt &p = tripoint_om_omt( elem.pos, 0 );
-            railroad_stations.emplace_back( elem );
-        }
-    }
-
     std::vector<tripoint_om_omt> &railroads_out = connections_out[overmap_connection_local_railroad];
 
     // At least 3 exit points, to guarantee railroad continuity across overmaps
@@ -4960,7 +4955,7 @@ void overmap::place_railroads( const overmap *north, const overmap *east, const 
             std::vector<point_om_omt> railroad_station_points;
             for( const auto &elem : railroad_stations ) {
                 const point_om_omt p1 = elem.pos;
-                const point_om_omt p2 = elem.pos + point( 0, 7 ).rotate( static_cast<int>( elem.dir ) );
+                const point_om_omt p2 = elem.pos + railroad_station_exits.rotate( static_cast<int>( elem.dir ) );
                 railroad_station_points.emplace_back( p1 );
                 railroad_station_points.emplace_back( p2 );
             }
@@ -4984,17 +4979,19 @@ void overmap::place_railroads( const overmap *north, const overmap *east, const 
                 if( !viable_railroads1.empty() ) {
                     const tripoint_om_omt &o1 = random_entry_removed( viable_railroads1 );
                     railroads_out.push_back( o1 );
+                    point_om_omt p1 = rs.pos;
                     railroad_points.clear();
                     railroad_points.emplace_back( o1.xy() );
-                    railroad_points.emplace_back( rs.pos );
+                    railroad_points.emplace_back( p1 );
                     connect_closest_points( railroad_points, 0, *overmap_connection_local_railroad );
                 }
                 if( !viable_railroads2.empty() ) {
                     const tripoint_om_omt &o2 = random_entry_removed( viable_railroads2 );
                     railroads_out.push_back( o2 );
+                    point_om_omt p2 = rs.pos + railroad_station_exits.rotate( static_cast<int>( rs.dir ) );
                     railroad_points.clear();
                     railroad_points.emplace_back( o2.xy() );
-                    railroad_points.emplace_back( rs.pos + point( 0, 7 ).rotate( static_cast<int>( rs.dir ) ) );
+                    railroad_points.emplace_back( p2 );
                     connect_closest_points( railroad_points, 0, *overmap_connection_local_railroad );
                 }
             };
@@ -5211,103 +5208,26 @@ void overmap::place_cities()
 
 void overmap::place_railroad_stations()
 {
-    for( const auto elem : railroad_stations ) {
-        const tripoint_om_omt &p0 = tripoint_om_omt( elem.pos, 0 );
-        auto special = elem.special_id.obj();
-        //See if we can actually place the special there.
-        //const om_direction::type rotation = random_special_rotation(special, p0, false);
-        //if( rotation == om_direction::type::invalid ) {
-        //   continue;
-        //}
-        /*
-        const auto n1_north = tripoint_om_omt( point_om_omt( ( p1 + point_north ).raw().rotate( rot ) ),
-                                               0 );
-        const auto n1_east = tripoint_om_omt( p1 + point_east, 0 );
-        const auto n1_south = tripoint_om_omt( p1 + point_south, 0 );
-        const auto n1_west = tripoint_om_omt( p1 + point_west, 0 );
+    for( const auto &elem : railroad_station::get_all() ) {
+        if( elem.pos_om == pos() ) {
+            const tripoint_om_omt p = tripoint_om_omt( elem.pos, 0 );
+            railroad_stations.emplace_back( elem );
+            auto special = elem.special_id.obj();
+            //See if we can actually place the special there.
+            //const om_direction::type rotation = random_special_rotation(special, p, false);
+            //if( rotation == om_direction::type::invalid ) {
+            //   continue;
+            //}
+            place_special( special, p, elem.dir, get_nearest_city( p ), false, true );
+            const point_om_omt p1 = elem.pos;
+            const point_om_omt p2 = elem.pos + railroad_station_exits.rotate( static_cast<int>( elem.dir ) );
 
-        const auto n2_north = tripoint_om_omt( p2 + point_north, 0 );
-        const auto n2_east = tripoint_om_omt( p2 + point_east, 0 );
-        const auto n2_south = tripoint_om_omt( p2 + point_south, 0 );
-        const auto n2_west = tripoint_om_omt( p2 + point_west, 0 );
-
-        const auto t1_north = ter( n1_north ).obj().get_type_id().str() == "railroad";
-        const auto t1_east = ter( n1_east ).obj().get_type_id().str() == "railroad";
-        const auto t1_south = ter( n1_south ).obj().get_type_id().str() == "railroad";
-        const auto t1_west = ter( n1_west ).obj().get_type_id().str() == "railroad";
-
-        const auto t2_north = ter( n2_north ).obj().get_type_id().str() == "railroad";
-        const auto t2_east = ter( n2_east ).obj().get_type_id().str() == "railroad";
-        const auto t2_south = ter( n2_south ).obj().get_type_id().str() == "railroad";
-        const auto t2_west = ter( n2_west ).obj().get_type_id().str() == "railroad";
-
-        std::vector<point_om_omt> railroad_points;
-
-        railroad_points.clear();
-        railroad_points.emplace_back( p1 );
-        oter_str_id connection_ter1;
-
-        if( !t1_north && !t1_east && t1_west ) {
-            connection_ter1 = oter_str_id( "railroad_sw" );
-        } else if( !t1_north && t1_east && !t1_west ) {
-            connection_ter1 = oter_str_id( "railroad_es" );
-        } else if( !t1_north && t1_east && t1_west ) {
-            connection_ter1 = oter_str_id( "railroad_esw" );
-        } else if( t1_north && !t1_east && !t1_west ) {
-            connection_ter1 = oter_str_id( "railroad_ns" );
-        } else if( t1_north && !t1_east && t1_west ) {
-            connection_ter1 = oter_str_id( "railroad_nsw" );
-        } else if( t1_north && t1_east && !t1_west ) {
-            connection_ter1 = oter_str_id( "railroad_nes" );
+            add_note( tripoint_om_omt( p1, 0 ),
+                      string_format( "1:R;S0 %s | %s", elem.pos_om.to_string(), p1.to_string() ) );
+            add_note( tripoint_om_omt( p2, 0 ),
+                      string_format( "2:G;S1 %s | %s", elem.pos_om.to_string(), p2.to_string() ) );
         }
-        */
-
-        int rot = static_cast<int>( elem.dir );
-        const point_om_omt p1 = elem.pos;
-        const point_om_omt p2 = elem.pos + point( 0, 7 ).rotate( rot );
-
-        place_special( special, p0, elem.dir, get_nearest_city( p0 ), false, true );
-
-        std::vector<point_om_omt> railroad_points;
-
-        for( const auto &d : four_cardinal_directions ) {
-            railroad_points.emplace_back( p1 );
-            const auto p = tripoint_om_omt( p1 + d, 0 );
-            if( ter( p ).id() == oter_railroad ) {
-                railroad_points.emplace_back( p.xy() );
-            }
-            connect_closest_points( railroad_points, 0, *overmap_connection_local_railroad );
-            railroad_points.clear();
-        }
-        add_note( tripoint_om_omt( p1, 0 ), string_format( "1:R;S0 %s | %s", elem.pos_om.to_string(),
-                  p1.to_string() ) );
-
-        for( const auto &d : four_cardinal_directions ) {
-            railroad_points.emplace_back( p2 );
-            const auto p = tripoint_om_omt( p2 + d, 0 );
-            if( ter( p ).id() == oter_railroad ) {
-                railroad_points.emplace_back( p.xy() );
-            }
-            connect_closest_points( railroad_points, 0, *overmap_connection_local_railroad );
-            railroad_points.clear();
-        }
-        add_note( tripoint_om_omt( p2, 0 ), string_format( "2:G;S1 %s | %s", elem.pos_om.to_string(),
-                  p2.to_string() ) );
-
     }
-
-    //add_note( tripoint_om_omt( tripoint( 0, 0, 0 ) ),
-    //          string_format( "ROT1 %s | %s | %s",
-    //                         t1_west.obj().id.str(),
-    //                         t1_north.obj().id.str(),
-    //                         t1_east.obj().id.str()
-    //                       ) );
-    //add_note( tripoint_om_omt( tripoint( 0, 1, 0 ) ),
-    //          string_format( "ROT2 %s | %s | %s",
-    //                         t2_west.obj().id.str(),
-    //                         t2_south.obj().id.str(),
-    //                         t2_east.obj().id.str()
-    //                       ) );
 }
 
 overmap_special_id overmap::pick_random_building_to_place( int town_dist ) const
