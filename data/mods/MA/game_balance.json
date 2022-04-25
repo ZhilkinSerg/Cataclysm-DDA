@@ -25,7 +25,7 @@
     "name": "OVERMAP_PLACE_RIVERS",
     "info": "Allows to place procgen rivers during overmap generation.",
     "stype": "bool",
-    "value": false
+    "value": true
   },
   {
     "type": "EXTERNAL_OPTION",

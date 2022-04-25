@@ -18,7 +18,23 @@
       ">": "t_sidewalk_ramp_down_low",
       "<": "t_sidewalk_ramp_up_high",
       "w": "t_sidewalk_ramp_up_low",
-      "#": "t_concrete_wall"
+      "#": "t_concrete_wall",
+
+      "^": "t_railroad_rubble",
+      "t": "t_railroad_tie",
+      "-": "t_railroad_tie_h",
+      "|": "t_railroad_tie_v",
+      "/": "t_railroad_tie_d",
+      "X": "t_railroad_track",
+      "H": "t_railroad_track_h",
+      "V": "t_railroad_track_v",
+      "D": "t_railroad_track_d",
+      "E": "t_railroad_track_d1",
+      "F": "t_railroad_track_d2",
+      "x": "t_railroad_track_on_tie",
+      "h": "t_railroad_track_h_on_tie",
+      "v": "t_railroad_track_v_on_tie",
+      "d": "t_railroad_track_d_on_tie",
     }
   },
   {

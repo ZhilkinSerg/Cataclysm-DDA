@@ -1645,7 +1645,7 @@ void mapgen_railroad( mapgendata &dat )
                                         "^|^^|^^|^^|^^|^^|^^|^^|^\n"
                                         "........................",
                                         mapf::ter_bind( ". ^ | X x / D",
-                                                t_dirt,
+                                                t_region_groundcover_urban,
                                                 t_railroad_rubble,
                                                 t_railroad_tie,
                                                 t_railroad_track,
