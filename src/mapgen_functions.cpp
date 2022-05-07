@@ -92,6 +92,8 @@ static const oter_str_id oter_slimepit_down( "slimepit_down" );
 
 static const oter_type_str_id oter_type_railroad( "railroad" );
 
+static const ter_id t_region_groundcover_urban( "t_region_groundcover_urban" );
+
 static const ter_str_id ter_t_soil( "t_soil" );
 
 static const vspawn_id VehicleSpawn_default_highway( "default_highway" );
