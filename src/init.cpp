@@ -410,6 +410,7 @@ void DynamicDataLoader::initialize()
     add( "overmap_connection", &overmap_connections::load );
     add( "overmap_location", &overmap_locations::load );
     add( "city", &city::load_city );
+    add( "railroad_station", &railroad_station::load_railroad_station );
     add( "overmap_special", &overmap_specials::load );
     add( "overmap_special_migration", &overmap_special_migration::load_migrations );
     add( "city_building", &city_buildings::load );

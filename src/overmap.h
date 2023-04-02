@@ -28,6 +28,7 @@
 #include "mongroup.h"
 #include "overmap_types.h" // IWYU pragma: keep
 #include "point.h"
+#include "railroad_station.h"
 #include "rng.h"
 #include "type_id.h"
 
@@ -320,6 +321,7 @@ class overmap
         std::map<int, om_vehicle> vehicles;
         std::vector<basecamp> camps;
         std::vector<city> cities;
+        std::vector<railroad_station> railroad_stations;
         std::map<string_id<overmap_connection>, std::vector<tripoint_om_omt>> connections_out;
         std::optional<basecamp *> find_camp( const point_abs_omt &p );
         /// Adds the npc to the contained list of npcs ( @ref npcs ).
@@ -407,7 +409,10 @@ class overmap
         bool generate_sub( int z );
         bool generate_over( int z );
         // Check and put bridgeheads
-        void generate_bridgeheads( const std::vector<point_om_omt> &bridge_points );
+        void generate_bridgeheads( const std::vector<point_om_omt> &bridge_points,
+                                   const std::string &bridge,
+                                   const std::string &bridgehead_ground,
+                                   const std::string &bridgehead_ramp );
 
         const city &get_nearest_city( const tripoint_om_omt &p ) const;
 
@@ -433,6 +438,8 @@ class overmap
 
         void place_roads( const overmap *north, const overmap *east, const overmap *south,
                           const overmap *west );
+        void place_railroads( const overmap *north, const overmap *east, const overmap *south,
+                              const overmap *west );
 
         void populate_connections_out_from_neighbors( const overmap *north, const overmap *east,
                 const overmap *south, const overmap *west );
@@ -441,6 +448,7 @@ class overmap
         overmap_special_id pick_random_building_to_place( int town_dist ) const;
 
         void place_cities();
+        void place_railroad_stations();
         void place_building( const tripoint_om_omt &p, om_direction::type dir, const city &town );
 
         void build_city_street( const overmap_connection &connection, const point_om_omt &p, int cs,

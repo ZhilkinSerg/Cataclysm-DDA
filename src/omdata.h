@@ -29,6 +29,7 @@
 class overmap_land_use_code;
 struct MonsterGroup;
 struct city;
+struct railroad_station;
 template <typename E> struct enum_traits;
 
 using overmap_land_use_code_id = string_id<overmap_land_use_code>;

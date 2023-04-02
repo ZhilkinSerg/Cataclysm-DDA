@@ -1,0 +1,1757 @@
+[
+  {
+    "type": "railroad_station",
+    "id": "MA_261_ABINGTON_RAILROAD_STATION",
+    "database_id": 261,
+    "name": "ABINGTON RAILROAD STATION #261",
+    "special_id": "Railroad Station",
+    "pos_om": [ 49, 20 ],
+    "pos": [ 52, 162 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_116_ACTON_RAILROAD_STATION",
+    "database_id": 116,
+    "name": "ACTON RAILROAD STATION #116",
+    "special_id": "Railroad Station",
+    "pos_om": [ 39, 11 ],
+    "pos": [ 46, 151 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_18_ADAMS_RAILROAD_STATION",
+    "database_id": 18,
+    "name": "ADAMS RAILROAD STATION #18",
+    "special_id": "Railroad Station",
+    "pos_om": [ 7, 6 ],
+    "pos": [ 163, 134 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_138_AMHERST_RAILROAD_STATION",
+    "database_id": 138,
+    "name": "AMHERST RAILROAD STATION #138",
+    "special_id": "Railroad Station",
+    "pos_om": [ 19, 13 ],
+    "pos": [ 31, 164 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_23_ANDOVER_RAILROAD_STATION",
+    "database_id": 23,
+    "name": "ANDOVER RAILROAD STATION #23",
+    "special_id": "Railroad Station",
+    "pos_om": [ 45, 6 ],
+    "pos": [ 38, 88 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_41_ANDOVER_RAILROAD_STATION",
+    "database_id": 41,
+    "name": "ANDOVER RAILROAD STATION #41",
+    "special_id": "Railroad Station",
+    "pos_om": [ 44, 7 ],
+    "pos": [ 164, 119 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_65_ASHBURNHAM_RAILROAD_STATION",
+    "database_id": 65,
+    "name": "ASHBURNHAM RAILROAD STATION #65",
+    "special_id": "Railroad Station",
+    "pos_om": [ 30, 8 ],
+    "pos": [ 26, 5 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_196_ASHLAND_RAILROAD_STATION",
+    "database_id": 196,
+    "name": "ASHLAND RAILROAD STATION #196",
+    "special_id": "Railroad Station",
+    "pos_om": [ 38, 16 ],
+    "pos": [ 164, 174 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_59_ATHOL_RAILROAD_STATION",
+    "database_id": 59,
+    "name": "ATHOL RAILROAD STATION #59",
+    "special_id": "Railroad Station",
+    "pos_om": [ 24, 8 ],
+    "pos": [ 82, 88 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_277_ATTLEBORO_RAILROAD_STATION",
+    "database_id": 277,
+    "name": "ATTLEBORO RAILROAD STATION #277",
+    "special_id": "Railroad Station",
+    "pos_om": [ 42, 25 ],
+    "pos": [ 107, 31 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_278_ATTLEBORO_RAILROAD_STATION",
+    "database_id": 278,
+    "name": "ATTLEBORO RAILROAD STATION #278",
+    "special_id": "Railroad Station",
+    "pos_om": [ 41, 26 ],
+    "pos": [ 43, 55 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_95_AYER_RAILROAD_STATION",
+    "database_id": 95,
+    "name": "AYER RAILROAD STATION #95",
+    "special_id": "Railroad Station",
+    "pos_om": [ 36, 9 ],
+    "pos": [ 139, 57 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_100_AYER_RAILROAD_STATION",
+    "database_id": 100,
+    "name": "AYER RAILROAD STATION #100",
+    "special_id": "Railroad Station",
+    "pos_om": [ 37, 9 ],
+    "pos": [ 109, 60 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_300_BARNSTABLE_RAILROAD_STATION",
+    "database_id": 300,
+    "name": "BARNSTABLE RAILROAD STATION #300",
+    "special_id": "Railroad Station",
+    "pos_om": [ 61, 32 ],
+    "pos": [ 175, 69 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_232_BELCHERTOWN_RAILROAD_STATION",
+    "database_id": 232,
+    "name": "BELCHERTOWN RAILROAD STATION #232",
+    "special_id": "Railroad Station",
+    "pos_om": [ 21, 18 ],
+    "pos": [ 167, 120 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_144_BELMONT_RAILROAD_STATION",
+    "database_id": 144,
+    "name": "BELMONT RAILROAD STATION #144",
+    "special_id": "Railroad Station",
+    "pos_om": [ 44, 13 ],
+    "pos": [ 80, 113 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_287_BERKLEY_RAILROAD_STATION",
+    "database_id": 287,
+    "name": "BERKLEY RAILROAD STATION #287",
+    "special_id": "Railroad Station",
+    "pos_om": [ 47, 28 ],
+    "pos": [ 97, 5 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_22_BERNARDSTON_RAILROAD_STATION",
+    "database_id": 22,
+    "name": "BERNARDSTON RAILROAD STATION #22",
+    "special_id": "Railroad Station",
+    "pos_om": [ 18, 6 ],
+    "pos": [ 94, 72 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_74_BEVERLY_RAILROAD_STATION",
+    "database_id": 74,
+    "name": "BEVERLY RAILROAD STATION #74",
+    "special_id": "Railroad Station",
+    "pos_om": [ 50, 8 ],
+    "pos": [ 29, 116 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_104_BEVERLY_RAILROAD_STATION",
+    "database_id": 104,
+    "name": "BEVERLY RAILROAD STATION #104",
+    "special_id": "Railroad Station",
+    "pos_om": [ 50, 9 ],
+    "pos": [ 54, 65 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_106_BEVERLY_RAILROAD_STATION",
+    "database_id": 106,
+    "name": "BEVERLY RAILROAD STATION #106",
+    "special_id": "Railroad Station",
+    "pos_om": [ 51, 9 ],
+    "pos": [ 73, 39 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_72_BILLERICA_RAILROAD_STATION",
+    "database_id": 72,
+    "name": "BILLERICA RAILROAD STATION #72",
+    "special_id": "Railroad Station",
+    "pos_om": [ 42, 8 ],
+    "pos": [ 110, 73 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_158_BOSTON_RAILROAD_STATION",
+    "database_id": 158,
+    "name": "BOSTON RAILROAD STATION #158",
+    "special_id": "Railroad Station",
+    "pos_om": [ 45, 14 ],
+    "pos": [ 72, 88 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_160_BOSTON_RAILROAD_STATION",
+    "database_id": 160,
+    "name": "BOSTON RAILROAD STATION #160",
+    "special_id": "Railroad Station",
+    "pos_om": [ 46, 14 ],
+    "pos": [ 136, 93 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_182_BOSTON_RAILROAD_STATION",
+    "database_id": 182,
+    "name": "BOSTON RAILROAD STATION #182",
+    "special_id": "Railroad Station",
+    "pos_om": [ 45, 15 ],
+    "pos": [ 146, 173 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_183_BOSTON_RAILROAD_STATION",
+    "database_id": 183,
+    "name": "BOSTON RAILROAD STATION #183",
+    "special_id": "Railroad Station",
+    "pos_om": [ 46, 15 ],
+    "pos": [ 96, 72 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_190_BOSTON_RAILROAD_STATION",
+    "database_id": 190,
+    "name": "BOSTON RAILROAD STATION #190",
+    "special_id": "Railroad Station",
+    "pos_om": [ 47, 15 ],
+    "pos": [ 0, 74 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_207_BOSTON_RAILROAD_STATION",
+    "database_id": 207,
+    "name": "BOSTON RAILROAD STATION #207",
+    "special_id": "Railroad Station",
+    "pos_om": [ 44, 16 ],
+    "pos": [ 171, 77 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_208_BOSTON_RAILROAD_STATION",
+    "database_id": 208,
+    "name": "BOSTON RAILROAD STATION #208",
+    "special_id": "Railroad Station",
+    "pos_om": [ 45, 16 ],
+    "pos": [ 46, 55 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_211_BOSTON_RAILROAD_STATION",
+    "database_id": 211,
+    "name": "BOSTON RAILROAD STATION #211",
+    "special_id": "Railroad Station",
+    "pos_om": [ 46, 16 ],
+    "pos": [ 54, 88 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_219_BOSTON_RAILROAD_STATION",
+    "database_id": 219,
+    "name": "BOSTON RAILROAD STATION #219",
+    "special_id": "Railroad Station",
+    "pos_om": [ 45, 17 ],
+    "pos": [ 104, 53 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_295_BOURNE_RAILROAD_STATION",
+    "database_id": 295,
+    "name": "BOURNE RAILROAD STATION #295",
+    "special_id": "Railroad Station",
+    "pos_om": [ 55, 30 ],
+    "pos": [ 85, 27 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_239_BRAINTREE_RAILROAD_STATION",
+    "database_id": 239,
+    "name": "BRAINTREE RAILROAD STATION #239",
+    "special_id": "Railroad Station",
+    "pos_om": [ 47, 18 ],
+    "pos": [ 177, 53 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_274_BRIDGEWATER_RAILROAD_STATION",
+    "database_id": 274,
+    "name": "BRIDGEWATER RAILROAD STATION #274",
+    "special_id": "Railroad Station",
+    "pos_om": [ 48, 24 ],
+    "pos": [ 131, 10 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_260_BROCKTON_RAILROAD_STATION",
+    "database_id": 260,
+    "name": "BROCKTON RAILROAD STATION #260",
+    "special_id": "Railroad Station",
+    "pos_om": [ 47, 20 ],
+    "pos": [ 104, 153 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_267_BROCKTON_RAILROAD_STATION",
+    "database_id": 267,
+    "name": "BROCKTON RAILROAD STATION #267",
+    "special_id": "Railroad Station",
+    "pos_om": [ 47, 21 ],
+    "pos": [ 129, 86 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_270_BROCKTON_RAILROAD_STATION",
+    "database_id": 270,
+    "name": "BROCKTON RAILROAD STATION #270",
+    "special_id": "Railroad Station",
+    "pos_om": [ 47, 22 ],
+    "pos": [ 148, 14 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_29_BUCKLAND_RAILROAD_STATION",
+    "database_id": 29,
+    "name": "BUCKLAND RAILROAD STATION #29",
+    "special_id": "Railroad Station",
+    "pos_om": [ 14, 7 ],
+    "pos": [ 70, 105 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_46_BUCKLAND_RAILROAD_STATION",
+    "database_id": 46,
+    "name": "BUCKLAND RAILROAD STATION #46",
+    "special_id": "Railroad Station",
+    "pos_om": [ 14, 8 ],
+    "pos": [ 179, 32 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_147_CAMBRIDGE_RAILROAD_STATION",
+    "database_id": 147,
+    "name": "CAMBRIDGE RAILROAD STATION #147",
+    "special_id": "Railroad Station",
+    "pos_om": [ 45, 13 ],
+    "pos": [ 128, 122 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_246_CANTON_RAILROAD_STATION",
+    "database_id": 246,
+    "name": "CANTON RAILROAD STATION #246",
+    "special_id": "Railroad Station",
+    "pos_om": [ 45, 19 ],
+    "pos": [ 23, 93 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_21_CHARLEMONT_RAILROAD_STATION",
+    "database_id": 21,
+    "name": "CHARLEMONT RAILROAD STATION #21",
+    "special_id": "Railroad Station",
+    "pos_om": [ 11, 6 ],
+    "pos": [ 58, 143 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_28_CHARLEMONT_RAILROAD_STATION",
+    "database_id": 28,
+    "name": "CHARLEMONT RAILROAD STATION #28",
+    "special_id": "Railroad Station",
+    "pos_om": [ 12, 7 ],
+    "pos": [ 33, 69 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_32_CHELMSFORD_RAILROAD_STATION",
+    "database_id": 32,
+    "name": "CHELMSFORD RAILROAD STATION #32",
+    "special_id": "Railroad Station",
+    "pos_om": [ 40, 7 ],
+    "pos": [ 154, 49 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_149_CHELSEA_RAILROAD_STATION",
+    "database_id": 149,
+    "name": "CHELSEA RAILROAD STATION #149",
+    "special_id": "Railroad Station",
+    "pos_om": [ 47, 13 ],
+    "pos": [ 62, 87 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_128_CLINTON_RAILROAD_STATION",
+    "database_id": 128,
+    "name": "CLINTON RAILROAD STATION #128",
+    "special_id": "Railroad Station",
+    "pos_om": [ 34, 12 ],
+    "pos": [ 156, 137 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_230_COHASSET_RAILROAD_STATION",
+    "database_id": 230,
+    "name": "COHASSET RAILROAD STATION #230",
+    "special_id": "Railroad Station",
+    "pos_om": [ 51, 17 ],
+    "pos": [ 21, 63 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_117_CONCORD_RAILROAD_STATION",
+    "database_id": 117,
+    "name": "CONCORD RAILROAD STATION #117",
+    "special_id": "Railroad Station",
+    "pos_om": [ 40, 11 ],
+    "pos": [ 90, 166 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_119_CONCORD_RAILROAD_STATION",
+    "database_id": 119,
+    "name": "CONCORD RAILROAD STATION #119",
+    "special_id": "Railroad Station",
+    "pos_om": [ 41, 11 ],
+    "pos": [ 26, 166 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_217_DEDHAM_RAILROAD_STATION",
+    "database_id": 217,
+    "name": "DEDHAM RAILROAD STATION #217",
+    "special_id": "Railroad Station",
+    "pos_om": [ 44, 17 ],
+    "pos": [ 148, 135 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_238_DEDHAM_RAILROAD_STATION",
+    "database_id": 238,
+    "name": "DEDHAM RAILROAD STATION #238",
+    "special_id": "Railroad Station",
+    "pos_om": [ 45, 18 ],
+    "pos": [ 36, 46 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_52_DEERFIELD_RAILROAD_STATION",
+    "database_id": 52,
+    "name": "DEERFIELD RAILROAD STATION #52",
+    "special_id": "Railroad Station",
+    "pos_om": [ 18, 8 ],
+    "pos": [ 0, 150 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_77_DEERFIELD_RAILROAD_STATION",
+    "database_id": 77,
+    "name": "DEERFIELD RAILROAD STATION #77",
+    "special_id": "Railroad Station",
+    "pos_om": [ 16, 9 ],
+    "pos": [ 83, 103 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_79_DEERFIELD_RAILROAD_STATION",
+    "database_id": 79,
+    "name": "DEERFIELD RAILROAD STATION #79",
+    "special_id": "Railroad Station",
+    "pos_om": [ 17, 9 ],
+    "pos": [ 59, 98 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_82_DEERFIELD_RAILROAD_STATION",
+    "database_id": 82,
+    "name": "DEERFIELD RAILROAD STATION #82",
+    "special_id": "Railroad Station",
+    "pos_om": [ 18, 9 ],
+    "pos": [ 53, 11 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_191_EASTHAMPTON_RAILROAD_STATION",
+    "database_id": 191,
+    "name": "EASTHAMPTON RAILROAD STATION #191",
+    "special_id": "Railroad Station",
+    "pos_om": [ 17, 16 ],
+    "pos": [ 25, 30 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_266_EASTON_RAILROAD_STATION",
+    "database_id": 266,
+    "name": "EASTON RAILROAD STATION #266",
+    "special_id": "Railroad Station",
+    "pos_om": [ 46, 21 ],
+    "pos": [ 9, 158 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_55_ERVING_RAILROAD_STATION",
+    "database_id": 55,
+    "name": "ERVING RAILROAD STATION #55",
+    "special_id": "Railroad Station",
+    "pos_om": [ 21, 8 ],
+    "pos": [ 97, 33 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_296_FALL_RIVER_RAILROAD_STATION",
+    "database_id": 296,
+    "name": "FALL RIVER RAILROAD STATION #296",
+    "special_id": "Railroad Station",
+    "pos_om": [ 44, 31 ],
+    "pos": [ 169, 50 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_297_FALL_RIVER_RAILROAD_STATION",
+    "database_id": 297,
+    "name": "FALL RIVER RAILROAD STATION #297",
+    "special_id": "Railroad Station",
+    "pos_om": [ 45, 31 ],
+    "pos": [ 22, 2 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_66_FITCHBURG_RAILROAD_STATION",
+    "database_id": 66,
+    "name": "FITCHBURG RAILROAD STATION #66",
+    "special_id": "Railroad Station",
+    "pos_om": [ 32, 8 ],
+    "pos": [ 156, 139 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_87_FITCHBURG_RAILROAD_STATION",
+    "database_id": 87,
+    "name": "FITCHBURG RAILROAD STATION #87",
+    "special_id": "Railroad Station",
+    "pos_om": [ 31, 9 ],
+    "pos": [ 148, 78 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_90_FITCHBURG_RAILROAD_STATION",
+    "database_id": 90,
+    "name": "FITCHBURG RAILROAD STATION #90",
+    "special_id": "Railroad Station",
+    "pos_om": [ 33, 9 ],
+    "pos": [ 38, 1 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_19_FLORIDA_RAILROAD_STATION",
+    "database_id": 19,
+    "name": "FLORIDA RAILROAD STATION #19",
+    "special_id": "Railroad Station",
+    "pos_om": [ 9, 6 ],
+    "pos": [ 46, 9 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_264_FOXBOROUGH_RAILROAD_STATION",
+    "database_id": 264,
+    "name": "FOXBOROUGH RAILROAD STATION #264",
+    "special_id": "Railroad Station",
+    "pos_om": [ 43, 21 ],
+    "pos": [ 7, 51 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_197_FRAMINGHAM_RAILROAD_STATION",
+    "database_id": 197,
+    "name": "FRAMINGHAM RAILROAD STATION #197",
+    "special_id": "Railroad Station",
+    "pos_om": [ 39, 16 ],
+    "pos": [ 177, 104 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_262_FRANKLIN_RAILROAD_STATION",
+    "database_id": 262,
+    "name": "FRANKLIN RAILROAD STATION #262",
+    "special_id": "Railroad Station",
+    "pos_om": [ 39, 21 ],
+    "pos": [ 109, 66 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_263_FRANKLIN_RAILROAD_STATION",
+    "database_id": 263,
+    "name": "FRANKLIN RAILROAD STATION #263",
+    "special_id": "Railroad Station",
+    "pos_om": [ 40, 21 ],
+    "pos": [ 77, 99 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_290_FREETOWN_RAILROAD_STATION",
+    "database_id": 290,
+    "name": "FREETOWN RAILROAD STATION #290",
+    "special_id": "Railroad Station",
+    "pos_om": [ 46, 29 ],
+    "pos": [ 125, 47 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_62_GARDNER_RAILROAD_STATION",
+    "database_id": 62,
+    "name": "GARDNER RAILROAD STATION #62",
+    "special_id": "Railroad Station",
+    "pos_om": [ 28, 8 ],
+    "pos": [ 80, 139 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_64_GARDNER_RAILROAD_STATION",
+    "database_id": 64,
+    "name": "GARDNER RAILROAD STATION #64",
+    "special_id": "Railroad Station",
+    "pos_om": [ 30, 8 ],
+    "pos": [ 5, 116 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_85_GARDNER_RAILROAD_STATION",
+    "database_id": 85,
+    "name": "GARDNER RAILROAD STATION #85",
+    "special_id": "Railroad Station",
+    "pos_om": [ 29, 9 ],
+    "pos": [ 50, 15 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_44_GLOUCESTER_RAILROAD_STATION",
+    "database_id": 44,
+    "name": "GLOUCESTER RAILROAD STATION #44",
+    "special_id": "Railroad Station",
+    "pos_om": [ 53, 7 ],
+    "pos": [ 96, 160 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_45_GLOUCESTER_RAILROAD_STATION",
+    "database_id": 45,
+    "name": "GLOUCESTER RAILROAD STATION #45",
+    "special_id": "Railroad Station",
+    "pos_om": [ 54, 7 ],
+    "pos": [ 53, 134 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_216_GRAFTON_RAILROAD_STATION",
+    "database_id": 216,
+    "name": "GRAFTON RAILROAD STATION #216",
+    "special_id": "Railroad Station",
+    "pos_om": [ 34, 17 ],
+    "pos": [ 167, 57 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_48_GREENFIELD_RAILROAD_STATION",
+    "database_id": 48,
+    "name": "GREENFIELD RAILROAD STATION #48",
+    "special_id": "Railroad Station",
+    "pos_om": [ 17, 8 ],
+    "pos": [ 102, 99 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_272_HALIFAX_RAILROAD_STATION",
+    "database_id": 272,
+    "name": "HALIFAX RAILROAD STATION #272",
+    "special_id": "Railroad Station",
+    "pos_om": [ 51, 23 ],
+    "pos": [ 86, 53 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_43_HAMILTON_RAILROAD_STATION",
+    "database_id": 43,
+    "name": "HAMILTON RAILROAD STATION #43",
+    "special_id": "Railroad Station",
+    "pos_om": [ 50, 7 ],
+    "pos": [ 62, 166 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_271_HANSON_RAILROAD_STATION",
+    "database_id": 271,
+    "name": "HANSON RAILROAD STATION #271",
+    "special_id": "Railroad Station",
+    "pos_om": [ 50, 22 ],
+    "pos": [ 52, 91 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_98_HARVARD_RAILROAD_STATION",
+    "database_id": 98,
+    "name": "HARVARD RAILROAD STATION #98",
+    "special_id": "Railroad Station",
+    "pos_om": [ 36, 9 ],
+    "pos": [ 116, 161 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_108_HARVARD_RAILROAD_STATION",
+    "database_id": 108,
+    "name": "HARVARD RAILROAD STATION #108",
+    "special_id": "Railroad Station",
+    "pos_om": [ 36, 10 ],
+    "pos": [ 10, 169 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_127_HATFIELD_RAILROAD_STATION",
+    "database_id": 127,
+    "name": "HATFIELD RAILROAD STATION #127",
+    "special_id": "Railroad Station",
+    "pos_om": [ 17, 12 ],
+    "pos": [ 18, 169 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_150_HATFIELD_RAILROAD_STATION",
+    "database_id": 150,
+    "name": "HATFIELD RAILROAD STATION #150",
+    "special_id": "Railroad Station",
+    "pos_om": [ 16, 14 ],
+    "pos": [ 156, 4 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_1_HAVERHILL_RAILROAD_STATION",
+    "database_id": 1,
+    "name": "HAVERHILL RAILROAD STATION #1",
+    "special_id": "Railroad Station",
+    "pos_om": [ 45, 2 ],
+    "pos": [ 143, 145 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_3_HAVERHILL_RAILROAD_STATION",
+    "database_id": 3,
+    "name": "HAVERHILL RAILROAD STATION #3",
+    "special_id": "Railroad Station",
+    "pos_om": [ 46, 3 ],
+    "pos": [ 49, 133 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_9_HAVERHILL_RAILROAD_STATION",
+    "database_id": 9,
+    "name": "HAVERHILL RAILROAD STATION #9",
+    "special_id": "Railroad Station",
+    "pos_om": [ 45, 4 ],
+    "pos": [ 147, 86 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_10_HAVERHILL_RAILROAD_STATION",
+    "database_id": 10,
+    "name": "HAVERHILL RAILROAD STATION #10",
+    "special_id": "Railroad Station",
+    "pos_om": [ 46, 4 ],
+    "pos": [ 17, 16 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_228_HINGHAM_RAILROAD_STATION",
+    "database_id": 228,
+    "name": "HINGHAM RAILROAD STATION #228",
+    "special_id": "Railroad Station",
+    "pos_om": [ 49, 17 ],
+    "pos": [ 156, 102 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_229_HINGHAM_RAILROAD_STATION",
+    "database_id": 229,
+    "name": "HINGHAM RAILROAD STATION #229",
+    "special_id": "Railroad Station",
+    "pos_om": [ 50, 17 ],
+    "pos": [ 95, 60 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_249_HOLBROOK_RAILROAD_STATION",
+    "database_id": 249,
+    "name": "HOLBROOK RAILROAD STATION #249",
+    "special_id": "Railroad Station",
+    "pos_om": [ 47, 19 ],
+    "pos": [ 88, 118 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_192_HOLYOKE_RAILROAD_STATION",
+    "database_id": 192,
+    "name": "HOLYOKE RAILROAD STATION #192",
+    "special_id": "Railroad Station",
+    "pos_om": [ 17, 16 ],
+    "pos": [ 54, 139 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_215_HOLYOKE_RAILROAD_STATION",
+    "database_id": 215,
+    "name": "HOLYOKE RAILROAD STATION #215",
+    "special_id": "Railroad Station",
+    "pos_om": [ 17, 17 ],
+    "pos": [ 23, 153 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_255_HOPEDALE_RAILROAD_STATION",
+    "database_id": 255,
+    "name": "HOPEDALE RAILROAD STATION #255",
+    "special_id": "Railroad Station",
+    "pos_om": [ 37, 20 ],
+    "pos": [ 120, 66 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_26_IPSWICH_RAILROAD_STATION",
+    "database_id": 26,
+    "name": "IPSWICH RAILROAD STATION #26",
+    "special_id": "Railroad Station",
+    "pos_om": [ 50, 6 ],
+    "pos": [ 174, 40 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_275_KINGSTON_RAILROAD_STATION",
+    "database_id": 275,
+    "name": "KINGSTON RAILROAD STATION #275",
+    "special_id": "Railroad Station",
+    "pos_om": [ 53, 24 ],
+    "pos": [ 62, 39 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_285_LAKEVILLE_RAILROAD_STATION",
+    "database_id": 285,
+    "name": "LAKEVILLE RAILROAD STATION #285",
+    "special_id": "Railroad Station",
+    "pos_om": [ 49, 26 ],
+    "pos": [ 117, 142 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_15_LAWRENCE_RAILROAD_STATION",
+    "database_id": 15,
+    "name": "LAWRENCE RAILROAD STATION #15",
+    "special_id": "Railroad Station",
+    "pos_om": [ 44, 5 ],
+    "pos": [ 161, 147 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_17_LAWRENCE_RAILROAD_STATION",
+    "database_id": 17,
+    "name": "LAWRENCE RAILROAD STATION #17",
+    "special_id": "Railroad Station",
+    "pos_om": [ 45, 5 ],
+    "pos": [ 11, 111 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_91_LEOMINSTER_RAILROAD_STATION",
+    "database_id": 91,
+    "name": "LEOMINSTER RAILROAD STATION #91",
+    "special_id": "Railroad Station",
+    "pos_om": [ 33, 9 ],
+    "pos": [ 139, 100 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_139_LINCOLN_RAILROAD_STATION",
+    "database_id": 139,
+    "name": "LINCOLN RAILROAD STATION #139",
+    "special_id": "Railroad Station",
+    "pos_om": [ 41, 13 ],
+    "pos": [ 139, 5 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_101_LITTLETON_RAILROAD_STATION",
+    "database_id": 101,
+    "name": "LITTLETON RAILROAD STATION #101",
+    "special_id": "Railroad Station",
+    "pos_om": [ 38, 9 ],
+    "pos": [ 38, 17 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_109_LITTLETON_RAILROAD_STATION",
+    "database_id": 109,
+    "name": "LITTLETON RAILROAD STATION #109",
+    "special_id": "Railroad Station",
+    "pos_om": [ 38, 10 ],
+    "pos": [ 73, 59 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_34_LOWELL_RAILROAD_STATION",
+    "database_id": 34,
+    "name": "LOWELL RAILROAD STATION #34",
+    "special_id": "Railroad Station",
+    "pos_om": [ 41, 7 ],
+    "pos": [ 169, 50 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_39_LOWELL_RAILROAD_STATION",
+    "database_id": 39,
+    "name": "LOWELL RAILROAD STATION #39",
+    "special_id": "Railroad Station",
+    "pos_om": [ 42, 7 ],
+    "pos": [ 19, 94 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_242_LUDLOW_RAILROAD_STATION",
+    "database_id": 242,
+    "name": "LUDLOW RAILROAD STATION #242",
+    "special_id": "Railroad Station",
+    "pos_om": [ 19, 19 ],
+    "pos": [ 124, 50 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_123_LYNN_RAILROAD_STATION",
+    "database_id": 123,
+    "name": "LYNN RAILROAD STATION #123",
+    "special_id": "Railroad Station",
+    "pos_om": [ 48, 11 ],
+    "pos": [ 176, 138 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_136_LYNN_RAILROAD_STATION",
+    "database_id": 136,
+    "name": "LYNN RAILROAD STATION #136",
+    "special_id": "Railroad Station",
+    "pos_om": [ 48, 12 ],
+    "pos": [ 100, 15 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_135_MALDEN_RAILROAD_STATION",
+    "database_id": 135,
+    "name": "MALDEN RAILROAD STATION #135",
+    "special_id": "Railroad Station",
+    "pos_om": [ 46, 12 ],
+    "pos": [ 102, 124 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_75_MANCHESTER_RAILROAD_STATION",
+    "database_id": 75,
+    "name": "MANCHESTER RAILROAD STATION #75",
+    "special_id": "Railroad Station",
+    "pos_om": [ 52, 8 ],
+    "pos": [ 58, 157 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_269_MANSFIELD_RAILROAD_STATION",
+    "database_id": 269,
+    "name": "MANSFIELD RAILROAD STATION #269",
+    "special_id": "Railroad Station",
+    "pos_om": [ 43, 22 ],
+    "pos": [ 148, 149 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_133_MEDFORD_RAILROAD_STATION",
+    "database_id": 133,
+    "name": "MEDFORD RAILROAD STATION #133",
+    "special_id": "Railroad Station",
+    "pos_om": [ 45, 12 ],
+    "pos": [ 79, 147 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_120_MELROSE_RAILROAD_STATION",
+    "database_id": 120,
+    "name": "MELROSE RAILROAD STATION #120",
+    "special_id": "Railroad Station",
+    "pos_om": [ 46, 11 ],
+    "pos": [ 118, 131 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_134_MELROSE_RAILROAD_STATION",
+    "database_id": 134,
+    "name": "MELROSE RAILROAD STATION #134",
+    "special_id": "Railroad Station",
+    "pos_om": [ 46, 12 ],
+    "pos": [ 118, 6 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_284_MIDDLEBOROUGH_RAILROAD_STATION",
+    "database_id": 284,
+    "name": "MIDDLEBOROUGH RAILROAD STATION #284",
+    "special_id": "Railroad Station",
+    "pos_om": [ 49, 26 ],
+    "pos": [ 132, 129 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_256_MILFORD_RAILROAD_STATION",
+    "database_id": 256,
+    "name": "MILFORD RAILROAD STATION #256",
+    "special_id": "Railroad Station",
+    "pos_om": [ 38, 20 ],
+    "pos": [ 28, 18 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_53_MONTAGUE_RAILROAD_STATION",
+    "database_id": 53,
+    "name": "MONTAGUE RAILROAD STATION #53",
+    "special_id": "Railroad Station",
+    "pos_om": [ 19, 8 ],
+    "pos": [ 121, 128 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_81_MONTAGUE_RAILROAD_STATION",
+    "database_id": 81,
+    "name": "MONTAGUE RAILROAD STATION #81",
+    "special_id": "Railroad Station",
+    "pos_om": [ 18, 9 ],
+    "pos": [ 128, 88 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_84_MONTAGUE_RAILROAD_STATION",
+    "database_id": 84,
+    "name": "MONTAGUE RAILROAD STATION #84",
+    "special_id": "Railroad Station",
+    "pos_om": [ 19, 9 ],
+    "pos": [ 20, 63 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_199_NATICK_RAILROAD_STATION",
+    "database_id": 199,
+    "name": "NATICK RAILROAD STATION #199",
+    "special_id": "Railroad Station",
+    "pos_om": [ 40, 16 ],
+    "pos": [ 95, 71 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_200_NATICK_RAILROAD_STATION",
+    "database_id": 200,
+    "name": "NATICK RAILROAD STATION #200",
+    "special_id": "Railroad Station",
+    "pos_om": [ 41, 16 ],
+    "pos": [ 64, 60 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_203_NEEDHAM_RAILROAD_STATION",
+    "database_id": 203,
+    "name": "NEEDHAM RAILROAD STATION #203",
+    "special_id": "Railroad Station",
+    "pos_om": [ 43, 16 ],
+    "pos": [ 106, 82 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_298_NEW_BEDFORD_RAILROAD_STATION",
+    "database_id": 298,
+    "name": "NEW BEDFORD RAILROAD STATION #298",
+    "special_id": "Railroad Station",
+    "pos_om": [ 49, 31 ],
+    "pos": [ 43, 158 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_299_NEW_BEDFORD_RAILROAD_STATION",
+    "database_id": 299,
+    "name": "NEW BEDFORD RAILROAD STATION #299",
+    "special_id": "Railroad Station",
+    "pos_om": [ 49, 32 ],
+    "pos": [ 98, 145 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_301_NEW_BEDFORD_RAILROAD_STATION",
+    "database_id": 301,
+    "name": "NEW BEDFORD RAILROAD STATION #301",
+    "special_id": "Railroad Station",
+    "pos_om": [ 49, 33 ],
+    "pos": [ 117, 18 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_6_NEWBURYPORT_RAILROAD_STATION",
+    "database_id": 6,
+    "name": "NEWBURYPORT RAILROAD STATION #6",
+    "special_id": "Railroad Station",
+    "pos_om": [ 50, 3 ],
+    "pos": [ 39, 13 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_154_NEWTON_RAILROAD_STATION",
+    "database_id": 154,
+    "name": "NEWTON RAILROAD STATION #154",
+    "special_id": "Railroad Station",
+    "pos_om": [ 43, 14 ],
+    "pos": [ 72, 136 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_157_NEWTON_RAILROAD_STATION",
+    "database_id": 157,
+    "name": "NEWTON RAILROAD STATION #157",
+    "special_id": "Railroad Station",
+    "pos_om": [ 44, 14 ],
+    "pos": [ 8, 114 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_257_NORFOLK_RAILROAD_STATION",
+    "database_id": 257,
+    "name": "NORFOLK RAILROAD STATION #257",
+    "special_id": "Railroad Station",
+    "pos_om": [ 41, 20 ],
+    "pos": [ 143, 103 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_12_NORTH_ADAMS_RAILROAD_STATION",
+    "database_id": 12,
+    "name": "NORTH ADAMS RAILROAD STATION #12",
+    "special_id": "Railroad Station",
+    "pos_om": [ 7, 5 ],
+    "pos": [ 161, 96 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_16_NORTH_ANDOVER_RAILROAD_STATION",
+    "database_id": 16,
+    "name": "NORTH ANDOVER RAILROAD STATION #16",
+    "special_id": "Railroad Station",
+    "pos_om": [ 45, 5 ],
+    "pos": [ 68, 93 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_172_NORTHAMPTON_RAILROAD_STATION",
+    "database_id": 172,
+    "name": "NORTHAMPTON RAILROAD STATION #172",
+    "special_id": "Railroad Station",
+    "pos_om": [ 16, 15 ],
+    "pos": [ 153, 4 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_173_NORTHAMPTON_RAILROAD_STATION",
+    "database_id": 173,
+    "name": "NORTHAMPTON RAILROAD STATION #173",
+    "special_id": "Railroad Station",
+    "pos_om": [ 17, 15 ],
+    "pos": [ 8, 127 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_8_NORTHFIELD_RAILROAD_STATION",
+    "database_id": 8,
+    "name": "NORTHFIELD RAILROAD STATION #8",
+    "special_id": "Railroad Station",
+    "pos_om": [ 20, 4 ],
+    "pos": [ 41, 165 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_13_NORTHFIELD_RAILROAD_STATION",
+    "database_id": 13,
+    "name": "NORTHFIELD RAILROAD STATION #13",
+    "special_id": "Railroad Station",
+    "pos_om": [ 19, 5 ],
+    "pos": [ 144, 154 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_234_NORWOOD_RAILROAD_STATION",
+    "database_id": 234,
+    "name": "NORWOOD RAILROAD STATION #234",
+    "special_id": "Railroad Station",
+    "pos_om": [ 44, 18 ],
+    "pos": [ 39, 135 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_244_NORWOOD_RAILROAD_STATION",
+    "database_id": 244,
+    "name": "NORWOOD RAILROAD STATION #244",
+    "special_id": "Railroad Station",
+    "pos_om": [ 43, 19 ],
+    "pos": [ 143, 49 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_58_ORANGE_RAILROAD_STATION",
+    "database_id": 58,
+    "name": "ORANGE RAILROAD STATION #58",
+    "special_id": "Railroad Station",
+    "pos_om": [ 23, 8 ],
+    "pos": [ 7, 76 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_233_PALMER_RAILROAD_STATION",
+    "database_id": 233,
+    "name": "PALMER RAILROAD STATION #233",
+    "special_id": "Railroad Station",
+    "pos_om": [ 22, 18 ],
+    "pos": [ 46, 90 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_115_PITTSFIELD_RAILROAD_STATION",
+    "database_id": 115,
+    "name": "PITTSFIELD RAILROAD STATION #115",
+    "special_id": "Railroad Station",
+    "pos_om": [ 5, 11 ],
+    "pos": [ 12, 131 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_276_PLYMOUTH_RAILROAD_STATION",
+    "database_id": 276,
+    "name": "PLYMOUTH RAILROAD STATION #276",
+    "special_id": "Railroad Station",
+    "pos_om": [ 54, 24 ],
+    "pos": [ 3, 18 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_226_QUINCY_RAILROAD_STATION",
+    "database_id": 226,
+    "name": "QUINCY RAILROAD STATION #226",
+    "special_id": "Railroad Station",
+    "pos_om": [ 47, 17 ],
+    "pos": [ 163, 34 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_273_RAYNHAM_RAILROAD_STATION",
+    "database_id": 273,
+    "name": "RAYNHAM RAILROAD STATION #273",
+    "special_id": "Railroad Station",
+    "pos_om": [ 46, 24 ],
+    "pos": [ 109, 41 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_110_READING_RAILROAD_STATION",
+    "database_id": 110,
+    "name": "READING RAILROAD STATION #110",
+    "special_id": "Railroad Station",
+    "pos_om": [ 45, 10 ],
+    "pos": [ 155, 37 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_288_ROCHESTER_RAILROAD_STATION",
+    "database_id": 288,
+    "name": "ROCHESTER RAILROAD STATION #288",
+    "special_id": "Railroad Station",
+    "pos_om": [ 52, 28 ],
+    "pos": [ 16, 127 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_27_ROCKPORT_RAILROAD_STATION",
+    "database_id": 27,
+    "name": "ROCKPORT RAILROAD STATION #27",
+    "special_id": "Railroad Station",
+    "pos_om": [ 55, 6 ],
+    "pos": [ 7, 130 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_20_ROWE_RAILROAD_STATION",
+    "database_id": 20,
+    "name": "ROWE RAILROAD STATION #20",
+    "special_id": "Railroad Station",
+    "pos_om": [ 10, 6 ],
+    "pos": [ 25, 25 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_11_ROWLEY_RAILROAD_STATION",
+    "database_id": 11,
+    "name": "ROWLEY RAILROAD STATION #11",
+    "special_id": "Railroad Station",
+    "pos_om": [ 50, 4 ],
+    "pos": [ 111, 178 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_114_SALEM_RAILROAD_STATION",
+    "database_id": 114,
+    "name": "SALEM RAILROAD STATION #114",
+    "special_id": "Railroad Station",
+    "pos_om": [ 49, 10 ],
+    "pos": [ 170, 30 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_231_SCITUATE_RAILROAD_STATION",
+    "database_id": 231,
+    "name": "SCITUATE RAILROAD STATION #231",
+    "special_id": "Railroad Station",
+    "pos_om": [ 52, 17 ],
+    "pos": [ 20, 179 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_251_SCITUATE_RAILROAD_STATION",
+    "database_id": 251,
+    "name": "SCITUATE RAILROAD STATION #251",
+    "special_id": "Railroad Station",
+    "pos_om": [ 52, 19 ],
+    "pos": [ 155, 8 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_258_SHARON_RAILROAD_STATION",
+    "database_id": 258,
+    "name": "SHARON RAILROAD STATION #258",
+    "special_id": "Railroad Station",
+    "pos_om": [ 44, 20 ],
+    "pos": [ 90, 82 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_78_SHELBURNE_RAILROAD_STATION",
+    "database_id": 78,
+    "name": "SHELBURNE RAILROAD STATION #78",
+    "special_id": "Railroad Station",
+    "pos_om": [ 16, 9 ],
+    "pos": [ 14, 42 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_93_SHIRLEY_RAILROAD_STATION",
+    "database_id": 93,
+    "name": "SHIRLEY RAILROAD STATION #93",
+    "special_id": "Railroad Station",
+    "pos_om": [ 35, 9 ],
+    "pos": [ 85, 117 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_195_SOUTHBOROUGH_RAILROAD_STATION",
+    "database_id": 195,
+    "name": "SOUTHBOROUGH RAILROAD STATION #195",
+    "special_id": "Railroad Station",
+    "pos_om": [ 38, 16 ],
+    "pos": [ 0, 146 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_241_SPRINGFIELD_RAILROAD_STATION",
+    "database_id": 241,
+    "name": "SPRINGFIELD RAILROAD STATION #241",
+    "special_id": "Railroad Station",
+    "pos_om": [ 18, 19 ],
+    "pos": [ 63, 155 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_252_SPRINGFIELD_RAILROAD_STATION",
+    "database_id": 252,
+    "name": "SPRINGFIELD RAILROAD STATION #252",
+    "special_id": "Railroad Station",
+    "pos_om": [ 17, 20 ],
+    "pos": [ 89, 158 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_259_STOUGHTON_RAILROAD_STATION",
+    "database_id": 259,
+    "name": "STOUGHTON RAILROAD STATION #259",
+    "special_id": "Railroad Station",
+    "pos_om": [ 46, 20 ],
+    "pos": [ 8, 86 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_265_STOUGHTON_RAILROAD_STATION",
+    "database_id": 265,
+    "name": "STOUGHTON RAILROAD STATION #265",
+    "special_id": "Railroad Station",
+    "pos_om": [ 46, 21 ],
+    "pos": [ 26, 69 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_125_SWAMPSCOTT_RAILROAD_STATION",
+    "database_id": 125,
+    "name": "SWAMPSCOTT RAILROAD STATION #125",
+    "special_id": "Railroad Station",
+    "pos_om": [ 49, 11 ],
+    "pos": [ 83, 80 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_280_TAUNTON_RAILROAD_STATION",
+    "database_id": 280,
+    "name": "TAUNTON RAILROAD STATION #280",
+    "special_id": "Railroad Station",
+    "pos_om": [ 46, 26 ],
+    "pos": [ 104, 98 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_61_TEMPLETON_RAILROAD_STATION",
+    "database_id": 61,
+    "name": "TEMPLETON RAILROAD STATION #61",
+    "special_id": "Railroad Station",
+    "pos_om": [ 27, 8 ],
+    "pos": [ 103, 4 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_38_TEWKSBURY_RAILROAD_STATION",
+    "database_id": 38,
+    "name": "TEWKSBURY RAILROAD STATION #38",
+    "special_id": "Railroad Station",
+    "pos_om": [ 42, 7 ],
+    "pos": [ 166, 111 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_40_TEWKSBURY_RAILROAD_STATION",
+    "database_id": 40,
+    "name": "TEWKSBURY RAILROAD STATION #40",
+    "special_id": "Railroad Station",
+    "pos_om": [ 43, 7 ],
+    "pos": [ 108, 132 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_113_WAKEFIELD_RAILROAD_STATION",
+    "database_id": 113,
+    "name": "WAKEFIELD RAILROAD STATION #113",
+    "special_id": "Railroad Station",
+    "pos_om": [ 46, 10 ],
+    "pos": [ 95, 133 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_122_WAKEFIELD_RAILROAD_STATION",
+    "database_id": 122,
+    "name": "WAKEFIELD RAILROAD STATION #122",
+    "special_id": "Railroad Station",
+    "pos_om": [ 46, 11 ],
+    "pos": [ 124, 43 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_243_WALPOLE_RAILROAD_STATION",
+    "database_id": 243,
+    "name": "WALPOLE RAILROAD STATION #243",
+    "special_id": "Railroad Station",
+    "pos_om": [ 43, 19 ],
+    "pos": [ 53, 137 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_152_WALTHAM_RAILROAD_STATION",
+    "database_id": 152,
+    "name": "WALTHAM RAILROAD STATION #152",
+    "special_id": "Railroad Station",
+    "pos_om": [ 43, 14 ],
+    "pos": [ 46, 38 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_289_WAREHAM_RAILROAD_STATION",
+    "database_id": 289,
+    "name": "WAREHAM RAILROAD STATION #289",
+    "special_id": "Railroad Station",
+    "pos_om": [ 52, 28 ],
+    "pos": [ 83, 172 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_291_WAREHAM_RAILROAD_STATION",
+    "database_id": 291,
+    "name": "WAREHAM RAILROAD STATION #291",
+    "special_id": "Railroad Station",
+    "pos_om": [ 53, 29 ],
+    "pos": [ 130, 153 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_294_WAREHAM_RAILROAD_STATION",
+    "database_id": 294,
+    "name": "WAREHAM RAILROAD STATION #294",
+    "special_id": "Railroad Station",
+    "pos_om": [ 54, 29 ],
+    "pos": [ 140, 158 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_156_WATERTOWN_RAILROAD_STATION",
+    "database_id": 156,
+    "name": "WATERTOWN RAILROAD STATION #156",
+    "special_id": "Railroad Station",
+    "pos_om": [ 44, 14 ],
+    "pos": [ 33, 36 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_179_WELLESLEY_RAILROAD_STATION",
+    "database_id": 179,
+    "name": "WELLESLEY RAILROAD STATION #179",
+    "special_id": "Railroad Station",
+    "pos_om": [ 42, 15 ],
+    "pos": [ 134, 102 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_202_WELLESLEY_RAILROAD_STATION",
+    "database_id": 202,
+    "name": "WELLESLEY RAILROAD STATION #202",
+    "special_id": "Railroad Station",
+    "pos_om": [ 42, 16 ],
+    "pos": [ 66, 6 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_54_WENDELL_RAILROAD_STATION",
+    "database_id": 54,
+    "name": "WENDELL RAILROAD STATION #54",
+    "special_id": "Railroad Station",
+    "pos_om": [ 20, 8 ],
+    "pos": [ 123, 39 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_57_WENDELL_RAILROAD_STATION",
+    "database_id": 57,
+    "name": "WENDELL RAILROAD STATION #57",
+    "special_id": "Railroad Station",
+    "pos_om": [ 22, 8 ],
+    "pos": [ 24, 43 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_151_WEST_BOYLSTON_RAILROAD_STATION",
+    "database_id": 151,
+    "name": "WEST BOYLSTON RAILROAD STATION #151",
+    "special_id": "Railroad Station",
+    "pos_om": [ 33, 14 ],
+    "pos": [ 12, 29 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_194_WESTBOROUGH_RAILROAD_STATION",
+    "database_id": 194,
+    "name": "WESTBOROUGH RAILROAD STATION #194",
+    "special_id": "Railroad Station",
+    "pos_om": [ 35, 16 ],
+    "pos": [ 111, 135 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_69_WESTFORD_RAILROAD_STATION",
+    "database_id": 69,
+    "name": "WESTFORD RAILROAD STATION #69",
+    "special_id": "Railroad Station",
+    "pos_om": [ 38, 8 ],
+    "pos": [ 149, 112 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_71_WESTFORD_RAILROAD_STATION",
+    "database_id": 71,
+    "name": "WESTFORD RAILROAD STATION #71",
+    "special_id": "Railroad Station",
+    "pos_om": [ 39, 8 ],
+    "pos": [ 98, 62 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_88_WESTMINSTER_RAILROAD_STATION",
+    "database_id": 88,
+    "name": "WESTMINSTER RAILROAD STATION #88",
+    "special_id": "Railroad Station",
+    "pos_om": [ 31, 9 ],
+    "pos": [ 61, 49 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_140_WESTON_RAILROAD_STATION",
+    "database_id": 140,
+    "name": "WESTON RAILROAD STATION #140",
+    "special_id": "Railroad Station",
+    "pos_om": [ 42, 13 ],
+    "pos": [ 79, 131 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_237_WESTWOOD_RAILROAD_STATION",
+    "database_id": 237,
+    "name": "WESTWOOD RAILROAD STATION #237",
+    "special_id": "Railroad Station",
+    "pos_om": [ 44, 18 ],
+    "pos": [ 77, 17 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_227_WEYMOUTH_RAILROAD_STATION",
+    "database_id": 227,
+    "name": "WEYMOUTH RAILROAD STATION #227",
+    "special_id": "Railroad Station",
+    "pos_om": [ 48, 17 ],
+    "pos": [ 115, 169 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_240_WEYMOUTH_RAILROAD_STATION",
+    "database_id": 240,
+    "name": "WEYMOUTH RAILROAD STATION #240",
+    "special_id": "Railroad Station",
+    "pos_om": [ 49, 18 ],
+    "pos": [ 91, 0 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_250_WEYMOUTH_RAILROAD_STATION",
+    "database_id": 250,
+    "name": "WEYMOUTH RAILROAD STATION #250",
+    "special_id": "Railroad Station",
+    "pos_om": [ 48, 19 ],
+    "pos": [ 166, 122 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_126_WHATELY_RAILROAD_STATION",
+    "database_id": 126,
+    "name": "WHATELY RAILROAD STATION #126",
+    "special_id": "Railroad Station",
+    "pos_om": [ 17, 12 ],
+    "pos": [ 38, 15 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_268_WHITMAN_RAILROAD_STATION",
+    "database_id": 268,
+    "name": "WHITMAN RAILROAD STATION #268",
+    "special_id": "Railroad Station",
+    "pos_om": [ 49, 21 ],
+    "pos": [ 89, 91 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_7_WILLIAMSTOWN_RAILROAD_STATION",
+    "database_id": 7,
+    "name": "WILLIAMSTOWN RAILROAD STATION #7",
+    "special_id": "Railroad Station",
+    "pos_om": [ 6, 4 ],
+    "pos": [ 67, 141 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_73_WILMINGTON_RAILROAD_STATION",
+    "database_id": 73,
+    "name": "WILMINGTON RAILROAD STATION #73",
+    "special_id": "Railroad Station",
+    "pos_om": [ 44, 8 ],
+    "pos": [ 142, 83 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_102_WILMINGTON_RAILROAD_STATION",
+    "database_id": 102,
+    "name": "WILMINGTON RAILROAD STATION #102",
+    "special_id": "Railroad Station",
+    "pos_om": [ 44, 9 ],
+    "pos": [ 140, 55 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_31_WINCHENDON_RAILROAD_STATION",
+    "database_id": 31,
+    "name": "WINCHENDON RAILROAD STATION #31",
+    "special_id": "Railroad Station",
+    "pos_om": [ 26, 7 ],
+    "pos": [ 148, 90 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_130_WINCHESTER_RAILROAD_STATION",
+    "database_id": 130,
+    "name": "WINCHESTER RAILROAD STATION #130",
+    "special_id": "Railroad Station",
+    "pos_om": [ 45, 12 ],
+    "pos": [ 59, 29 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_111_WOBURN_RAILROAD_STATION",
+    "database_id": 111,
+    "name": "WOBURN RAILROAD STATION #111",
+    "special_id": "Railroad Station",
+    "pos_om": [ 45, 10 ],
+    "pos": [ 54, 102 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_174_WORCESTER_RAILROAD_STATION",
+    "database_id": 174,
+    "name": "WORCESTER RAILROAD STATION #174",
+    "special_id": "Railroad Station",
+    "pos_om": [ 32, 15 ],
+    "pos": [ 142, 106 ]
+  },
+  {
+    "type": "railroad_station",
+    "id": "MA_193_WORCESTER_RAILROAD_STATION",
+    "database_id": 193,
+    "name": "WORCESTER RAILROAD STATION #193",
+    "special_id": "Railroad Station",
+    "pos_om": [ 32, 16 ],
+    "pos": [ 149, 172 ]
+  }
+]

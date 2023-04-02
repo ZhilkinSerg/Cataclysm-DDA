@@ -123,6 +123,7 @@
     "type": "overmap_terrain",
     "id": "railroad",
     "name": "railroad",
+    "copy-from": "generic_transportation",
     "color": "light_green",
     "see_cost": 2,
     "mapgen_straight": [ { "method": "builtin", "name": "railroad_straight" } ],
@@ -134,13 +135,40 @@
   },
   {
     "type": "overmap_terrain",
-    "id": "railroad_bridge",
+    "abstract": "generic_railroad_bridge",
+    "copy-from": "generic_transportation",
     "name": "railroad bridge",
     "sym": "│",
+    "color": "white",
+    "see_cost": 2
+  },
+  {
+    "type": "overmap_terrain",
+    "id": "railroad_bridge",
+    "copy-from": "generic_railroad_bridge",
     "color": "light_cyan",
-    "see_cost": 2,
     "mapgen": [ { "method": "builtin", "name": "railroad_bridge" } ],
     "flags": [ "RIVER", "SHOULD_NOT_SPAWN" ]
+  },
+  {
+    "type": "overmap_terrain",
+    "id": "railroad_bridge_road",
+    "copy-from": "generic_railroad_bridge",
+    "name": "railroad bridge (overpass)"
+  },
+  {
+    "type": "overmap_terrain",
+    "id": "railroad_bridgehead_ground",
+    "copy-from": "generic_railroad_bridge",
+    "name": "railroad bridgehead (ground)",
+    "sym": "v"
+  },
+  {
+    "type": "overmap_terrain",
+    "id": "railroad_bridgehead_ramp",
+    "copy-from": "generic_railroad_bridge",
+    "name": "railroad bridgehead (ramp)",
+    "sym": "^"
   },
   {
     "type": "overmap_terrain",

@@ -21,6 +21,13 @@ Overmap terrain might be unpolished at times on some of the overmaps (e.g. field
 * OVERMAP_PLACE_FORESTS - Allows to place procgen forests during overmap generation.
 * OVERMAP_PLACE_SWAMPS - Allows to place procgen swamps during overmap generation.
 * OVERMAP_PLACE_RAVINES - Allows to place procgen ravines during overmap generation.
+* OVERMAP_PLACE_CITIES - Allows to place cities during overmap generation.
+* OVERMAP_PLACE_RAILROAD_STATIONS - Allows to place railroad stations during overmap generation.
+* OVERMAP_PLACE_FOREST_TRAILS - Allows to place procgen forest trails during overmap generation.
+* OVERMAP_PLACE_ROADS - Allows to place procgen roads during overmap generation.
+* OVERMAP_PLACE_RAILROADS - Allows to place procgen railroads during overmap generation.
+* OVERMAP_PLACE_SPECIALS - Allows to place overmap specials during overmap generation.
+* OVERMAP_PLACE_FOREST_TRAILHEADS - Allows to place procgen forest trailheads during overmap generation.
 
 # Additional files
 

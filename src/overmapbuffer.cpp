@@ -36,6 +36,7 @@
 #include "overmap_types.h"
 #include "path_info.h"
 #include "point.h"
+#include "railroad_station.h"
 #include "rng.h"
 #include "simple_pathfinding.h"
 #include "string_formatter.h"

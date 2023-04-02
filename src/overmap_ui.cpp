@@ -63,6 +63,7 @@
 #include "overmapbuffer.h"
 #include "player_activity.h"
 #include "point.h"
+#include "railroad_station.h"
 #include "regional_settings.h"
 #include "rng.h"
 #include "sdltiles.h"
@@ -2090,6 +2091,50 @@ std::optional<city> ui::omap::select_city( uilist &cities_menu,
         } else {
             if( cities_menu.entries.size() > 1 ) {
                 ret_val = cities_container[cities_menu.selected - 1];
+            }
+        }
+    }
+    return ret_val;
+}
+
+void ui::omap::setup_railroad_stations_menu( uilist &railroad_stations_menu,
+        std::vector<railroad_station> &railroad_stations_container )
+{
+    if( railroad_station::get_all().empty() ) {
+        return;
+    }
+    uilist_entry entry_random_railroad_station( RANDOM_CITY_ENTRY, true, '*',
+            _( "<color_red>* Random railroad station *</color>" ),
+            _( "Location: <color_white>(?,?)</color>:<color_white>(?,?)</color>" )
+                                              );
+    railroad_stations_menu.entries.emplace_back( entry_random_railroad_station );
+    railroad_stations_menu.desc_enabled = true;
+    railroad_stations_menu.title = _( "Select railroad station" );
+    for( const auto &c : railroad_stations_container ) {
+        uilist_entry entry( c.database_id, true, -1, c.name,
+                            string_format(
+                                _( "Location: <color_white>%s</color>:<color_white>%s</color>" ),
+                                c.pos_om.to_string(), c.pos.to_string() ) );
+        railroad_stations_menu.entries.emplace_back( entry );
+    }
+    railroad_stations_menu.w_height_setup = TERMY - 4;
+}
+
+std::optional<railroad_station> ui::omap::select_railroad_station( uilist &railroad_stations_menu,
+        std::vector<railroad_station> &railroad_stations_container, bool random )
+{
+    std::optional<railroad_station> ret_val = std::nullopt;
+    if( random ) {
+        ret_val = random_entry( railroad_stations_container );
+    } else {
+        railroad_stations_menu.query();
+        if( railroad_stations_menu.ret == RANDOM_CITY_ENTRY ) {
+            ret_val = random_entry( railroad_stations_container );
+        } else if( railroad_stations_menu.ret == UILIST_CANCEL ) {
+            ret_val = std::nullopt;
+        } else {
+            if( railroad_stations_menu.entries.size() > 1 ) {
+                ret_val = railroad_stations_container[railroad_stations_menu.selected - 1];
             }
         }
     }

@@ -25,7 +25,7 @@
     "name": "OVERMAP_PLACE_RIVERS",
     "info": "Allows to place procgen rivers during overmap generation.",
     "stype": "bool",
-    "value": false
+    "value": true
   },
   {
     "type": "EXTERNAL_OPTION",
@@ -64,6 +64,13 @@
   },
   {
     "type": "EXTERNAL_OPTION",
+    "name": "OVERMAP_PLACE_RAILROAD_STATIONS",
+    "info": "Allows to place railroad stations during overmap generation.",
+    "stype": "bool",
+    "value": true
+  },
+  {
+    "type": "EXTERNAL_OPTION",
     "name": "OVERMAP_PLACE_FOREST_TRAILS",
     "info": "Allows to place procgen forest trails during overmap generation.",
     "stype": "bool",
@@ -73,6 +80,13 @@
     "type": "EXTERNAL_OPTION",
     "name": "OVERMAP_PLACE_ROADS",
     "info": "Allows to place procgen roads during overmap generation.",
+    "stype": "bool",
+    "value": true
+  },
+  {
+    "type": "EXTERNAL_OPTION",
+    "name": "OVERMAP_PLACE_RAILROADS",
+    "info": "Allows to place procgen railroads during overmap generation.",
     "stype": "bool",
     "value": true
   },

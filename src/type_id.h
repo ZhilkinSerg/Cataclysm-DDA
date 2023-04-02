@@ -187,6 +187,9 @@ using overmap_special_migration_id = string_id<overmap_special_migration>;
 class profession;
 using profession_id = string_id<profession>;
 
+struct railroad_station;
+using railroad_station_id = string_id<railroad_station>;
+
 class recipe;
 using recipe_id = string_id<recipe>;
 
