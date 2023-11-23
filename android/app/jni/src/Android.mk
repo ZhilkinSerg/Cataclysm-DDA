@@ -12,7 +12,7 @@ LOCAL_SRC_FILES := $(sort $(CATA_SRCS:$(LOCAL_PATH)/%=%))
 
 LOCAL_STATIC_LIBRARIES := third-party
 
-LOCAL_SHARED_LIBRARIES := libhidapi SDL2 SDL2_mixer SDL2_image SDL2_ttf mpg123
+LOCAL_SHARED_LIBRARIES := SDL2 SDL2_mixer SDL2_image SDL2_ttf
 
 LOCAL_LDLIBS := -lGLESv1_CM -lGLESv2 -llog -lz
 
