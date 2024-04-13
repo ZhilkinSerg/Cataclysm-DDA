@@ -108,25 +108,14 @@
         brotlidec-static.lib;
         brotlienc-static.lib;
         bz2$(VcpkgLibSuffix).lib;
-        FLAC.lib;
-        FLAC++.lib;
         freetype$(VcpkgLibSuffix).lib;
         jpeg.lib;
         libpng16$(VcpkgLibSuffix).lib;
-        modplug.lib;
-        mpg123.lib;
-        ogg.lib;
-        out123.lib;
         pdcurses.lib;
         SDL2_image-static$(VcpkgLibSuffix).lib;
-        SDL2_mixer-static$(VcpkgLibSuffix).lib;
         SDL2_ttf.lib;
         SDL2-static$(VcpkgLibSuffix).lib;
-        syn123.lib;
         turbojpeg.lib;
-        vorbis.lib;
-        vorbisenc.lib;
-        vorbisfile.lib;
         zlib$(VcpkgLibSuffix).lib;
         <!-- win32 deps of the vcpkg deps -->
         Advapi32.lib;

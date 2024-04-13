@@ -7,16 +7,14 @@
           "name": "sdl2-image",
           "features": [ "libjpeg-turbo" ]
         },
-        {
-          "name": "sdl2-mixer",
-          "features": [ "libflac", "mpg123", "libmodplug" ]
-        },
         "sdl2-ttf",
         "pdcurses"
     ],
-    "vcpkg-configuration": {
-        "overlay-ports": [
-            "../.github/vcpkg_ports"
-        ]
-    }
+    "builtin-baseline": "ad3bae57455a3c3ce528fcd47d8e8027d0498add",
+    "overrides": [
+      {
+        "name": "brotli",
+        "version": "1.0.9#1"
+      }
+    ]
 }
