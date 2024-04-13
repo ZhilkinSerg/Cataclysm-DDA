@@ -40,17 +40,13 @@ class input_context
 {
         friend class keybindings_ui;
     public:
-#if defined(__ANDROID__)
         // Whatever's on top is our current input context.
         static std::list<input_context *> input_context_stack;
-#endif
 
         input_context() : registered_any_input( false ), category( "default" ),
             coordinate_input_received( false ), handling_coordinate_input( false ) {
-#if defined(__ANDROID__)
             input_context_stack.push_back( this );
             allow_text_entry = false;
-#endif
             register_action( "toggle_language_to_en" );
         }
         // TODO: consider making the curses WINDOW an argument to the constructor, so that mouse input
@@ -60,14 +56,12 @@ class input_context
             : registered_any_input( false ), category( category ),
               coordinate_input_received( false ), handling_coordinate_input( false ),
               preferred_keyboard_mode( preferred_keyboard_mode ) {
-#if defined(__ANDROID__)
             input_context_stack.push_back( this );
             allow_text_entry = false;
-#endif
+
             register_action( "toggle_language_to_en" );
         }
 
-#if defined(__ANDROID__)
         virtual ~input_context() {
             input_context_stack.remove( this );
         }
@@ -145,7 +139,6 @@ class input_context
         bool operator!=( const input_context &other ) const {
             return !( *this == other );
         }
-#endif
 
         /**
          * Register an action with this input context.

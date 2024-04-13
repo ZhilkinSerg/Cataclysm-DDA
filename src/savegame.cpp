@@ -59,11 +59,7 @@ static const oter_str_id oter_omt_obsolete( "omt_obsolete" );
 
 static const string_id<overmap_connection> overmap_connection_local_road( "local_road" );
 
-#if defined(__ANDROID__)
-#include "input.h"
-
 extern std::map<std::string, std::list<input_event>> quick_shortcuts_map;
-#endif
 
 /*
  * Changes that break backwards compatibility should bump this number, so the game can
@@ -318,7 +314,6 @@ void scent_map::deserialize( const std::string &data, bool is_type )
     }
 }
 
-#if defined(__ANDROID__)
 ///// quick shortcuts
 void game::load_shortcuts( const cata_path &path )
 {
@@ -362,7 +357,6 @@ void game::save_shortcuts( std::ostream &fout )
     }
     json.end_object();
 }
-#endif
 
 void overmap::load_monster_groups( const JsonArray &jsin )
 {

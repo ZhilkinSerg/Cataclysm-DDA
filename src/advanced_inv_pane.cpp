@@ -29,10 +29,6 @@
 
 class item_category;
 
-#if defined(__ANDROID__)
-#   include <SDL_keyboard.h>
-#endif
-
 void advanced_inventory_pane::set_area( const advanced_inv_area &square, bool in_vehicle_cargo )
 {
     prev_area = area;

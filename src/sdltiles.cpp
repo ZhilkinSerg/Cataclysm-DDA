@@ -33,9 +33,11 @@
 #endif
 #endif
 
+#include "action.h"
 #include "avatar.h"
 #include "cached_options.h"
 #include "cata_assert.h"
+#include "cata_imgui.h"
 #include "cata_scope_helpers.h"
 #include "cata_tiles.h"
 #include "cata_utility.h"
@@ -52,6 +54,7 @@
 #include "game_ui.h"
 #include "hash_utils.h"
 #include "input.h"
+#include "inventory.h"
 #include "json.h"
 #include "line.h"
 #include "map.h"
@@ -64,16 +67,18 @@
 #include "overmap_ui.h"
 #include "overmapbuffer.h"
 #include "path_info.h"
-#include "sdl_geometry.h"
-#include "sdl_wrappers.h"
 #include "sdl_font.h"
 #include "sdl_gamepad.h"
+#include "sdl_geometry.h"
+#include "sdl_wrappers.h"
 #include "sdlsound.h"
 #include "string_formatter.h"
 #include "uistate.h"
 #include "ui_manager.h"
+#include "vehicle.h"
+#include "vpart_position.h"
 #include "wcwidth.h"
-#include "cata_imgui.h"
+#include "worldfactory.h"
 
 std::unique_ptr<cataimgui::client> imclient;
 
@@ -90,13 +95,6 @@ std::unique_ptr<cataimgui::client> imclient;
 
 #if defined(__ANDROID__)
 #include <jni.h>
-
-#include "action.h"
-#include "inventory.h"
-#include "map.h"
-#include "vehicle.h"
-#include "vpart_position.h"
-#include "worldfactory.h"
 #endif
 
 #if defined(EMSCRIPTEN)
@@ -300,6 +298,13 @@ static void WinCreate()
     SDL_SetHint( SDL_HINT_MOUSE_TOUCH_EVENTS, "0" );
     SDL_SetHint( SDL_HINT_TOUCH_MOUSE_EVENTS, "0" );
 #endif
+#else
+#if defined(SDL_HINT_ANDROID_SEPARATE_MOUSE_AND_TOUCH)
+    SDL_SetHint( SDL_HINT_ANDROID_SEPARATE_MOUSE_AND_TOUCH, "0" );
+#else
+    SDL_SetHint( SDL_HINT_MOUSE_TOUCH_EVENTS, "1" );
+    SDL_SetHint( SDL_HINT_TOUCH_MOUSE_EVENTS, "1" );
+#endif
 #endif
 
     ::window.reset( SDL_CreateWindow( "",
@@ -451,12 +456,12 @@ static const SDL_Color &color_as_sdl( const unsigned char color )
     return windowsPalette[color];
 }
 
+void draw_quick_shortcuts();
+static bool quick_shortcuts_enabled = true;
+
 #if defined(__ANDROID__)
 void draw_terminal_size_preview();
-void draw_quick_shortcuts();
 void draw_virtual_joystick();
-
-static bool quick_shortcuts_enabled = true;
 
 // For previewing the terminal size with a transparent rectangle overlay when user is adjusting it in the settings
 static int preview_terminal_width = -1;
@@ -547,9 +552,11 @@ void refresh_display()
 
 #if defined(__ANDROID__)
     draw_terminal_size_preview();
+#endif
     if( g ) {
         draw_quick_shortcuts();
     }
+#if defined(__ANDROID__)
     draw_virtual_joystick();
 #endif
     SDL_RenderPresent( renderer.get() );
@@ -1854,7 +1861,6 @@ void toggle_fullscreen_window()
     fullscreen = !fullscreen;
 }
 
-#if defined(__ANDROID__)
 static float finger_down_x = -1.0f; // in pixels
 static float finger_down_y = -1.0f; // in pixels
 static float finger_curr_x = -1.0f; // in pixels
@@ -1884,8 +1890,10 @@ static bool is_quick_shortcut_touch = false;
 static bool quick_shortcuts_toggle_handled = false;
 // the current finger repeat delay - will be somewhere between the min/max values depending on user input
 uint32_t finger_repeat_delay = 500;
+#if defined(__ANDROID__)
 // should we make sure the sdl surface is visible? set to true whenever the SDL window is shown.
 static bool needs_sdl_surface_visibility_refresh = true;
+#endif
 
 // Quick shortcuts container: maps the touch input context category (std::string) to a std::list of input_events.
 using quick_shortcuts_t = std::list<input_event>;
@@ -1908,6 +1916,7 @@ std::string get_quick_shortcut_name( const std::string &category )
 
 float android_get_display_density()
 {
+#if defined(__ANDROID__)
     JNIEnv *env = ( JNIEnv * )SDL_AndroidGetJNIEnv();
     jobject activity = ( jobject )SDL_AndroidGetActivity();
     jclass clazz( env->GetObjectClass( activity ) );
@@ -1916,6 +1925,10 @@ float android_get_display_density()
     env->DeleteLocalRef( activity );
     env->DeleteLocalRef( clazz );
     return ans;
+#else
+    //TODO: Add actual value for non-Android
+    return 1.0f;
+#endif
 }
 
 // given the active quick shortcuts, returns the dimensions of each quick shortcut button.
@@ -2183,6 +2196,7 @@ void remove_stale_inventory_quick_shortcuts()
     }
 }
 
+#if defined(__ANDROID__)
 // Draw preview of terminal size when adjusting values
 void draw_terminal_size_preview()
 {
@@ -2202,11 +2216,13 @@ void draw_terminal_size_preview()
         SetRenderDrawColor( renderer, 0, 0, 0, 255 );
     }
 }
+#endif
 
 // Draw quick shortcuts on top of the game view
 void draw_quick_shortcuts()
 {
 
+#if defined(__ANDROID__)
     if( !quick_shortcuts_enabled ||
         SDL_IsTextInputActive() ||
         ( get_option<bool>( "ANDROID_HIDE_HOLDS" ) && !is_quick_shortcut_touch && finger_down_time > 0 &&
@@ -2214,6 +2230,7 @@ void draw_quick_shortcuts()
               get_option<int>( "ANDROID_INITIAL_DELAY" ) ) ) ) { // player is swipe + holding in a direction
         return;
     }
+#endif
 
     bool shortcut_right = get_option<std::string>( "ANDROID_SHORTCUT_POSITION" ) == "right";
     std::string &category = touch_input_context.get_category();
@@ -2400,7 +2417,7 @@ void draw_quick_shortcuts()
 
 void draw_virtual_joystick()
 {
-
+#if defined(__ANDROID__)
     // Bail out if we don't need to draw the joystick
     if( !get_option<bool>( "ANDROID_SHOW_VIRTUAL_JOYSTICK" ) ||
         finger_down_time <= 0 ||
@@ -2437,7 +2454,7 @@ void draw_virtual_joystick()
     dstrect.x = finger_down_x + ( finger_curr_x - finger_down_x ) / 2 - dstrect.w / 2;
     dstrect.y = finger_down_y + ( finger_curr_y - finger_down_y ) / 2 - dstrect.h / 2;
     RenderCopy( renderer, touch_joystick, NULL, &dstrect );
-
+#endif
 }
 
 void update_finger_repeat_delay()
@@ -2570,6 +2587,7 @@ void handle_finger_input( uint32_t ticks )
 
 bool android_is_hardware_keyboard_available()
 {
+#if defined(__ANDROID__)
     JNIEnv *env = ( JNIEnv * )SDL_AndroidGetJNIEnv();
     jobject activity = ( jobject )SDL_AndroidGetActivity();
     jclass clazz( env->GetObjectClass( activity ) );
@@ -2578,8 +2596,12 @@ bool android_is_hardware_keyboard_available()
     env->DeleteLocalRef( activity );
     env->DeleteLocalRef( clazz );
     return ans;
+#else
+    return true;
+#endif
 }
 
+#if defined(__ANDROID__)
 void android_vibrate()
 {
     int vibration_ms = get_option<int>( "ANDROID_VIBRATION" );
@@ -2644,9 +2666,11 @@ static void CheckMessages()
         ui_manager::redraw_invalidated();
         visible_display_frame_dirty = false;
     }
+#endif
 
     uint32_t ticks = SDL_GetTicks();
 
+#if defined(__ANDROID__)
     // Force text input mode if hardware keyboard is available.
     if( android_is_hardware_keyboard_available() && !SDL_IsTextInputActive() ) {
         StartTextInput();
@@ -2665,6 +2689,7 @@ static void CheckMessages()
         env->DeleteLocalRef( activity );
         env->DeleteLocalRef( clazz );
     }
+#endif
 
     // Copy the current input context
     if( !input_context::input_context_stack.empty() ) {
@@ -2881,6 +2906,7 @@ static void CheckMessages()
                 quick_shortcuts_toggle_handled = true;
                 refresh_display();
 
+#if defined(__ANDROID__)
                 // Display an Android toast message
                 {
                     JNIEnv *env = ( JNIEnv * )SDL_AndroidGetJNIEnv();
@@ -2893,6 +2919,8 @@ static void CheckMessages()
                     env->DeleteLocalRef( activity );
                     env->DeleteLocalRef( clazz );
                 }
+#endif
+
             }
         }
 
@@ -2943,7 +2971,6 @@ static void CheckMessages()
             needupdate = true;
         }
     }
-#endif
 
     last_input = input_event();
 
@@ -3257,7 +3284,6 @@ static void CheckMessages()
                 }
                 break;
 
-#if defined(__ANDROID__)
             case SDL_FINGERMOTION:
                 if( ev.tfinger.fingerId == 0 ) {
                     if( !is_quick_shortcut_touch ) {
@@ -3432,6 +3458,7 @@ static void CheckMessages()
 
                                     quick_shortcuts_toggle_handled = true;
 
+#if defined(__ANDROID__)
                                     // Display an Android toast message
                                     {
                                         JNIEnv *env = ( JNIEnv * )SDL_AndroidGetJNIEnv();
@@ -3444,6 +3471,7 @@ static void CheckMessages()
                                         env->DeleteLocalRef( activity );
                                         env->DeleteLocalRef( clazz );
                                     }
+#endif
                                 } else {
                                     last_input = input_event( three_tap_key, input_event_t::keyboard_char );
                                 }
@@ -3505,7 +3533,6 @@ static void CheckMessages()
                 }
 
                 break;
-#endif
 
             case SDL_QUIT:
                 quit = true;

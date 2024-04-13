@@ -983,14 +983,12 @@ void uilist::query( bool loop, int timeout, bool allow_unfiltered_hotkeys )
 
     shared_ptr_fast<uilist_impl> ui = create_or_get_ui();
 
-#if defined(__ANDROID__)
     for( const auto &entry : entries ) {
         if( entry.enabled && entry.hotkey.has_value()
             && entry.hotkey.value() != input_event() ) {
             ctxt.register_manual_key( entry.hotkey.value().get_first_input(), entry.txt );
         }
     }
-#endif
 
     do {
         ui_manager::redraw();

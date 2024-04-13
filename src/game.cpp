@@ -391,9 +391,7 @@ static const zone_type_id zone_type_NO_AUTO_PICKUP( "NO_AUTO_PICKUP" );
 
 static constexpr int DANGEROUS_PROXIMITY = 5;
 
-#if defined(__ANDROID__)
 extern bool add_key_to_quick_shortcuts( int key, const std::string &category, bool back ); // NOLINT
-#endif
 
 //The one and only game instance
 std::unique_ptr<game> g;
@@ -2136,11 +2134,9 @@ int game::inventory_item_menu( item_location locThisItem,
 
     item &oThisItem = *locThisItem;
     if( u.has_item( oThisItem ) ) {
-#if defined(__ANDROID__)
         if( get_option<bool>( "ANDROID_INVENTORY_AUTOADD" ) ) {
             add_key_to_quick_shortcuts( oThisItem.invlet, "INVENTORY", false );
         }
-#endif
         const bool bHPR = get_auto_pickup().has_rule( &oThisItem );
         std::vector<iteminfo> vThisItem;
         std::vector<iteminfo> vDummy;
@@ -3169,13 +3165,11 @@ bool game::load( const save_t &name )
                 _( "Finalizing" ), [&]()
                 {
 
-#if defined(__ANDROID__)
                     const cata_path shortcuts_filename =
                     worldpath / ( name.base_path() + SAVE_EXTENSION_SHORTCUTS );
                     if( file_exist( shortcuts_filename ) ) {
                         load_shortcuts( shortcuts_filename );
                     }
-#endif
 
                     // Now that the player's worn items are updated, their sight limits need to be
                     // recalculated. (This would be cleaner if u.worn were private.)
@@ -3415,17 +3409,13 @@ bool game::save_player_data()
     std::ostream & fout ) {
         memorial().save( fout );
     }, _( "player memorial" ) );
-#if defined(__ANDROID__)
     const bool saved_shortcuts = write_to_file( playerfile + SAVE_EXTENSION_SHORTCUTS, [&](
     std::ostream & fout ) {
         save_shortcuts( fout );
     }, _( "quick shortcuts" ) );
-#endif
     const bool saved_diary = u.get_avatar_diary()->store();
     return saved_data && saved_map_memory && saved_log && saved_diary
-#if defined(__ANDROID__)
            && saved_shortcuts
-#endif
            ;
 }
 

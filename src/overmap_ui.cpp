@@ -87,10 +87,6 @@ static const oter_type_str_id oter_type_forest_trail( "forest_trail" );
 static const trait_id trait_DEBUG_CLAIRVOYANCE( "DEBUG_CLAIRVOYANCE" );
 static const trait_id trait_DEBUG_NIGHTVISION( "DEBUG_NIGHTVISION" );
 
-#if defined(__ANDROID__)
-#include <SDL_keyboard.h>
-#endif
-
 static constexpr int UILIST_MAP_NOTE_DELETED = -2047;
 static constexpr int UILIST_MAP_NOTE_EDITED = -2048;
 
