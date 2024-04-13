@@ -216,9 +216,7 @@ options_manager::options_manager()
         pages_.emplace_back( "debug", to_translation( "Debug" ) );
     }
 
-#if defined(__ANDROID__)
     pages_.emplace_back( "android", to_translation( "Android" ) );
-#endif
 
     enable_json( "DEFAULT_REGION" );
     // to allow class based init_data functions to add values to a 'string' type option, add:
@@ -1391,9 +1389,9 @@ std::vector<options_manager::id_and_option> options_manager::get_lang_options()
     return options;
 }
 
-#if defined(__ANDROID__)
 bool android_get_default_setting( const char *settings_name, bool default_value )
 {
+#if defined(__ANDROID__)
     JNIEnv *env = ( JNIEnv * )SDL_AndroidGetJNIEnv();
     jobject activity = ( jobject )SDL_AndroidGetActivity();
     jclass clazz( env->GetObjectClass( activity ) );
@@ -1403,8 +1401,11 @@ bool android_get_default_setting( const char *settings_name, bool default_value 
     env->DeleteLocalRef( activity );
     env->DeleteLocalRef( clazz );
     return ans;
-}
+#else
+    return "";
 #endif
+}
+
 
 void options_manager::Page::removeRepeatedEmptyLines()
 {
@@ -2951,7 +2952,6 @@ void options_manager::add_options_debug()
 
 void options_manager::add_options_android()
 {
-#if defined(__ANDROID__)
     const auto add_empty_line = [&]() {
         this->add_empty_line( "android" );
     };
@@ -3237,7 +3237,6 @@ void options_manager::add_options_android()
            );
     } );
 
-#endif
 }
 
 #if defined(TILES)

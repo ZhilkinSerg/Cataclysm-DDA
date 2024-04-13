@@ -64,10 +64,6 @@
 #include "units_utility.h"
 #include "vehicle.h"
 
-#if defined(__ANDROID__)
-#   include <SDL_keyboard.h>
-#endif
-
 static const activity_id ACT_ADV_INVENTORY( "ACT_ADV_INVENTORY" );
 
 static const flag_id json_flag_NO_RELOAD( "NO_RELOAD" );

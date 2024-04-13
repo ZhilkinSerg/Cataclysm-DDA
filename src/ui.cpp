@@ -1111,14 +1111,12 @@ void uilist::query( bool loop, int timeout )
 
     ui_manager::redraw();
 
-#if defined(__ANDROID__)
     for( const auto &entry : entries ) {
         if( entry.enabled && entry.hotkey.has_value()
             && entry.hotkey.value() != input_event() ) {
             ctxt.register_manual_key( entry.hotkey.value().get_first_input(), entry.txt );
         }
     }
-#endif
 
     do {
         ret_act = ctxt.handle_input( timeout );
