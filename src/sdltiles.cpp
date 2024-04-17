@@ -1965,7 +1965,9 @@ input_event *get_quick_shortcut_under_finger( bool down = false )
     quick_shortcuts_t &qsl = quick_shortcuts_map[get_quick_shortcut_name(
                                  touch_input_context.get_category() )];
 
-    float border, width, height;
+    float border = 0;
+    float width = 0;
+    float height = 0;
     get_quick_shortcut_dimensions( qsl, border, width, height );
 
     float finger_y = down ? finger_down_y : finger_curr_y;
@@ -2278,11 +2280,14 @@ void draw_quick_shortcuts()
         reorder_quick_shortcuts( qsl );
     }
 
-    float border, width, height;
+    float border = 0;
+    float width = 0;
+    float height = 0;
     get_quick_shortcut_dimensions( qsl, border, width, height );
     input_event *hovered_quick_shortcut = get_quick_shortcut_under_finger();
     SDL_Rect rect;
-    bool hovered, show_hint;
+    bool hovered = false;
+    bool show_hint = false;
     int i = 0;
     for( std::list<input_event>::iterator it = qsl.begin(); it != qsl.end(); ++it ) {
         if( ( i + 1 ) * width > WindowWidth * get_option<int>( "ANDROID_SHORTCUT_SCREEN_PERCENTAGE" ) *
@@ -2977,6 +2982,10 @@ static void CheckMessages()
     std::optional<point> resize_dims;
     bool render_target_reset = false;
 
+    int mouse_x = 0;
+    int mouse_y = 0;
+    input_event *quick_shortcut;
+
     while( SDL_PollEvent( &ev ) ) {
         imclient->process_input( &ev );
         switch( ev.type ) {
@@ -3245,7 +3254,15 @@ static void CheckMessages()
             case SDL_MOUSEBUTTONDOWN:
                 switch( ev.button.button ) {
                     case SDL_BUTTON_LEFT:
-                        last_input = input_event( MouseInput::LeftButtonPressed, input_event_t::mouse );
+                        SDL_GetGlobalMouseState( &mouse_x, &mouse_y );
+                        finger_curr_x = static_cast<float>( mouse_x ); // ev.tfinger.x * WindowWidth;
+                        finger_curr_y = static_cast<float>( mouse_y ); // ev.tfinger.y* WindowHeight;
+                        quick_shortcut = get_quick_shortcut_under_finger();
+                        if( quick_shortcut ) {
+                            last_input = *quick_shortcut;
+                        } else {
+                            last_input = input_event( MouseInput::LeftButtonPressed, input_event_t::mouse );
+                        }
                         break;
                     case SDL_BUTTON_RIGHT:
                         last_input = input_event( MouseInput::RightButtonPressed, input_event_t::mouse );
