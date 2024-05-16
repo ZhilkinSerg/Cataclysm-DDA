@@ -652,6 +652,15 @@ keybindings_ui::keybindings_ui( bool permit_execute_action,
     legend.push_back( colorize( _( "Keybinding active only on this screen" ), local_key ) );
     legend.push_back( colorize( _( "Keybinding active globally" ), global_key ) );
     legend.push_back( colorize( _( "* User customized" ), global_key ) );
+    int bound_actions_count = 0;
+    for( const std::string &a : parent->get_registered_actions() ) {
+        auto iel = parent->keys_bound_to( a );
+        if( iel.size() > 0 ) {
+            bound_actions_count++;
+        }
+    }
+    legend.push_back( string_format( _( "All commands: %d, Bound to a key: %d" ),
+                                     parent->get_registered_actions().size(), bound_actions_count ) );
     if( permit_execute_action ) {
         legend.push_back( string_format(
                               _( "Press %c to execute action\n" ),
