@@ -2410,6 +2410,11 @@ void draw_quick_shortcuts()
                 font->OutputChar( renderer, geometry, hint_text, point( text_x, text_y ),
                                   get_option<int>( "ANDROID_SHORTCUT_COLOR" ),
                                   get_option<int>( "ANDROID_SHORTCUT_OPACITY_FG" ) * 0.01f );
+                tripoint p = tripoint_zero;
+                //bool a = false;
+                //std::string s = "";
+                //a = cata_tiles::draw
+                //a = cata_tiles::draw_from_id_string( s, p, 0, 0, lit_level::LOW, false );
             }
         }
         SDL_RenderSetScale( renderer.get(), 1.0f, 1.0f );
