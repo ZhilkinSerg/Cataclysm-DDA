@@ -2220,6 +2220,60 @@ void draw_terminal_size_preview()
 }
 #endif
 
+class quick_shortcuts_ui;
+
+class quick_shortcuts_ui
+{
+        friend class quick_shortcuts_ui_impl;
+    public:
+        void draw_quick_shortcuts_ui();
+};
+
+class quick_shortcuts_ui_impl : public cataimgui::window
+{
+    public:
+        std::string last_action;
+        explicit quick_shortcuts_ui_impl() : cataimgui::window( _( "Quick shortcuts" ),
+                    ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoNav ) {
+        }
+
+    private:
+        size_t window_width = str_width_to_pixels( TERMX ) / 2;
+        size_t window_height = str_height_to_pixels( TERMY ) / 2;
+        size_t table_column_width = window_width / 2;
+
+    protected:
+        void draw_controls() override;
+};
+
+void quick_shortcuts_ui::draw_quick_shortcuts_ui()
+{
+    input_context ctxt;
+    quick_shortcuts_ui_impl p_impl;
+
+    while( true ) {
+        ui_manager::redraw_invalidated();
+
+
+        p_impl.last_action = ctxt.handle_input();
+
+        if( p_impl.last_action == "QUIT" || !p_impl.get_is_open() ) {
+            break;
+        }
+    }
+    for( const auto &c :  get_option<std::string>( "ANDROID_SHORTCUT_DEFAULTS" ) ) {
+        p_impl.action_button( "Test", "Test2" );
+    }
+}
+
+void quick_shortcuts_ui_impl::draw_controls()
+{
+    ImGui::SetWindowSize( ImVec2( window_width, window_height ), ImGuiCond_Once );
+    for( const auto &c :  get_option<std::string>( "ANDROID_SHORTCUT_DEFAULTS" ) ) {
+        action_button( "Test", "Test2" );
+    }
+}
+
 // Draw quick shortcuts on top of the game view
 void draw_quick_shortcuts()
 {
@@ -2233,6 +2287,9 @@ void draw_quick_shortcuts()
         return;
     }
 #endif
+
+    quick_shortcuts_ui_impl qw;
+    qw.draw();
 
     bool shortcut_right = get_option<std::string>( "ANDROID_SHORTCUT_POSITION" ) == "right";
     std::string &category = touch_input_context.get_category();
