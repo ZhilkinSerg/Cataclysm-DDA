@@ -50,10 +50,6 @@
 #include "vehicle_selector.h"
 #include "vpart_position.h"
 
-#if defined(__ANDROID__)
-#include <SDL_keyboard.h>
-#endif
-
 #include <algorithm>
 #include <iterator>
 #include <limits>

@@ -19,9 +19,6 @@
 #include "ui_manager.h"
 #include "viewer.h"
 
-#if defined(__ANDROID__)
-#include <SDL_keyboard.h>
-#endif
 #include <algorithm>
 #include <deque>
 #include <iterator>

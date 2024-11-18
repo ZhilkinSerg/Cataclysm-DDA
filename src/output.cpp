@@ -44,7 +44,6 @@
 
 #if defined(__ANDROID__)
 #include <jni.h>
-#include <SDL_keyboard.h>
 #endif
 
 // Display data
@@ -2936,9 +2935,6 @@ void insert_table( const catacurses::window &w, int pad, int line, int columns,
     int div = columns - 1;
     int offset = 0;
 
-#if defined(__ANDROID__)
-    input_context ctxt( "INSERT_TABLE" );
-#endif
     wattron( w, FG );
     for( int i = 0; i < rows * columns; i++ ) {
         if( i + offset * columns >= static_cast<int>( data.size() ) ) {
